@@ -6,13 +6,46 @@
     import buildingSvg from '$lib/images/building.svg?raw';
     import walkSvg from '$lib/images/walk.svg?raw';
     import { browser } from '$app/environment';
-  
+    import Timer from './Timers.svelte';
+
+    function handleAddTime(e) {
+		  const nextValue = e.target.innerText;
+		  if (nextValue === '0' && value.length === 0 || value.length === 6) {
+		  		return;
+		  }
+		  value += nextValue;
+	  }
+	  function handleDeleteLastValue() {
+	  	value = value.substr(0, value.length - 1);
+	  }
+	  function reverseString(str) {
+	  	return str.split('').reverse().join('');
+	  }
+	  $: valueReversed = reverseString(value);
+	  $: seconds = reverseString(valueReversed.substr(0,2));
+	  $: minutes = reverseString(valueReversed.substr(2,2));
+	  $: hours = reverseString(valueReversed.substr(4,2));
+	
+	function handleStartTimer() {
+		const timeInSeconds = Number(seconds) + (Number(minutes) * 60) + (Number(hours) * 60 * 60);
+		timers = [...timers, {
+			time: timeInSeconds,
+			id: new Date().toISOString(),
+		}];
+		value = '';
+	}
+	function deleteTimer(id) {
+		timers = timers.filter(t => t.id !== id);
+	}
+
     let canvas;
     let house;
     let player;
     let rect;
     let labelh, labelp;
     let buildings;
+    let duration='42';
+    let timers = [{ time: 53, id: '123'}];
 
     onMount(() => {
         // Game timer and settings
