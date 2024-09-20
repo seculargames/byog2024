@@ -1,18 +1,37 @@
-<script lang="ts">
+<script >
     import { gameState, canvasSize, buildingOpts } from '../stores.ts';
-    import {updateGameState} from '../engine.ts'
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { SVG } from '@svgdotjs/svg.js';
     import houseSvg from '$lib/images/house.svg?raw';
     import buildingSvg from '$lib/images/building.svg?raw';
     import walkSvg from '$lib/images/walk.svg?raw';
+    import { browser } from '$app/environment';
+  
+    // Game timer and settings
+    let elapsed = 0;
+    let duration = 5000;
+    let frame;
+    if (browser) {
+      let last_time = window.performance.now();
+      (function update() {
+        //frame = requestAnimationFrame(update);
+        const time = window.performance.now();
+        elapsed += Math.min(time - last_time, duration-elapsed)
+
+        last_time= time;
+      })();
+    }
 
     let canvas;
     let rect;
     let house;
     let player;
-    let label;
+    let labelh, labelp;
     let buildings;
+
+    let updateGameState = function(currentLocation) {
+
+    }
     let generateMap = function () {
       let bldg_cnts = Math.floor(Math.random()*10);
       let buildings;
@@ -38,7 +57,7 @@
         house.size(50);
         house.move(400, 300);
         canvas.add(house);
-        label = canvas.text(function(add) {
+        labelh = canvas.text(function(add) {
             add.tspan('Home').fill('#fff');
         });
 
@@ -47,14 +66,13 @@
         player.size(30);
         player.move(400, 300);
 
-        label = canvas.text(function(add) {
+        labelp = canvas.text(function(add) {
             add.tspan('Player').fill('#fff');
         });
-        label.move(400, 280);
-        player.add(label);
+        labelp.move(400, 280);
+        player.add(labelp);
         canvas.add(player);
 
-        //bldgs = generateMap()
         let bldg_cnts = Math.floor(Math.random()*10);
         for(let i=0; i < bldg_cnts; i++ ) {
           let bldg, lbl;
@@ -72,9 +90,13 @@
         }
     });
 
-    gameState.subscribe((value) => {
-        console.log('gameState changed. new value:');
+    gameState.user.health.subscribe((value) => {
+
+        console.log('user health changed. new value:');
         console.log(value);
+        if (value === 0) {
+          goto('/deadpage');
+        }
     });
 
     const handleMouseDown = event => {
@@ -88,10 +110,17 @@
             player.move(house.x, house.y);
         }
     };
+
+    onDestroy(() =>{
+      cancelAnimaitonFrame(frame);
+    });
 </script>
 
 <svelte:window on:mousedown={handleMouseDown} />
 
 <div id="canvas">
+     <label for="time", id="time"> Survived Time: 
+       <progress value={elapsed} />
+     </label>
 
 </div>

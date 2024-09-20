@@ -3,7 +3,8 @@
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
 
-    import { gameState } from '../stores.ts';
+  import { gameState } from '../stores.ts';
+
     
 </script>
 
@@ -16,10 +17,10 @@
             <label for="health">Health:</label>
             <meter class="tw-meter-bar-slate-200 tw-meter-value-teal-500" 
                 id="health" min="0" max="100" low="20" high="80" optimum="80" value="{$gameState.user.health}">{$gameState.user.health}/100</meter>
-            <!-- <label for="energy">Energy:</label>
+            <label for="energy">Energy:</label>
             <meter class="tw-meter-bar-cyan-400 tw-meter-value-red-500" id="energy"
-                   min="0" max="100" low="20" high="80" optimum="80" value="{$gameState.user.energy.social}">{$gameState.energy.social}</meter>
-            -->
+                   min="0" max="100" low="20" high="80" optimum="80" value="{$gameState.user.energy.social}">{$gameState.user.energy.social}</meter>
+ 
 
         </div>
         <div class="flex-1 flex justify-center ml-auto">
