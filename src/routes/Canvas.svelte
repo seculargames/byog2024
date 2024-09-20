@@ -10,6 +10,9 @@
     let canvas;
     let house;
     let player;
+    let rect;
+    let labelh, labelp;
+    let buildings;
 
     onMount(() => {
         // Game timer and settings
@@ -25,9 +28,6 @@
           last_time= time;
         })();
 
-        let rect;
-        let labelh, labelp;
-        let buildings;
         let updateGameState = function(currentLocation) {
 
         }
