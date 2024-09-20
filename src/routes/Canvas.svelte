@@ -5,6 +5,7 @@
     import houseSvg from '$lib/images/house.svg?raw';
     import buildingSvg from '$lib/images/building.svg?raw';
     import walkSvg from '$lib/images/walk.svg?raw';
+    import citySvg from '$lib/images/city-map.svg?raw';
     import { browser } from '$app/environment';
   
     // Game timer and settings
@@ -32,11 +33,12 @@
     let updateGameState = function(currentLocation) {
 
     }
+
     let generateMap = function () {
-      let bldg_cnts = Math.floor(Math.random()*10);
-      let buildings;
-      // let bldg_types = $gameParams.keys();
-      for (let i=0; i< bldg_cnts; i++ ) {
+        let bldg_cnts = Math.floor(Math.random()*10);
+        let buildings;
+        // let bldg_types = $gameParams.keys();
+        for (let i=0; i< bldg_cnts; i++ ) {
         let bldg;
         bldg= {
           size: Math.floor(Math.random() * $buildingOpts.sizes.length),
@@ -45,13 +47,16 @@
         }
         console.log(buildings);
         buildings.push(bldg);
-      }
-    return buildings;
+        }
+        return buildings;
     }
 
     onMount(() => {
         canvas = SVG().addTo('#canvas').size($canvasSize.X,  $canvasSize.Y);
         rect = canvas.rect(100, 100).move(50, 50).fill('#fe0');
+        city = canvas.group();
+        city.svg(citySvg);
+        city.size(800, 600);
         house = canvas.group();
         house.svg(houseSvg);
         house.size(50);
@@ -91,7 +96,6 @@
     });
 
     gameState.user.health.subscribe((value) => {
-
         console.log('user health changed. new value:');
         console.log(value);
         if (value === 0) {
