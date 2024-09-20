@@ -25,16 +25,6 @@
     let elapsed = 0;
     let duration = 5000;
     let frame;
-    if (browser) {
-      let last_time = window.performance.now();
-      (function update() {
-        frame = requestAnimationFrame(update);
-        const time = window.performance.now();
-        elapsed += Math.min(time - last_time, duration-elapsed)
-
-        last_time= time;
-      })();
-    }
 
     let canvas;
     let rect;
@@ -44,9 +34,6 @@
     let buildings;
     let city;
 
-    let updateGameState = function(currentLocation) {
-
-    }
 
     onMount(() => {
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
