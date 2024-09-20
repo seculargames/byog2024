@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { gameState } from '../stores.ts';
+    import { gameState, canvasSize, buildingOpts } from '../stores.ts';
+    import {updateGameState} from '../engine.ts'
     import { onMount } from 'svelte';
     import { SVG } from '@svgdotjs/svg.js';
     import houseSvg from '$lib/images/house.svg?raw';
@@ -11,10 +12,26 @@
     let house;
     let player;
     let label;
-    let building, building1, building2, building3, building4;
+    let buildings;
+    let generateMap = function () {
+      let bldg_cnts = Math.floor(Math.random()*10);
+      let buildings;
+      // let bldg_types = $gameParams.keys();
+      for (let i=0; i< bldg_cnts; i++ ) {
+        let bldg;
+        bldg= {
+          size: Math.floor(Math.random() * $buildingOpts.sizes.length),
+          name: Math.floor(Math.random() * $buildingOpts.names.length),
+          poss: Math.floor(Math.random() * $buildingOpts.poss.length),
+        }
+        console.log(buildings);
+        buildings.push(bldg);
+      }
+    return buildings;
+    }
 
     onMount(() => {
-        canvas = SVG().addTo('#canvas').size(800, 600);
+        canvas = SVG().addTo('#canvas').size($canvasSize.X,  $canvasSize.Y);
         rect = canvas.rect(100, 100).move(50, 50).fill('#fe0');
         house = canvas.group();
         house.svg(houseSvg);
@@ -23,7 +40,6 @@
         canvas.add(house);
         label = canvas.text(function(add) {
             add.tspan('Home').fill('#fff');
-            /* add.tspan('Health').fill('#fff').newLine().dx(10); */
         });
 
         player = canvas.group();
@@ -38,44 +54,22 @@
         player.add(label);
         canvas.add(player);
 
-        /* Dance pub */
-        building1 = canvas.group();
-        building1.svg(buildingSvg);
-        building1.size(50);
-        label = canvas.text(function(add) {
-            add.tspan('DancePub').fill('#fff');
-        });
-        building1.move(500, 380);
-        canvas.add(building1);
-
-        /* Suicide Park */
-        building2 = canvas.group();
-        building2.svg(buildingSvg);
-        building2.size(50);
-        label = canvas.text(function(add) {
-            add.tspan('SuicidePark').fill('#fff');
-        });
-        building2.move(0, 500);
-        canvas.add(building2);
-
-
-        building3 = canvas.group();
-        building3.svg(buildingSvg);
-        building3.size(50);
-        label = canvas.text(function(add) {
-            add.tspan('Quiet Public Library').fill('#fff');
-        });
-        building3.move(300, 380);
-        canvas.add(building3);
-
-        building4 = canvas.group();
-        building4.svg(buildingSvg);
-        building4.size(50);
-        label = canvas.text(function(add) {
-            add.tspan('Scenic University').fill('#fff');
-        });
-        building4.move(400, 480);
-        canvas.add(building4); 
+        //bldgs = generateMap()
+        let bldg_cnts = Math.floor(Math.random()*10);
+        for(let i=0; i < bldg_cnts; i++ ) {
+          let bldg, lbl;
+          bldg = canvas.group();
+          bldg.svg(buildingSvg);
+          let poss;
+          poss = $buildingOpts.poss[Math.floor(Math.random() * $buildingOpts.poss.length)];
+          bldg.size($buildingOpts.sizes[Math.floor(Math.random() * $buildingOpts.sizes.length)]);
+          bldg.move(poss);
+          name = $buildingOpts.names[Math.floor(Math.random() * $buildingOpts.names.length)];
+          lbl = canvas.text(function(add) {
+            add.tspan(name).fill('#fff');
+          });
+          lbl.move(poss[0], poss[1]-20);
+        }
     });
 
     gameState.subscribe((value) => {
