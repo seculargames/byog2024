@@ -7,7 +7,6 @@
 	let paused = false;
 	let timeElapsed = 0;
 	let interval = null;
-	//$: remainingTime = timer - timeElapsed;
 	
 	onMount(() => {
 		interval = setInterval(() => {
@@ -16,10 +15,6 @@
 			}
 			timeElapsed += 1;
 
-			//:if (remainingTime === 0) {
-			//:	clearInterval(interval);
-			//:	deleteTimer();
-			//:}
 		}, 1000);
 	});
 	onDestroy(() => {
@@ -47,18 +42,5 @@
 		<div style="width: {humanReadableTime(timeElapsed)}%;"> </div>
 	</div>
 	<div>
-		<button on:click={() => paused = !paused} aria-label={paused ? "Play" : "Pause"}>
-			{#if paused} 
-				&#9658;
-			{:else}
-				&#10073;&#10073;
-			{/if}
-		</button> 
-		<button on:click={deleteTimer}>Delete</button>
 	</div>
 </div>
-<!-- 
-  <div class="progress">
-	    <div style="width: {timeElapsed / timer * 100}%;"></div>
-  </div>
--->

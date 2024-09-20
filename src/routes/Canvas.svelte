@@ -12,9 +12,12 @@
 
     import { browser } from '$app/environment';
 
+	  import {humanReadableTime} from './humanReadableTime.js';
     import Timer from './Timers.svelte';
-	  let value = '00:00:00';
+	 
+    let value = '00:00:00';
 	  let timers = [{ time: 53, id: '123' }];
+    let timeInSeconds;
 
 	  function handleAddTime(e) {
 	  	const nextValue = e.target.innerText;
@@ -40,6 +43,9 @@
 		  	time: timeInSeconds,
 		  	id: new Date().toISOString(),
 		  }];
+      if(browser) {
+       document.innerHTML += '<div class="timer"><div> <div style="width: {humanReadableTime(timeInSeconds)}%;"> </div> </div> <div> </div> </div>'; 
+      }
 		  value = '';
 	  }
 
@@ -169,8 +175,6 @@
 </style>
 
 <div id="canvas">
-     <label for="time", id="time"> Survived Time: 
-     </label>
 
   <div class="time-set">
   	<div class="time-display">
