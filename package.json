@@ -11,7 +11,8 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
-		"test:unit": "vitest"
+		"test:unit": "vitest",
+        "deploygh": "./node_modules/.bin/gh-pages -d 'build' --nojekyll"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^5.0.0",
