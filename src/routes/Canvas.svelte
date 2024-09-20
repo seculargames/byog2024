@@ -43,9 +43,6 @@
 		  	time: timeInSeconds,
 		  	id: new Date().toISOString(),
 		  }];
-      if(browser) {
-       document.innerHTML += '<div class="timer"><div> <div style="width: {humanReadableTime(timeInSeconds)}%;"> </div> </div> <div> </div> </div>'; 
-      }
 		  value = '';
 	  }
 
@@ -176,6 +173,13 @@
 
 <div id="canvas">
 
+  <div class="timer"><div> 
+  <div style="width: {humanReadableTime(timeInSeconds)}%;"> 
+
+  </div> 
+
+  </div> 
+  <div> </div> </div> 
   <div class="time-set">
   	<div class="time-display">
   		<div>
