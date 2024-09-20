@@ -1,13 +1,26 @@
-<script >
-    import { gameState, canvasSize, buildingOpts } from '../stores.ts';
+<script>
+    import { gameParams, gameState } from '../stores.ts';
     import { onMount, onDestroy } from 'svelte';
     import { SVG } from '@svgdotjs/svg.js';
     import houseSvg from '$lib/images/house.svg?raw';
     import buildingSvg from '$lib/images/building.svg?raw';
+    import buildingDomeSvg from '$lib/images/building-dome.svg?raw';
     import walkSvg from '$lib/images/walk.svg?raw';
     import citySvg from '$lib/images/city-map.svg?raw';
+    import parkSvg from '$lib/images/park.svg?raw';
+    import discoSvg from '$lib/images/disco.svg?raw';
+
     import { browser } from '$app/environment';
   
+    const buildingIconMap = {
+        'building.svg': buildingSvg,
+        'building-dome.svg': buildingDomeSvg,
+        'house.svg': houseSvg,
+        'walk.svg': walkSvg,
+        'park.svg': parkSvg,
+        'disco.svg': discoSvg
+    }
+
     // Game timer and settings
     let elapsed = 0;
     let duration = 5000;
@@ -15,7 +28,7 @@
     if (browser) {
       let last_time = window.performance.now();
       (function update() {
-        //frame = requestAnimationFrame(update);
+        frame = requestAnimationFrame(update);
         const time = window.performance.now();
         elapsed += Math.min(time - last_time, duration-elapsed)
 
@@ -29,73 +42,48 @@
     let player;
     let labelh, labelp;
     let buildings;
+    let city;
 
     let updateGameState = function(currentLocation) {
 
     }
 
-    let generateMap = function () {
-        let bldg_cnts = Math.floor(Math.random()*10);
-        let buildings;
-        // let bldg_types = $gameParams.keys();
-        for (let i=0; i< bldg_cnts; i++ ) {
-        let bldg;
-        bldg= {
-          size: Math.floor(Math.random() * $buildingOpts.sizes.length),
-          name: Math.floor(Math.random() * $buildingOpts.names.length),
-          poss: Math.floor(Math.random() * $buildingOpts.poss.length),
-        }
-        console.log(buildings);
-        buildings.push(bldg);
-        }
-        return buildings;
-    }
-
     onMount(() => {
-        canvas = SVG().addTo('#canvas').size($canvasSize.X,  $canvasSize.Y);
+        canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
         rect = canvas.rect(100, 100).move(50, 50).fill('#fe0');
         city = canvas.group();
         city.svg(citySvg);
+        city.move(0, 0);
         city.size(800, 600);
-        house = canvas.group();
-        house.svg(houseSvg);
-        house.size(50);
-        house.move(400, 300);
-        canvas.add(house);
-        labelh = canvas.text(function(add) {
-            add.tspan('Home').fill('#fff');
-        });
-
-        player = canvas.group();
-        player.svg(walkSvg);
-        player.size(30);
-        player.move(400, 300);
-
-        labelp = canvas.text(function(add) {
-            add.tspan('Player').fill('#fff');
-        });
-        labelp.move(400, 280);
-        player.add(labelp);
-        canvas.add(player);
-
-        let bldg_cnts = Math.floor(Math.random()*10);
-        for(let i=0; i < bldg_cnts; i++ ) {
-          let bldg, lbl;
-          bldg = canvas.group();
-          bldg.svg(buildingSvg);
-          let poss;
-          poss = $buildingOpts.poss[Math.floor(Math.random() * $buildingOpts.poss.length)];
-          bldg.size($buildingOpts.sizes[Math.floor(Math.random() * $buildingOpts.sizes.length)]);
-          bldg.move(poss);
-          name = $buildingOpts.names[Math.floor(Math.random() * $buildingOpts.names.length)];
-          lbl = canvas.text(function(add) {
-            add.tspan(name).fill('#fff');
-          });
-          lbl.move(poss[0], poss[1]-20);
+        canvas.add(city);
+        
+        for (const loc in $gameParams.locations) {
+            const location = $gameParams.locations[loc];
+            const svg = buildingIconMap[location.icon];
+           
+            const group = canvas.group();
+            group.svg(svg);
+            if ('dimensions' in location) {
+                group.size(location.dimensions.width, location.dimensions.height);
+            } else {
+                group.size($gameParams.defaults.buildingDimensions.width, $gameParams.defaults.buildingDimensions.height); 
+            }
+            const label = canvas.text(function(add) {
+                add.tspan(location.label);
+            });
+            const buildingPositions = $gameParams.defaults.buildingPositions;
+            const position = buildingPositions.at(Math.floor(Math.random()*buildingPositions.length));
+            group.move(position[0], position[1]);
+            label.move(position[0], position[1]-20);
+            group.add(label);
+            canvas.add(group);
+            if (location.label == 'Home') {
+                house = group;
+            }
         }
     });
 
-    gameState.user.health.subscribe((value) => {
+    gameState.subscribe((value) => {
         console.log('user health changed. new value:');
         console.log(value);
         if (value === 0) {
@@ -116,7 +104,7 @@
     };
 
     onDestroy(() =>{
-      cancelAnimaitonFrame(frame);
+      /* cancelAnimationFrame(frame); */
     });
 </script>
 
