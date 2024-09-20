@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { gameParams, gameState } from '../stores.ts';
     import { onMount, onDestroy } from 'svelte';
     import { SVG } from '@svgdotjs/svg.js';
@@ -11,7 +11,42 @@
     import discoSvg from '$lib/images/disco.svg?raw';
 
     import { browser } from '$app/environment';
-  
+
+    import Timer from './Timers.svelte';
+	  let value = '00:00:00';
+	  let timers = [{ time: 53, id: '123' }];
+
+	  function handleAddTime(e) {
+	  	const nextValue = e.target.innerText;
+	  	if (nextValue === '0' && value.length === 0 || value.length === 6) {
+	  			return;
+	  	}
+	  	value += nextValue;
+	  }
+	  function handleDeleteLastValue() {
+	  	value = value.substr(0, value.length - 1);
+	  }
+	  function reverseString(str) {
+	  	return str.split('').reverse().join('');
+	  }
+
+    $: valueReversed = reverseString(value);
+    $: seconds = reverseString(valueReversed.substr(0,2));
+    $: minutes = reverseString(valueReversed.substr(2,2));
+    $: hours = reverseString(valueReversed.substr(4,2));
+    function handleStartTimer() {
+		  const timeInSeconds = Number(seconds) + (Number(minutes) * 60) + (Number(hours) * 60 * 60);
+		  timers = [...timers, {
+		  	time: timeInSeconds,
+		  	id: new Date().toISOString(),
+		  }];
+		  value = '';
+	  }
+
+	  function deleteTimer(id) {
+	  	timers = timers.filter(t => t.id !== id);
+	  }
+
     const buildingIconMap = {
         'building.svg': buildingSvg,
         'building-dome.svg': buildingDomeSvg,
@@ -36,6 +71,10 @@
 
 
     onMount(() => {
+        if (browser){
+          window.onload = handleStartTimer();
+
+        }
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
         rect = canvas.rect(100, 100).move(50, 50).fill('#fe0');
         city = canvas.group();
@@ -43,11 +82,11 @@
         city.move(0, 0);
         city.size(800, 600);
         canvas.add(city);
-        
+
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
-           
+
             const group = canvas.group();
             group.svg(svg);
             if ('dimensions' in location) {
@@ -92,14 +131,59 @@
 
     onDestroy(() =>{
       /* cancelAnimationFrame(frame); */
+      timers.forEach(function(timer) {
+        deleteTimer(timer);
+      });
     });
 </script>
 
 <svelte:window on:mousedown={handleMouseDown} />
+<style>
+ .buttons {
+ 	display: grid;
+ 	width: 280px;
+ 	margin: 0 auto;
+ 	grid-template-columns: 1fr 1fr 1fr;
+ 	grid-gap: 8px;
+ }
+ .buttons button {
+ 	margin: 0;
+ }
+ .time-set {
+ 	width: 280px;
+ 	margin: 0 auto;
+ 	display: flex;
+ 	justify-content: space-between;
+ }
+ .time-display {
+ 	width: 100%;
+ 	display: grid;
+ 	grid-template-columns: 1fr 1fr 1fr;
+ 	text-align: right;
+ 	font-size: 20px;
+ }
+ .time-display span {
+ 	font-size: 12px;
+ 	color: #696969;
+ }
+</style>
 
 <div id="canvas">
      <label for="time", id="time"> Survived Time: 
-       <progress value={elapsed} />
      </label>
+
+  <div class="time-set">
+  	<div class="time-display">
+  		<div>
+  			{hours}<span>h</span>
+  		</div>
+  		<div>
+  			{minutes}<span>m</span>
+  		</div>
+  		<div>
+  			{seconds}<span>s</span>
+      </div>
+  	</div>
+  </div> 
 
 </div>
