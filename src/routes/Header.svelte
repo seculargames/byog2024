@@ -1,7 +1,10 @@
-<script>
+<script lang="ts">
 	import { page } from '$app/stores';
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
+
+    import { gameState } from '../stores.ts';
+    
 </script>
 
 <header>
@@ -9,36 +12,30 @@
         <div class="flex-1 flex justify-center mr-auto">
             This is the navbar
         </div>
-        <div class="mx-12">Logo</div>
+        <div class="mx-12">
+            <label for="health">Health:</label>
+            <meter class="tw-meter-bar-slate-200 tw-meter-value-teal-500" 
+                id="health" min="0" max="100" low="20" high="80" optimum="80" value="{$gameState.health}">{$gameState.health}/100</meter>
+            <label for="energy">Energy:</label>
+            <meter class="tw-meter-bar-cyan-400 tw-meter-value-red-500" id="energy"
+                   min="0" max="100" low="20" high="80" optimum="80" value="{$gameState.energy.social}">{$gameState.energy.social}</meter>
+        </div>
         <div class="flex-1 flex justify-center ml-auto">
-            This is right side
+            <label for="warning">Alert Level:</label>
+            <meter class="tw-meter-bar-blue-300 tw-meter-value-red-300" id="warning"
+                   min="0" max="100" low="10" high="60" optimum="15" value="{$gameState.alertLevel}">{$gameState.alertLevel}</meter>
         </div>
     </nav>
 </header>
 
-<style>
+<style lang="scss">
 	header {
 		display: flex;
 		justify-content: space-between;
-	}
 
-	.corner {
-		width: 3em;
-		height: 3em;
-	}
-
-	.corner a {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 100%;
-		height: 100%;
-	}
-
-	.corner img {
-		width: 2em;
-		height: 2em;
-		object-fit: contain;
+        label: {
+            color: white;
+        }
 	}
 
 	nav {
@@ -53,55 +50,12 @@
 		display: block;
 	}
 
+    meter {
+        border-radius: 10px;
+        width: 100px;
+    }
+
 	path {
 		fill: var(--background);
-	}
-
-	ul {
-		position: relative;
-		padding: 0;
-		margin: 0;
-		height: 3em;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		list-style: none;
-		background: var(--background);
-		background-size: contain;
-	}
-
-	li {
-		position: relative;
-		height: 100%;
-	}
-
-	li[aria-current='page']::before {
-		--size: 6px;
-		content: '';
-		width: 0;
-		height: 0;
-		position: absolute;
-		top: 0;
-		left: calc(50% - var(--size));
-		border: var(--size) solid transparent;
-		border-top: var(--size) solid var(--color-theme-1);
-	}
-
-	nav a {
-		display: flex;
-		height: 100%;
-		align-items: center;
-		padding: 0 0.5rem;
-		color: var(--color-text);
-		font-weight: 700;
-		font-size: 0.8rem;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		text-decoration: none;
-		transition: color 0.2s linear;
-	}
-
-	a:hover {
-		color: var(--color-theme-1);
 	}
 </style>
