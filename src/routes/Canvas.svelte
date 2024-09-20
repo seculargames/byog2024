@@ -7,50 +7,51 @@
     import walkSvg from '$lib/images/walk.svg?raw';
     import { browser } from '$app/environment';
   
-    // Game timer and settings
-    let elapsed = 0;
-    let duration = 5000;
-    let frame;
-    if (browser) {
-      let last_time = window.performance.now();
-      (function update() {
-        //frame = requestAnimationFrame(update);
-        const time = window.performance.now();
-        elapsed += Math.min(time - last_time, duration-elapsed)
-
-        last_time= time;
-      })();
-    }
-
     let canvas;
-    let rect;
     let house;
     let player;
-    let labelh, labelp;
-    let buildings;
-
-    let updateGameState = function(currentLocation) {
-
-    }
-    let generateMap = function () {
-      let bldg_cnts = Math.floor(Math.random()*10);
-      let buildings;
-      // let bldg_types = $gameParams.keys();
-      for (let i=0; i< bldg_cnts; i++ ) {
-        let bldg;
-        bldg= {
-          size: Math.floor(Math.random() * $buildingOpts.sizes.length),
-          name: Math.floor(Math.random() * $buildingOpts.names.length),
-          poss: Math.floor(Math.random() * $buildingOpts.poss.length),
-        }
-        console.log(buildings);
-        buildings.push(bldg);
-      }
-    return buildings;
-    }
 
     onMount(() => {
+        // Game timer and settings
+        let elapsed = 0;
+        let duration = 5000;
+        let frame;
+        let last_time = window.performance.now();
+        (function update() {
+          //frame = requestAnimationFrame(update);
+          const time = window.performance.now();
+          elapsed += Math.min(time - last_time, duration-elapsed)
+
+          last_time= time;
+        })();
+
+        let rect;
+        let labelh, labelp;
+        let buildings;
+        let updateGameState = function(currentLocation) {
+
+        }
+        let generateMap = function () {
+          let bldg_cnts = Math.floor(Math.random()*10);
+          let buildings;
+          // let bldg_types = $gameParams.keys();
+          for (let i=0; i< bldg_cnts; i++ ) {
+            let bldg;
+            bldg= {
+              size: Math.floor(Math.random() * $buildingOpts.sizes.length),
+              name: Math.floor(Math.random() * $buildingOpts.names.length),
+              poss: Math.floor(Math.random() * $buildingOpts.poss.length),
+            }
+            console.log(buildings);
+            buildings.push(bldg);
+          }
+        return buildings;
+        }
+
         canvas = SVG().addTo('#canvas').size($canvasSize.X,  $canvasSize.Y);
+        timer = canvas.group();
+        timer.innerHTML += '<div id="timer"> <label for="time", id="time"> Survived Time: <progress value={elapsed} /> </label> </div> '
+        header = canvas.add(timer)
         rect = canvas.rect(100, 100).move(50, 50).fill('#fe0');
         house = canvas.group();
         house.svg(houseSvg);
@@ -90,11 +91,12 @@
         }
     });
 
-    gameState.user.health.subscribe((value) => {
+    gameState.subscribe((value) => {
 
         console.log('user health changed. new value:');
         console.log(value);
-        if (value === 0) {
+        let health=value.user.health;
+        if (health=== 0) {
           goto('/deadpage');
         }
     });
@@ -112,15 +114,9 @@
     };
 
     onDestroy(() =>{
-      cancelAnimaitonFrame(frame);
+      // cancelAnimationFrame(frame);
     });
 </script>
 
 <svelte:window on:mousedown={handleMouseDown} />
 
-<div id="canvas">
-     <label for="time", id="time"> Survived Time: 
-       <progress value={elapsed} />
-     </label>
-
-</div>
