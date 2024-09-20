@@ -18,7 +18,7 @@ const config = {
             fallback: '404.html'
         }),
         paths: {
-            base: ('NODE_ENV' in process.env && process.env.NODE_ENV == 'development') ? '/' : process.env.BASE_PATH
+            base: ('NODE_ENV' in process.env && process.env.NODE_ENV == 'development') ? '' : process.env.BASE_PATH
         }
 	}
 };
