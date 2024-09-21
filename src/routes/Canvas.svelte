@@ -15,12 +15,12 @@
 	  import {humanReadableTime} from './humanReadableTime.js';
 	 
     let paused = null;
-    window.document.timeElapsed = 1;
 	  function reverseString(str) {
 	  	return str.split('').reverse().join('');
 	  }
 
     function handleStartTimer() {
+      window.document.timeElapsed = 1;
 		  let timer = setInterval(() => {
 		  	if(paused) {
 		  		return;
