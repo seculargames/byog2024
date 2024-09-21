@@ -140,35 +140,6 @@
 </script>
 
 <svelte:window on:mousedown={handleMouseDown} />
-<style>
- .buttons {
- 	display: grid;
- 	width: 280px;
- 	margin: 0 auto;
- 	grid-template-columns: 1fr 1fr 1fr;
- 	grid-gap: 8px;
- }
- .buttons button {
- 	margin: 0;
- }
- .time-set {
- 	width: 280px;
- 	margin: 0 auto;
- 	display: flex;
- 	justify-content: space-between;
- }
- .time-display {
- 	width: 100%;
- 	display: grid;
- 	grid-template-columns: 1fr 1fr 1fr;
- 	text-align: right;
- 	font-size: 20px;
- }
- .time-display span {
- 	font-size: 12px;
- 	color: #696969;
- }
-</style>
 
 {#each Object.entries($gameParams.locations) as [key, location]}
     {#if 'menu' in location}

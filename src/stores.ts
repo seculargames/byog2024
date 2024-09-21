@@ -152,16 +152,18 @@ export const gameState = writable({
             interest_centered: 100,
             hyper_focus: 100,
             no_social_cues: 100,
+            mirror_neuron_centered: 80,
 
           },
           gender: {
-            conform: 100,
-            stereotyped_weak: 100,
-            stereotyped_emo: 100,
+            agab_conform: 0,
+            stereotyped_weak: 50,
+            stereotyped_emo: 90,
 
 
           },
           sexuality: {
+            het_conform: 10,
 
           },
           alertLevel: 40
