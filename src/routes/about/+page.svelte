@@ -1,5 +1,5 @@
 <script>
-    import Wheel from '$lib/components/Wheel.svelte';
+    //import Wheel from '$lib/components/Wheel.svelte';
 
 </script>
 

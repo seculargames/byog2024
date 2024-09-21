@@ -13,22 +13,11 @@
     import { browser } from '$app/environment';
 
 	  import {humanReadableTime} from './humanReadableTime.js';
-	 
-    let paused = null;
-	  function reverseString(str) {
-	  	return str.split('').reverse().join('');
-	  }
 
-    function handleStartTimer() {
-      window.document.timeElapsed = 1;
-		  let timer = setInterval(() => {
-		  	if(paused) {
-		  		return;
-		  	}
-		  	window.document.timeElapsed += 1;
 
-		  }, 1000);
-	  }
+    function updatePlayerStats() {
+
+    }
 
     const buildingIconMap = {
         'building.svg': buildingSvg,
@@ -55,7 +44,7 @@
 
     onMount(() => {
         if (browser){
-          window.onload = handleStartTimer();
+          window.onload = updatePlayerStats();
 
         }
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
@@ -146,23 +135,5 @@
 </style>
 
 <div id="canvas">
-
-  <div class="timer"><div> 
-  <div id="survivedTime" style="width: document.timeElapsed%;"> 
-
-  </div> 
-
-  </div> 
-  <div> </div> </div> 
-  <div class="time-set">
-  	<div class="time-display">
-  		<div>
-  		</div>
-  		<div>
-  		</div>
-  		<div>
-      </div>
-  	</div>
-  </div> 
 
 </div>
