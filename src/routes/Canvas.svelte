@@ -73,8 +73,8 @@
         city.size(800, 600);
         canvas.add(city);
         
-        rect = canvas.rect(100, 100).move(50, 50).fill('#fe0');
-        rect.animate(500, 'bounce').move(300, 300);
+        //rect = canvas.rect(100, 100).move(50, 50).fill('#fe0');
+        //rect.animate(500, 'bounce').move(300, 300);
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
