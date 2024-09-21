@@ -13,41 +13,21 @@
     import { browser } from '$app/environment';
 
 	  import {humanReadableTime} from './humanReadableTime.js';
-    import Timer from './Timers.svelte';
 	 
-    let value = '00:00:00';
-	  let timers = [{ time: 53, id: '123' }];
-    let timeInSeconds;
-
-	  function handleAddTime(e) {
-	  	const nextValue = e.target.innerText;
-	  	if (nextValue === '0' && value.length === 0 || value.length === 6) {
-	  			return;
-	  	}
-	  	value += nextValue;
-	  }
-	  function handleDeleteLastValue() {
-	  	value = value.substr(0, value.length - 1);
-	  }
+    let paused = null;
+    window.document.timeElapsed = 1;
 	  function reverseString(str) {
 	  	return str.split('').reverse().join('');
 	  }
 
-    $: valueReversed = reverseString(value);
-    $: seconds = reverseString(valueReversed.substr(0,2));
-    $: minutes = reverseString(valueReversed.substr(2,2));
-    $: hours = reverseString(valueReversed.substr(4,2));
     function handleStartTimer() {
-		  const timeInSeconds = Number(seconds) + (Number(minutes) * 60) + (Number(hours) * 60 * 60);
-		  timers = [...timers, {
-		  	time: timeInSeconds,
-		  	id: new Date().toISOString(),
-		  }];
-		  value = '';
-	  }
+		  let timer = setInterval(() => {
+		  	if(paused) {
+		  		return;
+		  	}
+		  	window.document.timeElapsed += 1;
 
-	  function deleteTimer(id) {
-	  	timers = timers.filter(t => t.id !== id);
+		  }, 1000);
 	  }
 
     const buildingIconMap = {
@@ -132,12 +112,6 @@
         }
     };
 
-    onDestroy(() =>{
-      /* cancelAnimationFrame(frame); */
-      timers.forEach(function(timer) {
-        deleteTimer(timer);
-      });
-    });
 </script>
 
 <svelte:window on:mousedown={handleMouseDown} />
@@ -174,7 +148,7 @@
 <div id="canvas">
 
   <div class="timer"><div> 
-  <div style="width: {humanReadableTime(timeInSeconds)}%;"> 
+  <div id="survivedTime" style="width: document.timeElapsed%;"> 
 
   </div> 
 
@@ -183,13 +157,10 @@
   <div class="time-set">
   	<div class="time-display">
   		<div>
-  			{hours}<span>h</span>
   		</div>
   		<div>
-  			{minutes}<span>m</span>
   		</div>
   		<div>
-  			{seconds}<span>s</span>
       </div>
   	</div>
   </div> 
