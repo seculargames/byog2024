@@ -3,15 +3,37 @@
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
 
+  import { onMount, onDestroy } from 'svelte';
   import { gameState } from '../stores.ts';
+  import { browser } from '$app/environment';
+  import {humanReadableTime} from './humanReadableTime.js';
+  let paused = null;
+  let timeElapsed = 1;
 
-    
+  function handleStartTimer() {
+    let timer = setInterval(() => {
+      if(paused) {
+        return;
+      }
+      timeElapsed += 1;
+      window.document.getElementById('survivedTime').innerHTML= humanReadableTime(timeElapsed);
+    }, 1000);
+  }
+  onMount(() => {
+    if (browser){
+      window.onload = handleStartTimer();
+    }
+  });
+
 </script>
 
 <header>
     <nav class="flex fixed w-screen">
         <div class="flex-1 flex justify-center mr-auto">
-            This is the navbar
+          <div id="survivedTime" style="width: {humanReadableTime(timeElapsed)}%;"> 
+
+          </div>
+
         </div>
         <div class="mx-12">
             <label for="health">Health:</label>

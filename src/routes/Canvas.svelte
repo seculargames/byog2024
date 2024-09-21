@@ -12,6 +12,9 @@
     import personSvg from '$lib/images/person.svg?raw';
     import Menu from '$lib/components/Menu.svelte';
     import { browser } from '$app/environment';
+
+	  import {humanReadableTime} from './humanReadableTime.js';
+
     import { initFlowbite } from 'flowbite';
     import { goto } from '$app/navigation';
     import { Button, Modal } from 'flowbite-svelte';
@@ -38,16 +41,6 @@
     let elapsed = 0;
     let duration = 5000;
     let frame;
-    if (browser) {
-      let last_time = window.performance.now();
-      (function update() {
-        frame = requestAnimationFrame(update);
-        const time = window.performance.now();
-        elapsed += Math.min(time - last_time, duration-elapsed)
-
-        last_time= time;
-      })();
-    }
 
     let canvas;
     let rect;
@@ -57,11 +50,14 @@
     let buildings;
     let city;
 
-    let updateGameState = function(currentLocation) {
 
+    function updatePlayerStats() {
     }
-
     onMount(() => {
+        if (browser){
+          window.onload = updatePlayerStats();
+
+        }
         //const flowbite = await import('flowbite');
         initFlowbite();
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
@@ -78,7 +74,7 @@
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
-           
+
             const group = canvas.group();
             group.svg(svg);
             if ('dimensions' in location) {
@@ -141,12 +137,38 @@
         }
     };
 
-    onDestroy(() =>{
-      /* cancelAnimationFrame(frame); */
-    });
 </script>
 
 <svelte:window on:mousedown={handleMouseDown} />
+<style>
+ .buttons {
+ 	display: grid;
+ 	width: 280px;
+ 	margin: 0 auto;
+ 	grid-template-columns: 1fr 1fr 1fr;
+ 	grid-gap: 8px;
+ }
+ .buttons button {
+ 	margin: 0;
+ }
+ .time-set {
+ 	width: 280px;
+ 	margin: 0 auto;
+ 	display: flex;
+ 	justify-content: space-between;
+ }
+ .time-display {
+ 	width: 100%;
+ 	display: grid;
+ 	grid-template-columns: 1fr 1fr 1fr;
+ 	text-align: right;
+ 	font-size: 20px;
+ }
+ .time-display span {
+ 	font-size: 12px;
+ 	color: #696969;
+ }
+</style>
 
 {#each Object.entries($gameParams.locations) as [key, location]}
     {#if 'menu' in location}
@@ -162,9 +184,7 @@
 {/each}
 
 <div id="canvas">
-     <label for="time" id="time"> Survived Time: 
-       <progress value={elapsed} />
-     </label>
+
 </div>
 
 <style lang="scss">
