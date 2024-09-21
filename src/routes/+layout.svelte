@@ -1,12 +1,13 @@
 <script>
 	import Header from './Header.svelte';
 	import '../app.css';
+    import 'flowbite';
 </script>
 
-<div class="app">
+<div class="app container mx-auto">
 	<Header></Header>
 
-	<main>
+	<main role="main" class="w-full sm:w-2/3 md:w-3/4 pt-1 px-2">
 		<slot></slot>
 	</main>
 
