@@ -6,7 +6,9 @@ import flowbite from 'flowbite/plugin';
 export default {
 	content: [
         './src/**/*.{html,js,svelte,ts}',
-        './node_modules/flowbite/**/*.{js,html,svelte,ts}'    
+        './node_modules/flowbite/**/*.{js,html,svelte,ts}',
+        './node_modules/flowbite-svelte-icons/**/*.{js,html,svelte,ts}',
+        './node_modules/flowbite-svelte/**/*.{js,html,svelte,ts}'
     ],
     darkMode: 'class',
 	theme: {

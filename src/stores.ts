@@ -1,4 +1,7 @@
 import { writable,readable } from "svelte/store";
+import { persisted } from 'svelte-persisted-store';
+
+export const loading = writable(true);
 
 export const gameParams = readable({
     defaults: {
@@ -17,7 +20,21 @@ export const gameParams = readable({
             [300, 200],
             [400, 200],
             [500, 200],
-            [600, 200]
+            [600, 200],
+            [100, 400],
+            [200, 400],
+            [300, 400],
+            [400, 400],
+            [500, 400],
+            [600, 400],
+            [700, 400],
+            [100, 500],
+            [200, 500],
+            [300, 500],
+            [400, 500],
+            [500, 500],
+            [600, 500],
+            [700, 500],
         ],
         player: {
             dimensions: {
@@ -26,12 +43,54 @@ export const gameParams = readable({
             }
         }
     },
+    headlines: [
+        "The city's mayor declares an emergency, 2 men spotted holding hands in Sucidie Park!",
+        "Climate change is a hoax! Claims new AI chat bot",
+        "Spaceship explodes while trying to re-enter earth orbit. Space is too crowded now for safe travel!",
+        "AI has caught at least 20 protestors in Rio De Janeiro, before they could even think about protesting",
+    ],
     board: {
         width: 850,
         height: 650,
     },
+    attributes: {
+        health: "Health",
+        loneliness: "How isolated the player is",
+        alertness: "How alert they are",
+        energy: {
+            social: "Social Energy",
+            weird: "Weird Energy",
+            restless: "Restless Energy"
+        },
+        neuro: {
+            interest: "Interest Based",
+            hyperfocused: "Hyper-focused",
+            social: "No awareness of social cues"
+        },
+        gender: {
+            conform: "Conforming to Assigned Gender",
+            weak: "Stereotyped Weak",
+            emo: "Stereotyped Emo"
+        },
+        sexuality: {
+            hetero: "Attracted to opposite gender",
+            homo: "Attracted to same-sex gender",
+            asexual: "Not attracted to any genders"
+        },
+        social: {
+            listener: "Good listener",
+            talker: "Good Talker",
+            asocial: "Asocial"
+        },
+        leadership: {
+            leader: 'Being a Leader',
+            follower: 'Being a follower',
+            ownway: 'Go your own way'
+        }
+    },
     locations: {
         university: {
+            key: "university",
             icon: "building-dome.svg",
             label: "University",
             drain_rate: {
@@ -46,17 +105,28 @@ export const gameParams = readable({
                     guest_lecture: {
                         title: "Guest Lecture",
                         description: "A guest lecture by a visiting professoor of sociology",
-                        duration: "2h",
+                        duration: "2 h",
+                        effect: {
+                            alertness: 10,
+                            health: 0,
+                            energy: -5
+                        }
                     },
                     cafetira: {
                         title: "Hangout at the cafeteria",
                         description: "Spend time with students and faculty at their favourite coffee and snack space",
-                        duration: "2h"
+                        duration: "2 h",
+                        effect: {
+                            alertness: -2,
+                            health: 0,
+                            energy: 5
+                        }
                     }
                 }
             }
         },
         home: {
+            key: "home",
             icon: "house.svg",
             label: "Home",
             drain_rate: {
@@ -71,12 +141,32 @@ export const gameParams = readable({
                     sleep: {
                         title: "Sleep for 4 hours",
                         description: "Get a good power nap going",
-                        duration: "4h"
+                        duration: "4 h",
+                        effect: {
+                            alertness: 10,
+                            health: 10,
+                            energy: {
+                                social: -5,
+                                weird: 5,
+                                restless: 5
+                            }
+                        }
+                    },
+                    sleep8: {
+                        title: "Sleep for 8 hours",
+                        description: "Get a full night's sleep",
+                        duration: "8 h",
+                        effect: {
+                            alertness: 25,
+                            health: 25,
+                            energy: 25
+                        }
                     }
                 }
             }
         },
         library: {
+            key: "library",
             icon: "building.svg",
             label: "Library",
             drain_rate: {
@@ -91,12 +181,18 @@ export const gameParams = readable({
                     read: {
                         title: "Spend time reading a book",
                         description: "Read a book and maybe get a coffee along with it",
-                        duration: "2h"
+                        duration: "2 h",
+                        effect: {
+                            alertness: 5,
+                            health: 0,
+                            energy: -5
+                        }
                     }
                 }
             }
         },
         suicide_park: {
+            key: "suicide_park",
             icon: "park.svg",
             label: "Suicide Park",
             drain_rate: {
@@ -111,12 +207,28 @@ export const gameParams = readable({
                     rescue: {
                         title: "Rescue someone",
                         description: "Save someone on the brink of ending their life",
-                        duration: "2h",
+                        duration: "1 h",
+                        effect: {
+                            alertness: -5,
+                            health: -5,
+                            energy: -5
+                        }
+                    },
+                    conversation: {
+                        title: "Talk to someone",
+                        description: "The park despite it's name and reputation is quite popular as a place of solace for many",
+                        duration: "2 h",
+                        effect: {
+                            alertness: -5,
+                            health: 1,
+                            energy: 2
+                        }
                     }
                 }
             }
         },
         dance: {
+            key: "dance",
             icon: "disco.svg",
             label: "Dance Pub",
             drain_rate: {
@@ -129,9 +241,24 @@ export const gameParams = readable({
                 description: "A popular local place where people go to hangout, get drunk and dance",
                 choices: {
                     dance: {
-                        title: "Get down!",
-                        description: "Spend a few hours letting your hair loose",
-                        duration: "2h"
+                        title: "Go dancing!",
+                        description: "Spend a couple of hours letting your hair loose",
+                        duration: "2 h",
+                        effect: {
+                            alertness: -10,
+                            health: 5,
+                            energy: 5 
+                        }
+                    },
+                    drink: {
+                        title: "Consume some alcohol",
+                        description: "Get a few drinks",
+                        duration: "2 h",
+                        effect: {
+                            alertness: -10,
+                            health: -10,
+                            energy: 10
+                        }
                     }
                 }
             }
@@ -139,9 +266,12 @@ export const gameParams = readable({
     }
 })
 
-export const gameState = writable({
-
-  user: { id: "100",
+export const gameState = persisted('gameState', {
+    state: 'init',
+    time: 0,
+    map: {},
+    user: { 
+          id: "100",
           name: 'nands',
           health: 50,
           energy: {
@@ -149,26 +279,32 @@ export const gameState = writable({
               weird: 100,
           },
           neuro: {
-            interest_centered: 100,
-            hyper_focus: 100,
-            no_social_cues: 100,
-            mirror_neuron_centered: 80,
-
+            interest: 100,
+            hyperfocused: 100,
+            social: 100,
           },
           gender: {
-            agab_conform: 0,
-            stereotyped_weak: 50,
-            stereotyped_emo: 90,
-
-
+            conform: 100,
+            weak: 100,
+            emo: 100,
           },
           sexuality: {
-            het_conform: 10,
-
+            hetero: 0,
+            homo: 0,
+            pan: 0
+          },
+          social: {
+            listener: 0,
+            talker: 0,
+            asocial: 0
+          },
+          leadership: {
+            leader: 0,
+            follower: 0,
+            ownway: 0
           },
           alertLevel: 40
   },
-
 });
 
 export const generateMap = function () {
@@ -186,5 +322,5 @@ export const generateMap = function () {
 
     buildings[i] = bldg;
   }
-return buildings;
+  return buildings;
 }

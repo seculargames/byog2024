@@ -1,0 +1,9 @@
+{
+    "iconMap": {
+        "home": "house.svg",
+        "dance": "building.svg",
+        "library": "building.svg",
+        "university": "building.svg",
+        "suicide": ""
+    }
+}

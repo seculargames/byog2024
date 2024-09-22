@@ -3,7 +3,7 @@
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
     import { gameState } from '../stores.ts';
-    import Canvas from './Canvas.svelte';
+    import Canvas from '$lib/components/Canvas.svelte';
 
 </script>
 

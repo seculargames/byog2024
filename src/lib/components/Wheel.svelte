@@ -1,13 +1,19 @@
-<script lang="js">
+<script lang="ts">
     import { onMount } from 'svelte';
+    import { Button, Modal } from 'flowbite-svelte';
+
+    export let buttonLabel = "";
+    export let modalLabel = "";
+    export let triad = [];
+    export let values = [];
 
     let colorWheel;
     let p;
     let canvas;
     let canvasClone;
-
+    let hide = false;
     let colorPoints = [];
-
+    let openModal = false;
 // from this Stackoverflow answer - https://stackoverflow.com/questions/46214072/color-wheel-picker-canvas-javascript
 /**
  * degreesToRadians
@@ -86,15 +92,55 @@ function generateColorWheel(size, centerColor) {
         //Draw carved-put piece on main canvas
         ctx.drawImage(canvasClone, 0, 0);
     }
+    const canvasHtml = document.getElementById("canvas");
+    for (const i in triad) {
+        console.log(triad[i]);
+        render_html_to_canvas(`<p class="text-base text-white">${triad[i]}</p>`, ctx, 100, 100, 20, 20);
+    }
     //return main canvas
     //return canvas;
 }
+
+function render_html_to_canvas(html, ctx, x, y, width, height) {
+    var xml = html_to_xml(html);
+    xml = xml.replace(/\#/g, '%23');
+    var data = "data:image/svg+xml;charset=utf-8,"+'<svg xmlns="http://www.w3.org/2000/svg" width="'+width+'" height="'+height+'">' +
+                        '<foreignObject width="100%" height="100%">' +
+                        xml+
+                        '</foreignObject>' +
+                        '</svg>';
+
+    var img = new Image();
+    img.onload = function () {
+        ctx.drawImage(img, x, y);
+    }
+    img.src = data;
+}
+
+function html_to_xml(html) {
+    var doc = document.implementation.createHTMLDocument('');
+    doc.write(html);
+
+    // You must manually set the xmlns if you intend to immediately serialize
+    // the HTML document to a string as opposed to appending it to a
+    // <foreignObject> in the DOM
+    doc.documentElement.setAttribute('xmlns', doc.documentElement.namespaceURI);
+
+    // Get well-formed markup
+    html = (new XMLSerializer).serializeToString(doc.body);
+    return html;
+}
+
 //TEST
 //Get color wheel canvas
 onMount(async () => {
-    generateColorWheel(320);
+    console.log("Inside Wheel.svelte's onMount call");
+    generateColorWheel(320, 'black');
 });
 
+    function handleMessage(evt) {
+        //generateColorWheel(320);
+    }
 //Add color wheel canvas to document
 //Add ouput field
 /**
@@ -110,15 +156,24 @@ function colorWheelMouse(evt) {
 }
 //Bind mouse event
 
+function colorWheelClick(evt) {
+    values = colorPoints;
+}
+
 </script>
 
-<canvas bind:this={canvas} width={320} height={320} on:mousemove={colorWheelMouse} />
+<!-- <Button on:click={toggleHide}>{buttonLabel}</Button> -->
+<!--    <Modal color="black" title={modalLabel} bind:open={openModal} on:open={handleMessage} autoclose> -->
+<canvas id="canvas" bind:this={canvas} width={320} height={320} on:mousemove={colorWheelMouse} on:click={colorWheelClick} />
 <canvas id="clone" bind:this={canvasClone} width={320} height={320} />
 <p bind:this={p}>
     {#if colorPoints.length > 0 }
-    RGB: {colorPoints[0]},{colorPoints[1]},{colorPoints[2]}
+        {#each colorPoints as pt, i }
+            <p class="text-base bg-dark text-white">{triad[i]}:{pt}</p>
+        {/each}
     {/if}
 </p>
+<!-- </Modal> -->
 
 <style>
     p {

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameParams, gameState } from '../stores.ts';
+    import { gameParams, gameState, loading } from '../../stores.ts';
     import { onMount, onDestroy } from 'svelte';
     import { SVG } from '@svgdotjs/svg.js';
     import houseSvg from '$lib/images/house.svg?raw';
@@ -18,6 +18,7 @@
     import { initFlowbite } from 'flowbite';
     import { goto } from '$app/navigation';
     import { Button, Modal } from 'flowbite-svelte';
+    import { MS_PER_HOUR } from '$lib/constants.ts';
 
     const buildingPositions = $gameParams.defaults.buildingPositions;
     const buildingIconMap = {
@@ -85,7 +86,15 @@
             const label = canvas.text(function(add) {
                 add.tspan(location.label).fill('#fff');
             });
-            const [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
+            let x = 0;
+            let y = 0;
+            if ($gameState.state == 'mapcreated') {
+                console.log('Map has been created and saved:');
+                [x, y] = $gameState.map[loc];
+                console.log(`${loc}: ${x}, ${y}`);
+            } else {
+                [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
+            }
             group.move(x, y)
             label.move(x, y-20);
             group.add(label);
@@ -95,7 +104,8 @@
             group.click(() => modalShows[loc] = true);
             group.css('cursor', 'pointer');
             canvas.add(group);
-            if (location.label == 'Home') {
+            $gameState.map[loc] = [x,y];
+            if (location.label == 'Home' && $gameState.state == 'ready') {
                 house = group;
 
                 player = canvas.group();
@@ -113,22 +123,71 @@
                 player.move(x+30, y);
                 playerLabel.move(x+30, y-10)       
                 canvas.add(player);
+                $gameState.map['player'] = [x+30, y];
             }
         }
+        if ($gameState.state == 'ready') {
+            $gameState.state = 'mapcreated';
+        } else {
+            const player = canvas.group();
+            player.svg(personSvg);
+            player.size($gameParams.defaults.player.dimensions.width, $gameParams.defaults.player.dimensions.height);
+            const playerLabel = canvas.text(function(add) {
+                add.tspan("Player").fill("#fff").css('cursor', 'pointer');
+            });
+            player.add(playerLabel);
+            const [x, y] = $gameState.map['player'];
+            player.move(x, y);
+            playerLabel.move(x, y-10);
+            canvas.add(player);
+        }
+        loading.set(false);
     });
 
     gameState.subscribe((value) => {
-        console.log('user health changed. new value:');
-        console.log(value);
-        if (value.user.health === 0) {
+        /* console.log('user health changed. new value:'); */
+        /* console.log(value); */
+        if (value.user.health <= 0 || value.user.energy <= 0) {
           goto('/deadpage');
         }
     });
+    function parseDurationToMs(duration) {
+        const hours = parseFloat(duration.split(" ")[0]);
+        return hours * MS_PER_HOUR;
+    }
+    function clampValue(value) {
+        if (value < 0) {
+            value = 0;
+        } else if (value > 100) {
+            value = 100;
+        }
+        return value;
+    }
+    const onPlayerAction = (location, choice) => {
+        console.log(`Player chose location: ${location.label} and choice: ${choice}`);
+        console.log(choice);
+        $gameState.time += parseDurationToMs(choice.duration);
+        $gameState.user.health = clampValue($gameState.user.health + choice.effect.health);
+        $gameState.user.alertness = clampValue($gameState.user.alertness + choice.effect.alertness);
+        console.log(typeof choice.effect.energy);
+        if (typeof choice.effect.energy == 'object') {
+            $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy.social);
+            $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy.weird);
+            $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy.restless);
+        } else {
+            $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy);
+            $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy);
+            $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy);
+        }
+        const [x, y] = $gameState.map[location.key];
+        player.move(x+30, y);
+        $gameState.map['player'] = [x+30, y];
+    }
 
     const handleMouseDown = event => {
-        console.log(event);
-        console.log(canvas.node);
-        console.log(house.node);
+        /* console.log(event); */
+        /* console.log(canvas.node); */
+        /* console.log(house.node); */
         if (event.target == canvas.node) {
             //player.move(event.pageX-450, event.pageY-50);
             $gameState.user.energy.social -= 10;
@@ -143,28 +202,24 @@
 
 {#each Object.entries($gameParams.locations) as [key, location]}
     {#if 'menu' in location}
-        <Modal size="s" title={location.menu.title} bind:open={modalShows[key]} autoclose outsideclose>
-            <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">{location.menu.description}</p>
-            <Menu choices={location.menu.choices} />
+        <Modal size="xs" defaultClass="bg-gray-800" classHeader="bg-gray-800 text-gray-100" classFooter="bg-gray-800" title={location.menu.title} bind:open={modalShows[key]} autoclose outsideclose>
+            <p class="text-base leading-relaxed text-gray-300 dark:text-gray-400">{location.menu.description}</p>
+            <Menu location={location} onSelect={onPlayerAction}/>
             <svelte:fragment slot="footer">
-                <Button on:click={() => modalShows[key] = false} color="primary">I accept</Button>
-                <Button on:click={() => modalShows[key] = false} color="alternative">Decline</Button>
+                <Button on:click={() => modalShows[key] = false} color="primary">Travel To The Location</Button>
+                <Button on:click={() => modalShows[key] = false} color="alternative">Cancel</Button>
             </svelte:fragment>
         </Modal>
     {/if}
 {/each}
 
 <div id="canvas">
+<<<<<<< HEAD:src/routes/Canvas.svelte
 
+=======
+>>>>>>> 7d29058 (Massive commit of all the changes made before the BYOG):src/lib/components/Canvas.svelte
 </div>
 
 <style lang="scss">
-    svg > g > text >  tspan {
-        color: white;
-        font-weight: bold;
-    }
 
-    .mycolor {
-        color: pink;
-    }
 </style>
