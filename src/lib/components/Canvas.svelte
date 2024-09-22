@@ -12,9 +12,6 @@
     import personSvg from '$lib/images/person.svg?raw';
     import Menu from '$lib/components/Menu.svelte';
     import { browser } from '$app/environment';
-
-	  import {humanReadableTime} from './humanReadableTime.js';
-
     import { initFlowbite } from 'flowbite';
     import { goto } from '$app/navigation';
     import { Button, Modal } from 'flowbite-svelte';
@@ -42,6 +39,16 @@
     let elapsed = 0;
     let duration = 5000;
     let frame;
+    if (browser) {
+      let last_time = window.performance.now();
+      (function update() {
+        frame = requestAnimationFrame(update);
+        const time = window.performance.now();
+        elapsed += Math.min(time - last_time, duration-elapsed)
+
+        last_time= time;
+      })();
+    }
 
     let canvas;
     let rect;
@@ -51,14 +58,11 @@
     let buildings;
     let city;
 
+    let updateGameState = function(currentLocation) {
 
-    function updatePlayerStats() {
     }
-    onMount(() => {
-        if (browser){
-          window.onload = updatePlayerStats();
 
-        }
+    onMount(() => {
         //const flowbite = await import('flowbite');
         initFlowbite();
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
@@ -75,7 +79,7 @@
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
-
+           
             const group = canvas.group();
             group.svg(svg);
             if ('dimensions' in location) {
@@ -196,6 +200,9 @@
         }
     };
 
+    onDestroy(() =>{
+      /* cancelAnimationFrame(frame); */
+    });
 </script>
 
 <svelte:window on:mousedown={handleMouseDown} />
@@ -214,10 +221,6 @@
 {/each}
 
 <div id="canvas">
-<<<<<<< HEAD:src/routes/Canvas.svelte
-
-=======
->>>>>>> 7d29058 (Massive commit of all the changes made before the BYOG):src/lib/components/Canvas.svelte
 </div>
 
 <style lang="scss">
