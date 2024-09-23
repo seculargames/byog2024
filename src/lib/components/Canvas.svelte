@@ -41,6 +41,15 @@
     let elapsed = 0;
     let duration = 5000;
     let frame;
+    
+    let canvas;
+    let rect;
+    let house;
+    let player;
+    let labelh, labelp;
+    let buildings;
+    let city;
+    
     if (browser) {
       let last_time = window.performance.now();
       (function update() {
@@ -51,14 +60,6 @@
         last_time= time;
       })();
     }
-
-    let canvas;
-    let rect;
-    let house;
-    let player;
-    let labelh, labelp;
-    let buildings;
-    let city;
 
 
     function updatePlayerStats(location) {
