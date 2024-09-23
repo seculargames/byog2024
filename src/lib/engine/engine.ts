@@ -72,4 +72,6 @@ let addUser = function (location){
       $gameState.allUsers.push(newUserObj);
       $gameState.locationUserMap[location].push(newUserObj.id);
     };
-export { updateGameState, addUser };
+
+const engine = { ugs: updateGameState, au: addUser };
+export { engine };
