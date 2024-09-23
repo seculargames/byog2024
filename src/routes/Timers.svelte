@@ -14,7 +14,6 @@
 				return;
 			}
 			timeElapsed += 1;
-
 		}, 1000);
 	});
 	onDestroy(() => {

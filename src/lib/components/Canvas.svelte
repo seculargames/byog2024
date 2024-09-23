@@ -17,6 +17,8 @@
     import { Button, Modal } from 'flowbite-svelte';
     import { MS_PER_HOUR } from '$lib/constants.ts';
 
+    import { updateGameState, addUser } from '../engine/engine.ts';
+
     const buildingPositions = $gameParams.defaults.buildingPositions;
     const buildingIconMap = {
         'building.svg': buildingSvg,
@@ -58,10 +60,13 @@
     let buildings;
     let city;
 
-    let updateGameState = function(currentLocation) {
 
-    }
-
+    function updatePlayerStats(location) {
+      console.log(location);
+      setInterval(() => {
+            updateGameState(location);
+            }, $gameParams.TICK);
+        }
     onMount(() => {
         //const flowbite = await import('flowbite');
         initFlowbite();
@@ -73,19 +78,19 @@
         city.move(0, 0);
         city.size(800, 600);
         canvas.add(city);
-        
+
         //rect = canvas.rect(100, 100).move(50, 50).fill('#fe0');
         //rect.animate(500, 'bounce').move(300, 300);
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
-           
+
             const group = canvas.group();
             group.svg(svg);
             if ('dimensions' in location) {
                 group.size(location.dimensions.width, location.dimensions.height);
             } else {
-                group.size($gameParams.defaults.buildingDimensions.width, $gameParams.defaults.buildingDimensions.height); 
+                group.size($gameParams.defaults.buildingDimensions.width, $gameParams.defaults.buildingDimensions.height);
             }
             const label = canvas.text(function(add) {
                 add.tspan(location.label).fill('#fff');
@@ -125,7 +130,7 @@
                 const pos = player.point(x,y);
                 console.log(pos);
                 player.move(x+30, y);
-                playerLabel.move(x+30, y-10)       
+                playerLabel.move(x+30, y-10)
                 canvas.add(player);
                 $gameState.map['player'] = [x+30, y];
             }

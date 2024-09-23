@@ -48,6 +48,8 @@ export const gameParams = readable({
         "Climate change is a hoax! Claims new AI chat bot",
         "Spaceship explodes while trying to re-enter earth orbit. Space is too crowded now for safe travel!",
         "AI has caught at least 20 protestors in Rio De Janeiro, before they could even think about protesting",
+        "Two lifelong best friends and roommates(even through marriage and divorce) go to Suicide Park together",
+        "A esoteric cult group known to live in a remote farm found all dead by their own hands without coming to Suicide Park",
     ],
     board: {
         width: 850,
@@ -65,7 +67,8 @@ export const gameParams = readable({
         neuro: {
             interest: "Interest Based",
             hyperfocused: "Hyper-focused",
-            social: "No awareness of social cues"
+            asocial: "No awareness of social cues",
+            mirror: "Super empathic, and mirroring others' emotions"
         },
         gender: {
             conform: "Conforming to Assigned Gender",
@@ -247,7 +250,7 @@ export const gameParams = readable({
                         effect: {
                             alertness: -10,
                             health: 5,
-                            energy: 5 
+                            energy: 5
                         }
                     },
                     drink: {
@@ -270,7 +273,7 @@ export const gameState = persisted('gameState', {
     state: 'init',
     time: 0,
     map: {},
-    user: { 
+    user: {
           id: "100",
           name: 'nands',
           health: 50,
@@ -281,7 +284,8 @@ export const gameState = persisted('gameState', {
           neuro: {
             interest: 100,
             hyperfocused: 100,
-            social: 100,
+            asocial: 100,
+            mirror: 100
           },
           gender: {
             conform: 100,
@@ -291,12 +295,13 @@ export const gameState = persisted('gameState', {
           sexuality: {
             hetero: 0,
             homo: 0,
-            pan: 0
+            pan: 0,
+            ace: 0
           },
           social: {
             listener: 0,
             talker: 0,
-            asocial: 0
+            observer: 0
           },
           leadership: {
             leader: 0,
@@ -304,6 +309,14 @@ export const gameState = persisted('gameState', {
             ownway: 0
           },
           alertLevel: 40
+  },
+  allUsers: new Array(),
+  locationUserMap: {
+      university: [],
+      home: [],
+      library: [],
+      suicide_park: [],
+      dance: [],
   },
 });
 
