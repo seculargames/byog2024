@@ -1,4 +1,4 @@
-import {gameState, } from '../routes/stores.ts'
+import {gameState, } from '../routes/stores.ts';
 
 export updateGameState = function(currentLocation) {
     let user_health = $gameState.user.health;
@@ -13,7 +13,7 @@ export updateGameState = function(currentLocation) {
         }
     # Calculate user parameters based on the nearby people
     user_health +=   /$gameState.locationUserMap[location].length;
-        
+
     # Finally update the game statistics for the user.
     $gameState.user.health = user_health;
     $gameState.user.energy = user_energy;
