@@ -17,7 +17,7 @@
     import { Button, Modal } from 'flowbite-svelte';
     import { MS_PER_HOUR } from '$lib/constants.ts';
 
-    import { updateGameState, addUser } from '../engine/engine.ts';
+    import engine from '../engine/engine.ts';
 
     const buildingPositions = $gameParams.defaults.buildingPositions;
     const buildingIconMap = {
@@ -64,7 +64,7 @@
     function updatePlayerStats(location) {
       console.log(location);
       setInterval(() => {
-            updateGameState(location);
+            engine.updateGameState(location);
             }, $gameParams.TICK);
         }
     onMount(() => {

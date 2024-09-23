@@ -1,25 +1,26 @@
-import {gameState, } from '../routes/stores.ts';
+import {gameState, } from '../../stores.ts';
 
-export updateGameState = function(currentLocation) {
+let updateGameState = function(currentLocation) {
     let user_health = $gameState.user.health;
     let user_energy = $gameState.user.energy;
     let user_alertness = $gameState.user.alertLevel;
-    # Calculate user parameters based on the locations
+    // Calculate user parameters based on the locations
     user_health += $gameParams.locations[location].drain_rate.health * user_health;
     user_alertness += $gameParams.locations[location].drain_rate.alertness * user_alertness;
     user_energy = {
         social: user_energy.social + $gameParams.locations[location].drain_rate.energy * user_energy.social,
         weird: user_energy.weird + $gameParams.locations[location].drain_rate.energy * user_energy.weird,
         }
-    # Calculate user parameters based on the nearby people
-    user_health +=   /$gameState.locationUserMap[location].length;
+    // Calculate user parameters based on the nearby people
+    user_health += $gameState.locationUserMap[location].length;
 
-    # Finally update the game statistics for the user.
+    // Finally update the game statistics for the user.
     $gameState.user.health = user_health;
     $gameState.user.energy = user_energy;
     $gameState.user.alertLevel = user_alertness;
-    }
-export addUser = function (location){
+    };
+
+let addUser = function (location){
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let counter = 0;
       let rand_id, rand_name;
@@ -70,6 +71,5 @@ export addUser = function (location){
       $gameState.no_of_users += 1;
       $gameState.allUsers.push(newUserObj);
       $gameState.locationUserMap[location].push(newUserObj.id);
-    }
-
-export default GameEngine;
+    };
+export { updateGameState, addUser };
