@@ -13,8 +13,10 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
 <script lang="ts">
     //var _ = require('lodash');
+    import { izip, cycle } from 'itertools';
     import {engine} from '../engine/engine.ts';
     import {gameParams} from '../../stores.ts';
+
     // pos is cursor position when right click occur
     let pos = { x: 0, y: 0 }
     // menu is dimension (height and width) of context menu
@@ -64,15 +66,15 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     }
     function difficulty(){
         content.textContent = "Hard/Medium/Easy"
-        gameParams.TICK = 100000
+        gameParams.TICK = cycle(500, 10000,100000);
     }
-    function print(){
+    function addPlayers(){
         content.textContent = "Add more players"
     }
-    function remove(){
+    function removePlayers(){
         content.textContent = "Remove some players"
     }
-    function setting(){
+    function settings(){
         content.textContent = "Settings..."
     }
     function restart(){
@@ -82,43 +84,31 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         {
             'name': 'difficulty',
             'onClick': difficulty,
-            'displayText': "Add Item",
+            'displayText': "Difficulty Level",
             'class': 'fa-solid fa-plus'
         },
         {
-            'name': 'emptyicons',
-            'onClick': difficulty,
-            'displayText': "Empty Icon",
+            'name': 'Add more People',
+            'onClick': addPlayers,
+            'displayText': "Add People",
             'class': 'fa-solid fa-square'
         },
         {
-            'name': 'remove',
-            'onClick': remove,
-            'displayText': "remove",
+            'name': 'remove people',
+            'onClick': removePlayers,
+            'displayText': "remove people",
             'class': 'fa-solid fa-magnifying-glass'
         },
         {
             'name': 'setting',
-            'onClick': setting,
-            'displayText': "Print",
+            'onClick': settings,
+            'displayText': "Settings",
             'class': 'fa-solid fa-print'
         },
         {
-            'name': 'hr',
-        },
-        {
-            'name': 'settings',
-            'onClick': setting,
-            'displayText': "Settings",
-            'class': 'fa-solid fa-gear'
-        },
-        {
-            'name': 'hr',
-        },
-        {
-            'name': 'trash',
-            'onClick': remove,
-            'displayText': "Trash",
+            'name': 'restart',
+            'onClick': restart,
+            'displayText': "Restart",
             'class': 'fa-solid fa-trash-can'
         },
     ]
