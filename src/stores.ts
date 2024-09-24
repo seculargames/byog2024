@@ -77,8 +77,8 @@ export const gameParams = readable({
             emo: "Stereotyped Emo"
         },
         sexuality: {
-            gender-binary: "Attracted to specific gender",
-            gender-indifferent: "Attraction not dependent on gender ",
+            genderSpecific: "Attracted to specific gender",
+            genderIndifferent: "Attraction not dependent on gender ",
             asexual: "No sexual attraction"
         },
         social: {
@@ -275,9 +275,11 @@ export const gameState = persisted('gameState', {
     time: 0,
     map: {},
     user: {
+
           id: "100",
           name: 'nands',
           health: 50,
+          currentLocation: 'home',
           energy: {
               social: 100,
               weird: 100,

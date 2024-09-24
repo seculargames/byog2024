@@ -1,30 +1,34 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+    import { onMount, onDestroy } from 'svelte';
     import { gameState, gameParams } from '../../stores.ts';
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Input } from 'flowbite-svelte';
     import { Dropdown, DropdownItem, Marquee } from 'flowbite-svelte';
     import { ChevronDownOutline, ChevronRightOutline } from 'flowbite-svelte-icons';
     import Meter from '$lib/components/Meter.svelte';
-
+    
     let hamburgerOpen = false;
     let display = 'hidden sm:flex';
     let playerStats = false;
+    let currentLocation; 
 
     let allHeadlines = $gameParams.headlines;
     let headlines = [];
-
-    for (let i=0; i < 3; i++) {
-        headlines.push(allHeadlines.splice(Math.floor(Math.random()*allHeadlines.length), 1)[0]);
-    }
-
     $: toggleHamburger = () => {
         hamburgerOpen = !hamburgerOpen;
         display = hamburgerOpen ? 'sm:flex-col' : 'hidden sm:flex';
     }
 
     $: resetGame = () => {
-        gameState.reset();
+        $gameState.reset();
     }
+    onMount(() => {
+        currentLocation = $gameState.currentLocation;
+        for (let i=0; i < 3; i++) {
+            headlines.push(allHeadlines.splice(Math.floor(Math.random()*allHeadlines.length), 1)[0]);
+        }
+
+    });
 </script>
 
 <header class="sticky top-0 z-50 mx-auto bg-opacity-100">
@@ -56,6 +60,7 @@
             <Meter value={$gameState.user.health} label="Health" id="health" />
             <Meter value={$gameState.user.energy.social} label="Energy" id="energy" />
             <Meter value={$gameState.user.alertLevel} label="Alert Level" id="alert" />
+            <!-- <Meter value={$gameState.locationUserMap[currentLocation].length} label="Users Nearby" id="nearby_users" /> -->
         </div>
     </Navbar>
 </header>

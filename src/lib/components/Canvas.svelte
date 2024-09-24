@@ -62,15 +62,36 @@
       })();
     }
 
+    let updateGameState = function(currentLocation) {
+        console.log("update game state");
+        let user_health = $gameState.user.health;
+        let user_energy = $gameState.user.energy;
+        let user_alertness = $gameState.user.alertLevel;
+        // Calculate user parameters based on the locations
+        user_health += $gameParams.locations[location].drain_rate.health * user_health;
+        user_alertness += $gameParams.locations[location].drain_rate.alertness * user_alertness;
+        user_energy = {
+            social: user_energy.social + $gameParams.locations[location].drain_rate.energy * user_energy.social,
+            weird: user_energy.weird + $gameParams.locations[location].drain_rate.energy * user_energy.weird,
+            }
+        // Calculate user parameters based on the nearby people
+        user_health += $gameState.locationUserMap[location].length;
 
-function updatePlayerStats(location) {
-    console.log("update player stats called at ");
-    console.log(location);
-    setInterval(() => {
-            engine.updateGameState(location);
-            }, $gameParams.TICK);
-        }
+        // Finally update the game statistics for the user.
+        $gameState.user.health = user_health;
+        $gameState.user.energy = user_energy;
+        $gameState.user.alertLevel = user_alertness;
+        };
+
+    function updatePlayerStats(location) {
+        console.log("update player stats called at ");
+        console.log(location);
+        setInterval(() => {
+                updateGameState(location);
+                }, $gameParams.TICK);
+            }
     onMount(() => {
+        window.onload = updatePlayerStats('home');
         //const flowbite = await import('flowbite');
         initFlowbite();
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);

@@ -178,7 +178,6 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     }
 </style>
 
-<div class="content" bind:this={content}>Right click somewhere!</div>
 
 {#if showMenu}
 <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px">
