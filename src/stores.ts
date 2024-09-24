@@ -77,9 +77,9 @@ export const gameParams = readable({
             emo: "Stereotyped Emo"
         },
         sexuality: {
-            hetero: "Attracted to opposite gender",
-            homo: "Attracted to same-sex gender",
-            asexual: "Not attracted to any genders"
+            gender-binary: "Attracted to specific gender",
+            gender-indifferent: "Attraction not dependent on gender ",
+            asexual: "No sexual attraction"
         },
         social: {
             listener: "Good listener",
