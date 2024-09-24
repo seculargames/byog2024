@@ -229,7 +229,8 @@
 {/each}
 
 <div id="canvas">
-<div class="content" bind:this={content}>Right click somewhere!</div>
+<div class="content" bind:this={content}>Right click for settings!</div>
+<ContextMenu/>
 </div>
 
 <style lang="scss">

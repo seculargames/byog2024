@@ -48,7 +48,7 @@ export const gameParams = readable({
         "Climate change is a hoax! Claims new AI chat bot",
         "Spaceship explodes while trying to re-enter earth orbit. Space is too crowded now for safe travel!",
         "AI has caught at least 20 protestors in Rio De Janeiro, before they could even think about protesting",
-        "Two lifelong best friends and roommates(even through marriage and divorce) go to Suicide Park together",
+        "Two lifelong best female friends and roommates(even through marriage and divorce) go to Suicide Park together, and were found dead sweetly embracing each other.",
         "A esoteric cult group known to live in a remote farm found all dead by their own hands without coming to Suicide Park",
     ],
     board: {
