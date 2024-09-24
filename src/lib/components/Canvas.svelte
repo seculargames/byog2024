@@ -63,9 +63,10 @@
     }
 
 
-    function updatePlayerStats(location) {
-      console.log(location);
-      setInterval(() => {
+function updatePlayerStats(location) {
+    console.log("update player stats called at ");
+    console.log(location);
+    setInterval(() => {
             engine.updateGameState(location);
             }, $gameParams.TICK);
         }
@@ -203,9 +204,9 @@
         if (event.target == canvas.node) {
             //player.move(event.pageX-450, event.pageY-50);
             $gameState.user.energy.social -= 10;
-        } else if (event.target == house.node) {
+        } //else if (event.target == house.node) {
             //player.move(house.x, house.y);
-        }
+          //}
     };
 
     onDestroy(() =>{

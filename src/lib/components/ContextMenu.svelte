@@ -11,8 +11,10 @@ Known bug:
 Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dade0c1?version=3.25.0
 -->
 
-<script>
+<script lang="ts">
+    //var _ = require('lodash');
     import {engine} from '../engine/engine.ts';
+    import {gameParams} from '../../stores.ts';
     // pos is cursor position when right click occur
     let pos = { x: 0, y: 0 }
     // menu is dimension (height and width) of context menu
@@ -60,43 +62,44 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             w: width
         }
     }
-    function addItem(){
-        content.textContent = "Change Difficulty level"
+    function difficulty(){
+        content.textContent = "Hard/Medium/Easy"
+        gameParams.TICK = 100000
     }
     function print(){
         content.textContent = "Add more players"
     }
-    function zoom(){
+    function remove(){
         content.textContent = "Remove some players"
     }
     function setting(){
         content.textContent = "Settings..."
     }
-    function setting(){
+    function restart(){
         content.textContent = "Restart game..."
     }
     let menuItems = [
         {
-            'name': 'addItem',
-            'onClick': addItem,
+            'name': 'difficulty',
+            'onClick': difficulty,
             'displayText': "Add Item",
             'class': 'fa-solid fa-plus'
         },
         {
             'name': 'emptyicons',
-            'onClick': addItem,
+            'onClick': difficulty,
             'displayText': "Empty Icon",
             'class': 'fa-solid fa-square'
         },
         {
-            'name': 'zoom',
-            'onClick': zoom,
-            'displayText': "Zoom",
+            'name': 'remove',
+            'onClick': remove,
+            'displayText': "remove",
             'class': 'fa-solid fa-magnifying-glass'
         },
         {
-            'name': 'printMenu',
-            'onClick': print,
+            'name': 'setting',
+            'onClick': setting,
             'displayText': "Print",
             'class': 'fa-solid fa-print'
         },

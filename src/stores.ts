@@ -4,6 +4,7 @@ import { persisted } from 'svelte-persisted-store';
 export const loading = writable(true);
 
 export const gameParams = readable({
+    TICK: 500,
     defaults: {
         buildingDimensions: {
             width: 50,
