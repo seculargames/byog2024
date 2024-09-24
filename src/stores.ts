@@ -4,7 +4,7 @@ import { persisted } from 'svelte-persisted-store';
 export const loading = writable(true);
 
 export const gameParams = readable({
-    TICK: 500,
+    TICK: 5000,
     defaults: {
         buildingDimensions: {
             width: 50,
@@ -136,7 +136,7 @@ export const gameParams = readable({
             drain_rate: {
                 alertness: 1 * 0.01,
                 health: 1 * 0.002,
-                energy: -1 * 0.002
+                energy: -1 * 0.02
             },
             menu: {
                 title: "Home at last!",

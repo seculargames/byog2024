@@ -63,38 +63,39 @@
     }
 
     let updateGameState = function(currentLocation) {
-        console.log("update game state");
+        console.log("update game state at");
+        console.log(currentLocation);
         let user_health = $gameState.user.health;
         let user_energy = $gameState.user.energy;
         let user_alertness = $gameState.user.alertLevel;
         // Calculate user parameters based on the locations
-        user_health += $gameParams.locations[location].drain_rate.health * user_health;
-        user_alertness += $gameParams.locations[location].drain_rate.alertness * user_alertness;
+        user_health += $gameParams.locations[currentLocation].drain_rate.health * user_health;
+        user_alertness += $gameParams.locations[currentLocation].drain_rate.alertness * user_alertness;
         user_energy = {
-            social: user_energy.social + $gameParams.locations[location].drain_rate.energy * user_energy.social,
-            weird: user_energy.weird + $gameParams.locations[location].drain_rate.energy * user_energy.weird,
+            social: clampValue(user_energy.social + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.social),
+            weird: clampValue(user_energy.weird + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.weird),
             }
         // Calculate user parameters based on the nearby people
-        user_health += $gameState.locationUserMap[location].length;
+        //TODO: add average of all nearby users user_health += $gameState.locationUserMap[currentLocation].length;
 
         // Finally update the game statistics for the user.
-        $gameState.user.health = user_health;
+        $gameState.user.health = clampValue(user_health);
         $gameState.user.energy = user_energy;
-        $gameState.user.alertLevel = user_alertness;
+        $gameState.user.alertLevel = clampValue(user_alertness);
+        console.log(user_health);
+        //console.log(user_energy);
+        //console.log(user_alertness);
         };
 
-    function updatePlayerStats(location) {
+    function updatePlayerStats(currentLocation) {
         console.log("update player stats called at ");
-        console.log(location);
+        console.log(currentLocation);
         setInterval(() => {
-                updateGameState(location);
+                updateGameState(currentLocation);
                 }, $gameParams.TICK);
             }
-    onMount(() => {
-        window.onload = updatePlayerStats('home');
-        //const flowbite = await import('flowbite');
-        initFlowbite();
-        canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
+
+    function initializeGameState(canvas) {
         const style = canvas.style('.mycolor', { color: 'pink' });
         canvas.add(style);
         city = canvas.group();
@@ -103,8 +104,6 @@
         city.size(800, 600);
         canvas.add(city);
 
-        //rect = canvas.rect(100, 100).move(50, 50).fill('#fe0');
-        //rect.animate(500, 'bounce').move(300, 300);
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
@@ -119,45 +118,44 @@
             const label = canvas.text(function(add) {
                 add.tspan(location.label).fill('#fff');
             });
-            let x = 0;
-            let y = 0;
-            if ($gameState.state == 'mapcreated') {
-                console.log('Map has been created and saved:');
-                [x, y] = $gameState.map[loc];
-                console.log(`${loc}: ${x}, ${y}`);
-            } else {
-                [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
-            }
-            group.move(x, y)
-            label.move(x, y-20);
-            group.add(label);
-            //Tailwind helper attributes to trigger the modal Menu boxes
-            group.data('data-modal-target', `id-${loc}`);
-            group.data('data-modal-toggle', `id-${loc}`);
-            group.click(() => modalShows[loc] = true);
-            group.css('cursor', 'pointer');
-            canvas.add(group);
-            $gameState.map[loc] = [x,y];
-            if (location.label == 'Home' && $gameState.state == 'ready') {
-                house = group;
+        let x = 0;
+        let y = 0;
+        if ($gameState.state == 'mapcreated') {
+            console.log('Map has been created and saved:');
+            [x, y] = $gameState.map[loc];
+            console.log(`${loc}: ${x}, ${y}`);
+        } else {
+            [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
+        }
+        group.move(x, y)
+        label.move(x, y-20);
+        group.add(label);
+        //Tailwind helper attributes to trigger the modal Menu boxes
+        group.data('data-modal-target', `id-${loc}`);
+        group.data('data-modal-toggle', `id-${loc}`);
+        group.click(() => modalShows[loc] = true);
+        group.css('cursor', 'pointer');
+        canvas.add(group);
+        $gameState.map[loc] = [x,y];
+        if (location.label == 'Home' && $gameState.state == 'ready') {
+            house = group;
 
-                player = canvas.group();
-                player.svg(personSvg);
-                player.size($gameParams.defaults.player.dimensions.width, $gameParams.defaults.player.dimensions.height);
+            player = canvas.group();
+            player.svg(personSvg);
+            player.size($gameParams.defaults.player.dimensions.width, $gameParams.defaults.player.dimensions.height);
 
-                const playerLabel = canvas.text(function(add) {
-                    add.tspan("Player").fill('#fff').addClass('mycolor').css('cursor', 'pointer');
-                });
-                player.add(playerLabel);
-                //30 to the right of the Home
-                console.log(`x: ${x}, y: ${y}`);
-                const pos = player.point(x,y);
-                console.log(pos);
-                player.move(x+30, y);
-                playerLabel.move(x+30, y-10)
-                canvas.add(player);
-                $gameState.map['player'] = [x+30, y];
-            }
+            const playerLabel = canvas.text(function(add) {
+                add.tspan("Player").fill('#fff').addClass('mycolor').css('cursor', 'pointer');
+            });
+            player.add(playerLabel);
+            //30 to the right of the Home
+            console.log(`x: ${x}, y: ${y}`);
+            const pos = player.point(x,y);
+            console.log(pos);
+            player.move(x+30, y);
+            playerLabel.move(x+30, y-10)
+            canvas.add(player);
+            $gameState.map['player'] = [x+30, y];
         }
         if ($gameState.state == 'ready') {
             $gameState.state = 'mapcreated';
@@ -174,12 +172,21 @@
             playerLabel.move(x, y-10);
             canvas.add(player);
         }
-        loading.set(false);
+    }
+
+    loading.set(false);
+    }
+    onMount(() => {
+        window.onload = updatePlayerStats('home');
+        //const flowbite = await import('flowbite');
+        initFlowbite();
+        canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
+        initializeGameState(canvas);
     });
 
     gameState.subscribe((value) => {
-        /* console.log('user health changed. new value:'); */
-        /* console.log(value); */
+        console.log('user health changed. new value:');
+        console.log(value);
         if (value.user.health <= 0 || value.user.energy <= 0) {
           goto('/deadpage');
         }
