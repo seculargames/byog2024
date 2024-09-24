@@ -133,9 +133,9 @@ export const gameParams = readable({
             icon: "house.svg",
             label: "Home",
             drain_rate: {
-                alertness: -1 * 0.01,
-                health: -1 * 0.02,
-                energy: -1 * 0.02
+                alertness: 1 * 0.01,
+                health: 1 * 0.002,
+                energy: -1 * 0.002
             },
             menu: {
                 title: "Home at last!",

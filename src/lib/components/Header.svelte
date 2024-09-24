@@ -40,7 +40,7 @@
                             <DropdownItem>{ka} - {kv}: {$gameState.user[ka][kv]}</DropdownItem>
                         {/each}
                     {/each}
-                </Dropdown> 
+                </Dropdown>
             </p>
             <Button on:click={resetGame} class="mx-1 px-3 bg-primary-800 text-white">
                 New Game

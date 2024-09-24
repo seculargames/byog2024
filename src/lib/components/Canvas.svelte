@@ -18,6 +18,7 @@
     import { MS_PER_HOUR } from '$lib/constants.ts';
 
     import {engine} from '../engine/engine.ts';
+    import ContextMenu from './ContextMenu.svelte';
 
     const buildingPositions = $gameParams.defaults.buildingPositions;
     const buildingIconMap = {
@@ -32,7 +33,7 @@
 
     //Modal boxes for locations
     let modalShows: Record<String, Boolean>[] = {};
-
+    let content;
     for (const loc in $gameParams.locations) {
         modalShows[loc] = false;
     }
@@ -41,7 +42,7 @@
     let elapsed = 0;
     let duration = 5000;
     let frame;
-    
+
     let canvas;
     let rect;
     let house;
@@ -49,7 +50,7 @@
     let labelh, labelp;
     let buildings;
     let city;
-    
+
     if (browser) {
       let last_time = window.performance.now();
       (function update() {
@@ -191,6 +192,7 @@
         }
         const [x, y] = $gameState.map[location.key];
         player.move(x+30, y);
+        playerLabel.move(x+30, y+10);
         $gameState.map['player'] = [x+30, y];
     }
 
@@ -227,6 +229,7 @@
 {/each}
 
 <div id="canvas">
+<div class="content" bind:this={content}>Right click somewhere!</div>
 </div>
 
 <style lang="scss">
