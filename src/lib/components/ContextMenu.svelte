@@ -70,6 +70,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     }
     function addPlayers(){
         let currentLocation = $gameState.user.currentLocation;
+        let newBot;
         newBot = engine.ab();
         $gameState.locationUserMap[currentLocation].push(newBot);
         console.log($gameState.locationUserMap[currentLocation].length);
