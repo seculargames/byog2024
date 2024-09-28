@@ -19,7 +19,7 @@
 
     import {engine} from '../engine/engine.ts';
     import ContextMenu from './ContextMenu.svelte';
-
+    import {mean} from 'mathjs';
     const buildingPositions = $gameParams.defaults.buildingPositions;
     const buildingIconMap = {
         'building.svg': buildingSvg,
@@ -72,19 +72,46 @@
         user_health += $gameParams.locations[currentLocation].drain_rate.health * user_health;
         user_alertness += $gameParams.locations[currentLocation].drain_rate.alertness * user_alertness;
         user_energy = {
-            social: clampValue(user_energy.social + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.social),
-            weird: clampValue(user_energy.weird + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.weird),
+            social: user_energy.social + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.social,
+            weird: user_energy.weird + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.weird,
+            restless: user_energy.restless + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.restless,
             }
-        // Calculate user parameters based on the nearby people
-        //TODO: add average of all nearby users user_health += $gameState.locationUserMap[currentLocation].length;
+        if ($gameState.locationUserMap[currentLocation].length > 0) {
+            // Calculate user parameters based on the nearby people
+            user_health += mean($gameState.locationUserMap[currentLocation].map( a=> a.health));
+            //TODO: explore the other attribute values and how they affect/impact each other's values in
+            //a group setting
+            user_energy = {
+                social: user_energy.social +
+                            // average social energy, probbaly wrong logic
+                            mean($gameState.locationUserMap[currentLocation].map( a=> a.energy.social)) +
+                            // Idea being holding space for too many people can drain one's social battery
+                            $gameState.locationUserMap[currentLocation].length * $gameParams.spaceHoldingDrainer,
+                weird: user_energy.weird+
+                            // average weird energy, probbaly wrong logic
+                            mean($gameState.locationUserMap[currentLocation].map( a=> a.energy.weird)) +
+                            // Idea being holding space for too many people can drain one's social battery
+                            $gameState.locationUserMap[currentLocation].length * $gameParams.SPACEHOLDINGDRAINER,
+                restless: user_energy.restless +
+                            // average restless energy, probbaly wrong logic
+                            mean($gameState.locationUserMap[currentLocation].map( a=> a.energy.restless)) +
+                            // Idea being holding space for too many people can drain one's social battery
+                            $gameState.locationUserMap[currentLocation].length * $gameParams.SPACEHOLDINGDRAINER,
 
+                }
+
+            user_alertness += $gameState.locationUserMap[currentLocation].length * $gameParams.SPACEHOLDINGDRAINER;
+        }
         // Finally update the game statistics for the user.
         $gameState.user.health = clampValue(user_health);
-        $gameState.user.energy = user_energy;
+        $gameState.user.energy = {social:  clampValue(user_energy.social),
+                                  weird:   clampValue(user_energy.weird),
+                                  restless: clampValue(user_energy.restless)
+                                  };
         $gameState.user.alertLevel = clampValue(user_alertness);
         console.log(user_health);
-        //console.log(user_energy);
-        //console.log(user_alertness);
+        console.log(user_energy);
+        console.log(user_alertness);
         };
 
     function updatePlayerStats(currentLocation) {

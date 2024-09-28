@@ -5,6 +5,7 @@ export const loading = writable(true);
 
 export const gameParams = readable({
     TICK: 5000,
+    SPACE_HOLDING_DRAINER: 0.05, // energy it drains(at every tick) to have one extra player/bot in your location
     defaults: {
         buildingDimensions: {
             width: 50,

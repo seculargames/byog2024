@@ -1,17 +1,18 @@
 import { gameParams, gameState, loading } from '../../stores.ts';
 
-
-let addUser = function (location){
+//TODO: move most of the game mechanics logic that's not UI here instead of context menu, canvas
+//svelte components
+let addBot= function (){
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let counter = 0;
       let rand_id, rand_name;
       length = Math.floor(Math.random() * 10);
       while (counter < length) {
-        rand_id += characters.charAt(Math.floor(Math.random() * charactersLength));
-        rand_name += characters.charAt(Math.floor(Math.random() * charactersLength));
+        rand_id += characters.charAt(Math.floor(Math.random() * characters.Length));
+        rand_name += characters.charAt(Math.floor(Math.random() * characters.Length));
         counter += 1;
       }
-      newUserObj = {
+      let newUserObj = {
           id: rand_id,
           name: rand_name,
           health: Math.floor(Math.random() * 100),
@@ -55,5 +56,5 @@ let addUser = function (location){
       //gameState.locationUserMap[location].push(newUserObj.id);
     };
 
-const engine = { au: addUser };
+const engine = { ab: addBot };
 export { engine };
