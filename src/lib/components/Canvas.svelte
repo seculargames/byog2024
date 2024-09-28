@@ -148,6 +148,7 @@
                     crowd = 1;
             }
             for (let i = 0; i < crowd; i++) {
+                let newBot;
                 newBot = engine.ab();
                 $gameState.locationUserMap[loc].push(newBot);
                 }
