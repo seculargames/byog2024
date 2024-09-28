@@ -151,6 +151,7 @@
                 let newBot;
                 newBot = engine.ab();
                 $gameState.locationUserMap[loc].push(newBot);
+                $gameState.allUsers.push(newBot.id);
                 }
             }
         for (const loc in $gameParams.locations) {
