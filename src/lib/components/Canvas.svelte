@@ -130,7 +130,28 @@
         city.move(0, 0);
         city.size(800, 600);
         canvas.add(city);
-
+        // Generate some random initial players for each location
+        let crowd;
+        for (const loc in $gameParams.locations) {
+            switch(loc) {
+                case 'home':
+                    crowd = 2;
+                case 'university':
+                    crowd = 20;
+                case 'library':
+                    crowd = 5;
+                case 'suicide_park':
+                    crowd = 5;
+                case 'dance':
+                    crowd = 10;
+                default:
+                    crowd = 1;
+            }
+            for (let i = 0; i < crowd; i++) {
+                newBot = engine.ab();
+                $gameState.locationUserMap[loc].push(newBot);
+                }
+            }
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
