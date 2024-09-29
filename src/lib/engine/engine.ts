@@ -4,8 +4,17 @@ import {mean} from 'mathjs';
 //TODO: move most of the game mechanics logic that's not UI here instead of context menu, canvas
 //svelte components
 let genMap = function() {
-      city_cnts = Math.floor(Math.random() * 10);
-
+      //let city_cnts = Math.floor(Math.random() * 10);
+      let city_cnts = 1;
+      for(let i = 0; i++; i < city_cnts){
+        canvas.city = new Array();
+        let location_cnts = Math.floor(Math.random()*10);
+        for(let i = 0; i++; i < location_cnts){
+          let chosen_loc = gameParams.locations[Math.random() * gameParams.locations.length];
+          let bot = addBot();
+          canvas.city.locations.push({chosen_loc: [bot] })
+        }
+      }
 };
 
 let addBot= function (){
