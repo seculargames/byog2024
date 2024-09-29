@@ -1,0 +1,1 @@
+import{w as e}from"./index.C5X9v00r.js";const o=e({location:"init",user:{id:"100",name:"nands",health:50,energy:{social:100,weird:100},neuro:{interest_centered:100,hyper_focus:100,no_social_cues:100},gender:{conform:100,stereotyped_weak:100,stereotyped_emo:100},sexuality:{},alertLevel:40}});export{o as g};
