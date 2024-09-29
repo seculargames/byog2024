@@ -3,7 +3,13 @@ import {mean} from 'mathjs';
 
 //TODO: move most of the game mechanics logic that's not UI here instead of context menu, canvas
 //svelte components
+let genMap = function() {
+      city_cnts = Math.floor(Math.random() * 10);
+
+};
+
 let addBot= function (){
+      // Generate some random initial players for each location
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let counter = 0;
       let rand_id, rand_name;
@@ -112,7 +118,7 @@ let updateGameState = function(userStats, gameParams, currentLocation, ) {
 
 let genBots = function(locations) {
     let crowd;
-    let allUsers;
+    let allUsers = new Array();
     let locationUserMap = new Array();
     for (const loc in locations) {
         switch(loc) {

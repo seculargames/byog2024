@@ -65,10 +65,8 @@
         console.log("update player stats called at ");
         console.log(currentLocation);
         setInterval(() => {
-                let result = engine.ugs($gameState,
-                                    // locationUserMap: $gameState.locationUserMap },
-                                    $gameParams,
-                                    currentLocation);
+                let result = engine.ugs($gameState, $gameParams,
+                                        currentLocation);
                 // Finally update the game statistics for the user.
                 $gameState.user.health = clampValue(result.health);
                 $gameState.user.energy = {social:  clampValue(result.energy.social),
@@ -87,11 +85,9 @@
         city.move(0, 0);
         city.size(800, 600);
         canvas.add(city);
-        // Generate some random initial players for each location
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
-
             const group = canvas.group();
             group.svg(svg);
             if ('dimensions' in location) {
@@ -157,8 +153,11 @@
             canvas.add(player);
         }
     }
-    bots = engine.gb($gameParams.locations);
-    $gameState.locationUserMap = bots.locationUserMap;
+    let bots = engine.gb($gameParams.locations);
+    //$gameState.locationUserMap = bots.locationUserMap;
+    bots.locationUserMap.forEach((item) => {
+        $gameState.locationUserMap.push(item);
+    });
     $gameState.allUsers = bots.allUsers;
 
     loading.set(false);
