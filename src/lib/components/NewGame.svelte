@@ -106,11 +106,11 @@
             Welcome to the yet to be titled game. You are a traveler in time, you are in an unknown city some 10 years or more in the future. You have your home 
             where you are located. And you have a map full of locations to explore in the city map that is shown. Please click on each building for options on what you 
             can do. In this dark future, the social police are constantly looking out for anyone who doesn't fit into social norms. Anyone who is a loner, or prefers
-            to be by themselves is targeted by a new AGI system build collectively by the biggest corporations. These AGI systems are trained to see how you respond 
-            to social media, how many posts you like and to see if you are social or not. The AGI overlords have determined that people who stray from being social,
-            are often the trouble makers. And therefore after being trained on centuries of histories of dissidence, the AGI is now able to detect loners and 
-            transgressors even before they know themselves. Your challenge is to not get caught by this AGI system. That is being fed not only on everyone's social media
-            posts but live feeds from CCTVs installed all over the world. All world governments have given over to this AGI based alogrithmic policing system, to 
+            to be by themselves is targeted by a new  system build collectively by the biggest corporations. These  systems are trained to see how you respond 
+            to social media, how many posts you like and to see if you are social or not. The  overlords have determined that people who stray from being social,
+            are often the trouble makers. And therefore after being trained on centuries of histories of dissidence, the  is now able to detect loners and 
+            transgressors even before they know themselves. Your challenge is to not get caught by this  system. That is being fed not only on everyone's social media
+            posts but live feeds from CCTVs installed all over the world. All world governments have given over to this  based alogrithmic policing system, to 
             decide who is ok and who is not ok.
         </div>
         <div class="mx-auto text-white bg-gray-800 text-lg mt-3">
