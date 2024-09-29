@@ -153,6 +153,7 @@
             canvas.add(player);
         }
     }
+    // add bot players
     let bots = engine.gb($gameParams.locations);
     //$gameState.locationUserMap = bots.locationUserMap;
     bots.locationUserMap.forEach((item) => {
@@ -173,7 +174,9 @@
 
     gameState.subscribe((value) => {
         console.log('user health changed. new value:');
-        console.log(value);
+        console.log($gameState.user.energy);
+        console.log($gameState.user.Location);
+        console.log($gameState.locationUserMap);
         if (value.user.health <= 0 || value.user.energy <= 0) {
           goto('/deadpage');
         }

@@ -283,12 +283,12 @@ export const gameState = persisted('gameState', {
           currentLocation: 'home',
           energy: {
               social: 100,
+              asocial: 100,
               weird: 100,
           },
           neuro: {
             interest: 100,
             hyperfocused: 100,
-            asocial: 100,
             mirror: 100
           },
           gender: {
@@ -302,11 +302,12 @@ export const gameState = persisted('gameState', {
             pan: 0,
             ace: 0
           },
-          social: {
+          /*social: {
             listener: 0,
             talker: 0,
             observer: 0
-          },
+          },*/
+
           leadership: {
             leader: 0,
             follower: 0,
