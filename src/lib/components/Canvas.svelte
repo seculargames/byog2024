@@ -19,7 +19,6 @@
 
     import {engine} from '../engine/engine.ts';
     import ContextMenu from './ContextMenu.svelte';
-    import {mean} from 'mathjs';
     const buildingPositions = $gameParams.defaults.buildingPositions;
     const buildingIconMap = {
         'building.svg': buildingSvg,
@@ -62,63 +61,21 @@
       })();
     }
 
-    let updateGameState = function(currentLocation) {
-        console.log("update game state at");
-        console.log(currentLocation);
-        let user_health = $gameState.user.health;
-        let user_energy = $gameState.user.energy;
-        let user_alertness = $gameState.user.alertLevel;
-        // Calculate user parameters based on the locations
-        user_health += $gameParams.locations[currentLocation].drain_rate.health * user_health;
-        user_alertness += $gameParams.locations[currentLocation].drain_rate.alertness * user_alertness;
-        user_energy = {
-            social: user_energy.social + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.social,
-            weird: user_energy.weird + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.weird,
-            restless: user_energy.restless + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.restless,
-            }
-        if ($gameState.locationUserMap[currentLocation].length > 0) {
-            // Calculate user parameters based on the nearby people
-            user_health += mean($gameState.locationUserMap[currentLocation].map( a=> a.health));
-            //TODO: explore the other attribute values and how they affect/impact each other's values in
-            //a group setting
-            user_energy = {
-                social: user_energy.social +
-                            // average social energy, probbaly wrong logic
-                            mean($gameState.locationUserMap[currentLocation].map( a=> a.energy.social)) +
-                            // Idea being holding space for too many people can drain one's social battery
-                            $gameState.locationUserMap[currentLocation].length * $gameParams.spaceHoldingDrainer,
-                weird: user_energy.weird+
-                            // average weird energy, probbaly wrong logic
-                            mean($gameState.locationUserMap[currentLocation].map( a=> a.energy.weird)) +
-                            // Idea being holding space for too many people can drain one's social battery
-                            $gameState.locationUserMap[currentLocation].length * $gameParams.SPACEHOLDINGDRAINER,
-                restless: user_energy.restless +
-                            // average restless energy, probbaly wrong logic
-                            mean($gameState.locationUserMap[currentLocation].map( a=> a.energy.restless)) +
-                            // Idea being holding space for too many people can drain one's social battery
-                            $gameState.locationUserMap[currentLocation].length * $gameParams.SPACEHOLDINGDRAINER,
-
-                }
-
-            user_alertness += $gameState.locationUserMap[currentLocation].length * $gameParams.SPACEHOLDINGDRAINER;
-        }
-        // Finally update the game statistics for the user.
-        $gameState.user.health = clampValue(user_health);
-        $gameState.user.energy = {social:  clampValue(user_energy.social),
-                                  weird:   clampValue(user_energy.weird),
-                                  restless: clampValue(user_energy.restless)
-                                  };
-        $gameState.user.alertLevel = clampValue(user_alertness);
-        console.log(user_health);
-        console.log(user_energy);
-        console.log(user_alertness);
-        };
-
     function updatePlayerStats(currentLocation) {
         console.log("update player stats called at ");
         console.log(currentLocation);
         setInterval(() => {
-                updateGameState(currentLocation);
+                let result = engine.ugs($gameState,
+                                    // locationUserMap: $gameState.locationUserMap },
+                                    $gameParams,
+                                    currentLocation);
+                // Finally update the game statistics for the user.
+                $gameState.user.health = clampValue(result.health);
+                $gameState.user.energy = {social:  clampValue(result.energy.social),
+                                          weird:   clampValue(result.energy.weird),
+                                          restless: clampValue(result.energy.restless)
+                                          };
+                $gameState.user.alertLevel = clampValue(result.alertness);
                 }, $gameParams.TICK);
             }
 
@@ -131,29 +88,6 @@
         city.size(800, 600);
         canvas.add(city);
         // Generate some random initial players for each location
-        let crowd;
-        for (const loc in $gameParams.locations) {
-            switch(loc) {
-                case 'home':
-                    crowd = 2;
-                case 'university':
-                    crowd = 20;
-                case 'library':
-                    crowd = 5;
-                case 'suicide_park':
-                    crowd = 5;
-                case 'dance':
-                    crowd = 10;
-                default:
-                    crowd = 1;
-            }
-            for (let i = 0; i < crowd; i++) {
-                let newBot;
-                newBot = engine.ab();
-                $gameState.locationUserMap[loc].push(newBot);
-                $gameState.allUsers.push(newBot.id);
-                }
-            }
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
@@ -223,6 +157,9 @@
             canvas.add(player);
         }
     }
+    bots = engine.gb($gameParams.locations);
+    $gameState.locationUserMap = bots.locationUserMap;
+    $gameState.allUsers = bots.allUsers;
 
     loading.set(false);
     }
@@ -232,6 +169,7 @@
         initFlowbite();
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
         initializeGameState(canvas);
+        updatePlayerStats
     });
 
     gameState.subscribe((value) => {
@@ -256,23 +194,26 @@
     const onPlayerAction = (location, choice) => {
         console.log(`Player chose location: ${location.label} and choice: ${choice}`);
         console.log(choice);
-        $gameState.time += parseDurationToMs(choice.duration);
-        $gameState.user.health = clampValue($gameState.user.health + choice.effect.health);
-        $gameState.user.alertness = clampValue($gameState.user.alertness + choice.effect.alertness);
-        console.log(typeof choice.effect.energy);
-        if (typeof choice.effect.energy == 'object') {
-            $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy.social);
-            $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy.weird);
-            $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy.restless);
-        } else {
-            $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy);
-            $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy);
-            $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy);
-        }
+        // First update the UI;
         const [x, y] = $gameState.map[location.key];
         player.move(x+30, y);
         playerLabel.move(x+30, y+10);
         $gameState.map['player'] = [x+30, y];
+
+        // Now calculate the stats.
+        // $gameState.time += parseDurationToMs(choice.duration);
+        // $gameState.user.health = clampValue($gameState.user.health + choice.effect.health);
+        // $gameState.user.alertness = clampValue($gameState.user.alertness + choice.effect.alertness);
+        // console.log(typeof choice.effect.energy);
+        // if (typeof choice.effect.energy == 'object') {
+        //     $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy.social);
+        //     $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy.weird);
+        //     $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy.restless);
+        // } else {
+        //     $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy);
+        //     $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy);
+        //     $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy);
+        // }
     }
 
     const handleMouseDown = event => {

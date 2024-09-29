@@ -1,4 +1,5 @@
 import { gameParams, gameState, loading } from '../../stores.ts';
+import {mean} from 'mathjs';
 
 //TODO: move most of the game mechanics logic that's not UI here instead of context menu, canvas
 //svelte components
@@ -56,5 +57,93 @@ let addBot= function (){
       //gameState.locationUserMap[location].push(newUserObj.id);
     };
 
-const engine = { ab: addBot };
+let updateGameState = function(userStats, gameParams, currentLocation, ) {
+        console.log("update game state at");
+        console.log(currentLocation);
+        console.log(userStats.user.health);
+        console.log(userStats.user.energy);
+        console.log(userStats.user.alertLevel);
+
+        let user_health = userStats.user.health;
+        let user_energy = userStats.user.energy;
+        let user_alertness = userStats.user.alertLevel;
+        // Calculate user parameters based on the locations
+        user_health += gameParams.locations[currentLocation].drain_rate.health * user_health;
+        user_alertness += gameParams.locations[currentLocation].drain_rate.alertness * user_alertness;
+        user_energy = {
+            social: user_energy.social + gameParams.locations[currentLocation].drain_rate.energy * user_energy.social,
+            weird: user_energy.weird + gameParams.locations[currentLocation].drain_rate.energy * user_energy.weird,
+            restless: user_energy.restless + gameParams.locations[currentLocation].drain_rate.energy * user_energy.restless,
+            }
+        if (userStats.locationUserMap[currentLocation].length > 0) {
+            // Calculate user parameters based on the nearby people
+            user_health += mean(userStats.locationUserMap[currentLocation].map( a=> a.health));
+            //TODO: explore the other attribute values and how they affect/impact each other's values in
+            //a group setting
+            user_energy = {
+                social: user_energy.social +
+                            // average social energy, probbaly wrong logic
+                            mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.social)) +
+                            // Idea being holding space for too many people can drain one's social battery
+                            userStats.locationUserMap[currentLocation].length * gameParams.spaceHoldingDrainer,
+                weird: user_energy.weird+
+                            // average weird energy, probbaly wrong logic
+                            mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.weird)) + // Idea being holding space for too many people can drain one's social battery
+                            userStats.locationUserMap[currentLocation].length * gameParams.SPACEHOLDINGDRAINER,
+                restless: user_energy.restless +
+                            // average restless energy, probbaly wrong logic
+                            mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.restless)) +
+                            // Idea being holding space for too many people can drain one's social battery
+                            userStats.locationUserMap[currentLocation].length * gameParams.SPACEHOLDINGDRAINER,
+
+                }
+
+            user_alertness += userStats.locationUserMap[currentLocation].length * gameParams.SPACEHOLDINGDRAINER;
+        }
+
+        return {
+                health: user_health,
+                energy: user_energy,
+                alertness: user_alertness,
+                locationUserMap: userStats.locationUserMap,
+            };
+        };
+
+
+let genBots = function(locations) {
+    let crowd;
+    let allUsers;
+    let locationUserMap = new Array();
+    for (const loc in locations) {
+        switch(loc) {
+            case 'home':
+                crowd = 2;
+            case 'university':
+                crowd = 20;
+            case 'library':
+                crowd = 5;
+            case 'suicide_park':
+                crowd = 5;
+            case 'dance':
+                crowd = 10;
+            default:
+                crowd = 1;
+        }
+
+    for (let i = 0; i < crowd; i++) {
+        let newBot;
+        newBot = engine.ab();
+        locationUserMap.push({loc: newBot});
+        allUsers.push(newBot.id);
+        }
+    }
+    return { allUsers: allUsers,
+             locationUserMap: locationUserMap,
+    }
+}
+const engine = {
+                 ab: addBot,
+                 ugs: updateGameState,
+                 gb: genBots
+                };
 export { engine };
