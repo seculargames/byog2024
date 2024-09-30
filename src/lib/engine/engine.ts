@@ -21,7 +21,7 @@ let addBot= function (){
       // Generate some random initial players for each location
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let counter = 0;
-      let rand_id, rand_name;
+      let rand_id = '', rand_name = '';
       length = Math.floor(Math.random() * 10);
       while (counter < length) {
         rand_id += characters.charAt(Math.floor(Math.random() * characters.Length));
@@ -128,7 +128,7 @@ let updateGameState = function(userStats, gameParams, currentLocation, ) {
 let genBots = function(locations) {
     let crowd;
     let allUsers = new Array();
-    let locationUserMap = new Array();
+    let locationUserMap = new Object();
     for (const loc in locations) {
         let loc2 = loc;
         switch(loc) {
@@ -148,8 +148,8 @@ let genBots = function(locations) {
       console.log(loc2);
       for (let i = 0; i < crowd; i++) {
           let newBot;
-          newBot = engine.ab();
-          locationUserMap.push({loc2: newBot});
+          newBot = addBot();
+          locationUserMap[loc2] = newBot;
           allUsers.push(newBot.id);
           }
     }

@@ -82,13 +82,12 @@
         initializeCity(canvas);
         // add bot players
         let bots = engine.gb($gameParams.locations);
-        debugger;
         console.log(bots);
-        //$gameState.locationUserMap = bots.locationUserMap;
-        //bots.locationUserMap.forEach((item) => {
-        //    //k$gameState.locationUserMap.push(item);
-        //});
-        //$gameState.allUsers = bots.allUsers;
+        $gameState.locationUserMap = bots.locationUserMap;
+        for (const loc in $gameParams.locations) {
+            $gameState.locationUserMap[loc] = bots.locationUserMap[loc];
+        };
+        $gameState.allUsers = bots.allUsers;
 
         loading.set(false);
     }
