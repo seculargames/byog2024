@@ -130,6 +130,7 @@ let genBots = function(locations) {
     let allUsers = new Array();
     let locationUserMap = new Array();
     for (const loc in locations) {
+        let loc2 = loc;
         switch(loc) {
             case 'home':
                 crowd = 2;
@@ -144,13 +145,13 @@ let genBots = function(locations) {
             default:
                 crowd = 1;
         }
-
-    for (let i = 0; i < crowd; i++) {
-        let newBot;
-        newBot = engine.ab();
-        locationUserMap.push({loc: newBot});
-        allUsers.push(newBot.id);
-        }
+      console.log(loc2);
+      for (let i = 0; i < crowd; i++) {
+          let newBot;
+          newBot = engine.ab();
+          locationUserMap.push({loc2: newBot});
+          allUsers.push(newBot.id);
+          }
     }
     return { allUsers: allUsers,
              locationUserMap: locationUserMap,
