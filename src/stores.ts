@@ -3,7 +3,7 @@ import { persisted } from 'svelte-persisted-store';
 
 export const loading = writable(true);
 
-export const gameParams = readable({
+export const gameParams = writable({
     TICK: 5000,
     // energy it drains(at every tick) to have one extra player/bot in your location
     defaults: {
