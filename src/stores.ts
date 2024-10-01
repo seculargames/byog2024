@@ -5,7 +5,7 @@ export const loading = writable(true);
 
 export const gameParams = readable({
     TICK: 5000,
-    SPACE_HOLDING_DRAINER: 0.05, // energy it drains(at every tick) to have one extra player/bot in your location
+    // energy it drains(at every tick) to have one extra player/bot in your location
     defaults: {
         buildingDimensions: {
             width: 50,
@@ -67,25 +67,20 @@ export const gameParams = readable({
             restless: "Restless Energy"
         },
         neuro: {
-            interest: "Interest Based",
+            anxious: "Highly anxious",
             hyperfocused: "Hyper-focused",
             asocial: "No awareness of social cues",
             mirror: "Super empathic, and mirroring others' emotions"
         },
         gender: {
             conform: "Conforming to Assigned Gender",
-            weak: "Stereotyped Weak",
+            rational: "Stereotyped rational",
             emo: "Stereotyped Emo"
         },
         sexuality: {
             genderSpecific: "Attracted to specific gender",
             genderIndifferent: "Attraction not dependent on gender ",
             asexual: "No sexual attraction"
-        },
-        social: {
-            listener: "Good listener",
-            talker: "Good Talker",
-            asocial: "Asocial"
         },
         leadership: {
             leader: 'Being a Leader',
@@ -271,6 +266,7 @@ export const gameParams = readable({
     }
 })
 
+export var spaceHoldingDrainer = persisted('spaceHoldingDrainer', 0); //0, //socialDrainMultiplier(userObj),
 export const gameState = persisted('gameState', {
     state: 'init',
     time: 0,
@@ -325,20 +321,3 @@ export const gameState = persisted('gameState', {
   },
 });
 
-export const generateMap = function () {
-  let bldg_cnts = Math.floor(Math.random()*10);
-  let buildings;
-  // let bldg_types = $gameParams.keys();
-  for (let i=0; i < bldg_cnts; i++ ) {
-    let bldg;
-    bldg= {
-      size: Math.floor(Math.random() * buildingOpts.sizes.length),
-      name: Math.floor(Math.random() * buildingOpts.names.length),
-      poss: Math.floor(Math.random() * buildingOpts.poss.length),
-    }
-    usedPoss.push(bldg.poss);
-
-    buildings[i] = bldg;
-  }
-  return buildings;
-}

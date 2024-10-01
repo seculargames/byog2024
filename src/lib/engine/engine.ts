@@ -36,7 +36,7 @@ let addBot= function (){
           health: Math.floor(Math.random() * 100),
           energy: {
               social: Math.floor(Math.random() * 100),
-              weird: Math.floor(Math.random() * 100),
+              focus: Math.floor(Math.random() * 100),
               restless: Math.floor(Math.random() * 100),
           },
           neuro: {
@@ -74,7 +74,8 @@ let addBot= function (){
       //gameState.locationUserMap[location].push(newUserObj.id);
     };
 
-let updateGameState = function(userStats, gameParams, currentLocation, ) {
+let updateGameState = function(userStats, gameParams,
+                                currentLocation, spaceHoldingDrainer ) {
         console.log("update game state at");
         console.log(currentLocation);
         console.log(userStats.user.health);
@@ -89,7 +90,7 @@ let updateGameState = function(userStats, gameParams, currentLocation, ) {
         user_alertness += gameParams.locations[currentLocation].drain_rate.alertness * user_alertness;
         user_energy = {
             social: user_energy.social + gameParams.locations[currentLocation].drain_rate.energy * user_energy.social,
-            weird: user_energy.weird + gameParams.locations[currentLocation].drain_rate.energy * user_energy.weird,
+            focus: user_energy.focus + gameParams.locations[currentLocation].drain_rate.energy * user_energy.focus,
             restless: user_energy.restless + gameParams.locations[currentLocation].drain_rate.energy * user_energy.restless,
             }
         if (userStats.locationUserMap[currentLocation].length > 0) {
@@ -102,20 +103,20 @@ let updateGameState = function(userStats, gameParams, currentLocation, ) {
                             // average social energy, probbaly wrong logic
                             mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.social)) +
                             // Idea being holding space for too many people can drain one's social battery
-                            userStats.locationUserMap[currentLocation].length * gameParams.spaceHoldingDrainer,
-                weird: user_energy.weird+
-                            // average weird energy, probbaly wrong logic
-                            mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.weird)) + // Idea being holding space for too many people can drain one's social battery
-                            userStats.locationUserMap[currentLocation].length * gameParams.SPACEHOLDINGDRAINER,
+                            userStats.locationUserMap[currentLocation].length * spaceHoldingDrainer,
+                focus: user_energy.focus+
+                            // average focus energy, probbaly wrong logic
+                            mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.focus)) + // Idea being holding space for too many people can drain one's social battery
+                            userStats.locationUserMap[currentLocation].length * spaceHoldingDrainer,
                 restless: user_energy.restless +
                             // average restless energy, probbaly wrong logic
                             mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.restless)) +
                             // Idea being holding space for too many people can drain one's social battery
-                            userStats.locationUserMap[currentLocation].length * gameParams.SPACEHOLDINGDRAINER,
+                            userStats.locationUserMap[currentLocation].length * spaceHoldingDrainer,
 
                 }
 
-            user_alertness += userStats.locationUserMap[currentLocation].length * gameParams.SPACEHOLDINGDRAINER;
+            user_alertness += userStats.locationUserMap[currentLocation].length * spaceHoldingDrainer;
         }
 
         return {

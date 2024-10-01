@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameParams, gameState, loading } from '../../stores.ts';
+    import { gameParams, gameState, loading, spaceHoldingDrainer } from '../../stores.ts';
     import { onMount, onDestroy } from 'svelte';
     import { SVG } from '@svgdotjs/svg.js';
     import houseSvg from '$lib/images/house.svg?raw';
@@ -29,6 +29,19 @@
         'disco.svg': discoSvg,
         'person.svg': personSvg
     }
+    const socialDrainMultiplier = function(userObj) {
+        let result = 0.3
+        if(userObj.neuro.asocial > userObj.neuro.mirror) {
+            return result + 0.5; // highly socially draining
+        }
+        if(userObj.leadership.ownway > userObj.leadership.leader || userObj.leadership.ownway > userObj.leadership.follower) {
+            return result + 0.3 // above average socially draining to hold space
+        }
+        if(userObj.gender.conform > userObj.gender.strong ||
+           userObj.gender.conform > userObj.gender.emo) {
+            return result + 0.1 // easily conforms so not much social battery drain.
+        }
+}
 
     //Modal boxes for locations
     let modalShows: Record<String, Boolean>[] = {};
@@ -78,6 +91,7 @@
             }
     function initializeGameState(canvas) {
         const style = canvas.style('.mycolor', { color: 'pink' });
+        $spaceHoldingDrainer = socialDrainMultiplier($gameState.user);
         canvas.add(style);
         initializeCity(canvas);
         // add bot players
@@ -176,9 +190,7 @@
         console.log($gameState.user.energy);
         //console.log($gameState.user.Location);
         console.log($gameState.locationUserMap);
-        if (value.user.health <= 0 || value.user.energy.social <= 0 || \
-                    value.user.energy.weird > 50 || value.user.gender.conform < 75 || \
-                    value.user.social.asocial > 50
+        if (value.user.health <= 0 || value.user.energy.social <= 0 || value.user.energy.weird > 50 || value.user.gender.conform < 75 || value.user.social.asocial > 50
                     ) {
           console.log("dead, go home");
           //goto('/newgame');
