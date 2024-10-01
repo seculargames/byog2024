@@ -5,16 +5,18 @@ import {mean} from 'mathjs';
 //svelte components
 let genMap = function() {
       //let city_cnts = Math.floor(Math.random() * 10);
+      let map;
       let city_cnts = 1;
       for(let i = 0; i++; i < city_cnts){
-        canvas.city = new Array();
+        map.city = new Array();
         let location_cnts = Math.floor(Math.random()*10);
         for(let i = 0; i++; i < location_cnts){
           let chosen_loc = gameParams.locations[Math.random() * gameParams.locations.length];
           let bot = addBot();
-          canvas.city.locations.push({chosen_loc: [bot] })
+          map.city.locations.push({chosen_loc: [bot] })
         }
       }
+      return map;
 };
 
 let addBot= function (){
@@ -160,6 +162,7 @@ let genBots = function(locations) {
 const engine = {
                  ab: addBot,
                  ugs: updateGameState,
-                 gb: genBots
+                 gb: genBots,
+                 gm: genMap,
                 };
 export { engine };

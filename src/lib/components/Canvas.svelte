@@ -174,9 +174,10 @@
     gameState.subscribe((value) => {
         console.log('user health changed. new value:');
         console.log($gameState.user.energy);
-        console.log($gameState.user.Location);
+        //console.log($gameState.user.Location);
         console.log($gameState.locationUserMap);
-        if (value.user.health <= 0 || value.user.energy <= 0) {
+
+        if (value.user.health <= 0 || value.user.energy.social <= 0) {
           goto('/deadpage');
         }
     });
@@ -200,21 +201,6 @@
         player.move(x+30, y);
         playerLabel.move(x+30, y+10);
         $gameState.map['player'] = [x+30, y];
-
-        // Now calculate the stats.
-        // $gameState.time += parseDurationToMs(choice.duration);
-        // $gameState.user.health = clampValue($gameState.user.health + choice.effect.health);
-        // $gameState.user.alertness = clampValue($gameState.user.alertness + choice.effect.alertness);
-        // console.log(typeof choice.effect.energy);
-        // if (typeof choice.effect.energy == 'object') {
-        //     $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy.social);
-        //     $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy.weird);
-        //     $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy.restless);
-        // } else {
-        //     $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy);
-        //     $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy);
-        //     $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy);
-        // }
     }
 
     const handleMouseDown = event => {
