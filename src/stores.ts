@@ -63,7 +63,7 @@ export const gameParams = readable({
         alertness: "How alert they are",
         energy: {
             social: "Social Energy",
-            weird: "Weird Energy",
+            focus: "Type and intensity of Focus",
             restless: "Restless Energy"
         },
         neuro: {
@@ -100,7 +100,7 @@ export const gameParams = readable({
             label: "University",
             drain_rate: {
                 alertness: 0.01,
-                health: 0.05,
+                health: -0.01,
                 energy: 0.05
             },
             menu: {
@@ -176,7 +176,7 @@ export const gameParams = readable({
             label: "Library",
             drain_rate: {
                 alertness: -1 * 0.1,
-                health: 0.01,
+                health: -1 * 0.01,
                 energy: 0.01,
             },
             menu: {

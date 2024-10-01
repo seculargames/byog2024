@@ -176,11 +176,18 @@
         console.log($gameState.user.energy);
         //console.log($gameState.user.Location);
         console.log($gameState.locationUserMap);
-
-        if (value.user.health <= 0 || value.user.energy.social <= 0) {
-          goto('/deadpage');
+        if (value.user.health <= 0 || value.user.energy.social <= 0 || \
+                    value.user.energy.weird > 50 || value.user.gender.conform < 75 || \
+                    value.user.social.asocial > 50
+                    ) {
+          console.log("dead, go home");
+          //goto('/newgame');
+        }
+        if(value.user.health <= 50) {
+            console.log("You've less than 50% health, Go home and rest");
         }
     });
+
     function parseDurationToMs(duration) {
         const hours = parseFloat(duration.split(" ")[0]);
         return hours * MS_PER_HOUR;
