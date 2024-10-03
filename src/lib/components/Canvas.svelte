@@ -77,17 +77,17 @@
     function updatePlayerStats(currentLocation) {
         console.log("update player stats called at ");
         console.log(currentLocation);
-        setInterval(() => {
-                let result = engine.ugs($gameState, $gameParams,
-                                        currentLocation);
-                // Finally update the game statistics for the user.
-                $gameState.user.health = clampValue(result.health);
-                $gameState.user.energy = {social:  clampValue(result.energy.social),
-                                          weird:   clampValue(result.energy.weird),
-                                          restless: clampValue(result.energy.restless)
-                                          };
-                $gameState.user.alertLevel = clampValue(result.alertness);
-                }, $gameParams.TICK);
+        //setInterval(() => {
+        //        let result = engine.ugs($gameState, $gameParams,
+        //                                currentLocation);
+        //        // Finally update the game statistics for the user.
+        //        $gameState.user.health = clampValue(result.health);
+        //        $gameState.user.energy = {social:  clampValue(result.energy.social),
+        //                                  weird:   clampValue(result.energy.weird),
+        //                                  restless: clampValue(result.energy.restless)
+        //                                  };
+        //        $gameState.user.alertLevel = clampValue(result.alertness);
+        //        }, $gameParams.TICK);
             }
     function initializeGameState(canvas) {
         const style = canvas.style('.mycolor', { color: 'pink' });
