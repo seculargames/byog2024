@@ -313,11 +313,11 @@ export const gameState = persisted('gameState', {
   },
   allUsers: new Array(),
   locationUserMap: {
-      university: [],
-      home: [],
-      library: [],
-      suicide_park: [],
-      dance: [],
+      university: new Array(),
+      home: new Array(),
+      library: new Array(),
+      suicide_park: new Array(),
+      dance: new Array(),
   },
 });
 

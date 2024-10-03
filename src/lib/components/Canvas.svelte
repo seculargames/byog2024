@@ -212,6 +212,15 @@
         }
         return value;
     }
+    function updatePlayerStatsChoice(location, choice) {
+
+      // update every type of energy value in user energy.
+      Object.keys($gameState.user.energy).map( a=> $gameState.user.energy[a]  += $gameParams.locations[location].menu.choices[choice].effect.energy);
+      // update alertness and health values based on hte choice.
+      $gameState.user.alertness += $gameParams.locations[location].menu.choices[choice].effect.alertness;
+      $gameState.user.health += $gameParams.locations[location].menu.choices[choice].effect.health;
+
+    }
     const onPlayerAction = (location, choice) => {
         console.log(`Player chose location: ${location.label} and choice: ${choice}`);
         console.log(choice);
@@ -220,6 +229,8 @@
         player.move(x+30, y);
         playerLabel.move(x+30, y+10);
         $gameState.map['player'] = [x+30, y];
+        // Now for stats update
+        updatePlayerStatsChoice(choice);
     }
 
     const handleMouseDown = event => {
