@@ -221,19 +221,20 @@
         return value;
     }
     function updatePlayerStatsChoice(location, choice) {
-      console.log("update player stats")
+      console.log("update player stats from location", location);
+      console.debug(locationSpecificParams);
       // update every type of energy value in user energy.
-      Object.keys($gameState.user.energy).map( a=> $gameState.user.energy[a]  += locationSpecificParams[location].menu.choices[choice].effect.energy);
-      if (choice in locationSpecificParams[location].menu.choices ) {
+      if (choice in locationSpecificParams[location.key].menu.choices ) {
+        Object.keys($gameState.user.energy).map( a=> $gameState.user.energy[a]  += locationSpecificParams[location.key].menu.choices[choice].effect.energy);
         // update alertness and health values based on hte choice.
-        $gameState.user.alertness += locationSpecificParams[location].menu.choices[choice].effect.alertness;
-        $gameState.user.health += locationSpecificParams[location].menu.choices[choice].effect.health;
+        $gameState.user.alertness += locationSpecificParams[location.key].menu.choices[choice].effect.alertness;
+        $gameState.user.health += locationSpecificParams[location.key].menu.choices[choice].effect.health;
       } else {
         console.debug("no effect on user stats except the global time based effects")
       }
-
     }
-    const onPlayerAction = (location, choice=false) => {
+
+    const onPlayerAction = function(location, choice=false) {
         console.debug(`Player chose location: ${location.label} and choice: ${choice}`);
         console.debug(choice);
         // First update the UI;
