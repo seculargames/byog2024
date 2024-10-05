@@ -146,13 +146,10 @@
             });
           let x = 0;
           let y = 0;
-          if ($gameState.state == 'mapcreated') {
-              console.log('Map has been created and saved:');
-              //[x, y] = $gameState.map[loc];
-              //console.log(`${loc}: ${x}, ${y}`);
-          } else {
-              [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
-          }
+
+          // Move the bulidings to a  random place
+          [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
+
           group.move(x, y)
           label.move(x, y-20);
           group.add(label);
@@ -167,11 +164,18 @@
               house = group;
               let player = createPlayer(canvas);
           }
-          if ($gameState.state == 'ready') {
-              $gameState.state = 'mapcreated';
-          } else {
-              let player = createPlayer(canvas);
-          }
+        }
+        if ($gameState.state == 'mapcreated') {
+            console.log('Map has been created and saved:');
+            //[x, y] = $gameState.map[loc];
+            //console.log(`${loc}: ${x}, ${y}`);
+        } else {
+        }
+
+        if ($gameState.state == 'ready') {
+            $gameState.state = 'mapcreated';
+        } else {
+            let player = createPlayer(canvas);
         }
         //player.move(x, y);
         //playerLabel.move(x, y-10);
