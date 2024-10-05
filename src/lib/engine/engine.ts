@@ -76,7 +76,7 @@ let addBot= function (){
 
 let updateGameState = function(userStats, gameParams,
                                 currentLocation, spaceHoldingDrainer ) {
-        console.log("update game state at");
+        console.debug("update game state at");
         console.log(currentLocation);
         console.log(userStats.user.health);
         console.log(userStats.user.energy);

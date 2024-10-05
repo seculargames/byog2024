@@ -94,7 +94,7 @@ function generateColorWheel(size, centerColor) {
     }
     const canvasHtml = document.getElementById("canvas");
     for (const i in triad) {
-        console.log(triad[i]);
+        console.debug(triad[i]);
         render_html_to_canvas(`<p class="text-base text-white">${triad[i]}</p>`, ctx, 100, 100, 20, 20);
     }
     //return main canvas
