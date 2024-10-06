@@ -80,23 +80,26 @@
     }
 
     function updatePlayerStats() {
-        console.debug("update player stats called at ", console.debug($currentLocation));
-        //setInterval(() => {
-        //        let result = engine.ugs($gameState, $gameParams,
-        //                                currentLocation);
-        //        // Finally update the game statistics for the user.
-        //        $gameState.user.health = clampValue(result.health);
-        //        $gameState.user.energy = {social:  clampValue(result.energy.social),
-        //                                  weird:   clampValue(result.energy.weird),
-        //                                  restless: clampValue(result.energy.restless)
-        //                                  };
-        //        $gameState.user.alertLevel = clampValue(result.alertness);
-        //        }, $gameParams.TICK);
-            }
+        tick = $gameParams.TICK[$gameState.worldmap.cities.level];
+        if(tick){
+          setInterval(() => {
+                  let result = engine.ugs($gameState, $gameParams,
+                                          currentLocation);
+                  // Finally update the game statistics for the user.
+                  $gameState.user.health = clampValue(result.health);
+                  $gameState.user.energy = {social:  clampValue(result.energy.social),
+                                            weird:   clampValue(result.energy.weird),
+                                            restless: clampValue(result.energy.restless)
+                                            };
+                  $gameState.user.alertLevel = clampValue(result.alertness);
+                  }, $gameParams.TICK);
+              }
+          }
     function initializeGameState(canvas) {
         const style = canvas.style('.mycolor', { color: 'pink' });
         $spaceHoldingDrainer = socialDrainMultiplier($gameState.user);
         canvas.add(style);
+        debugger;
         initializeCity(canvas);
         // add bot players
         let bots = engine.gb($gameParams.locations);
@@ -118,7 +121,7 @@
           add.tspan("Player").fill('#fff').addClass('mycolor').css('cursor', 'pointer');
       });
       player.add(playerLabel);
-      const [x, y] = [0,0]; //$gameState.map['player'];
+      const [x, y] = [0,0]; 
       //30 to the right of the Home
       //console.debug(`x: ${x}, y: ${y}`);
       const pos = player.point(x,y);
@@ -126,7 +129,7 @@
       player.move(x+30, y);
       playerLabel.move(x+30, y-10)
       canvas.add(player);
-      $gameState.map['player'] = [x+30, y];
+      $gameState.worldmap['player'] = [x+30, y];
     }
 
     function initializeCity(canvas) {
@@ -163,7 +166,7 @@
           group.click(() => modalShows[loc] = true);
           group.css('cursor', 'pointer');
           canvas.add(group);
-          $gameState.map[loc] = [x,y];
+          //$gameState.worldmap[loc] = [x,y];
           if (location.label == 'Home' && $gameState.state == 'ready') {
               house = group;
               let player = createPlayer(canvas);
@@ -171,7 +174,7 @@
         }
         if ($gameState.state == 'mapcreated') {
             console.debug('Map has been created and saved:');
-            //[x, y] = $gameState.map[loc];
+            //[x, y] = $gameState.worldmap[loc];
             //console.debug(`${loc}: ${x}, ${y}`);
         } else {
         }
@@ -186,11 +189,11 @@
         //canvas.add(player);
     }
     onMount(() => {
-        window.onload = updatePlayerStats('home');
         //const flowbite = await import('flowbite');
         initFlowbite();
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
         initializeGameState(canvas);
+        window.onload = updatePlayerStats('home');
     });
 
     gameState.subscribe((value) => {
@@ -238,10 +241,10 @@
         console.debug(`Player chose location: ${location.label} and choice: ${choice}`);
         console.debug(choice);
         // First update the UI;
-        const [x, y] = $gameState.map[location.key];
+        const [x, y] = $gameState.worldmap[location.key];
         player.move(x+30, y);
         playerLabel.move(x+30, y+10);
-        $gameState.map['player'] = [x+30, y];
+        $gameState.worldmap['player'] = [x+30, y];
         // Now for stats update
         updatePlayerStatsChoice(location, choice);
     }
