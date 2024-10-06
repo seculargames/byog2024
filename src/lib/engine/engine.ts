@@ -5,17 +5,22 @@ import {mean} from 'mathjs';
 //svelte components
 let genMap = function() {
       //let city_cnts = Math.floor(Math.random() * 10);
-      let wmap;
-      let city_cnts = 1;
+      let wmap = new Object();
+      let city_cnts = 5;
+      wmap.cities = new Array();
       for(let i = 0; i++; i < city_cnts){
-        wmap.cities = new Array();
+        let cityObj = new Object();
+
         let location_cnts = Math.floor(Math.random()*10);
         for(let i = 0; i++; i < location_cnts){
           let chosen_loc = gameParams.locations[Math.random() * gameParams.locations.length];
           let bot = addBot();
-          wmap.city.locations.push({chosen_loc: [bot] })
+          cityObj.locations.push({chosen_loc: [bot] });
         }
+        wmap.cities.push(cityObj);
+      console.log(wmap);
       }
+      console.log(wmap);
       return wmap;
 };
 

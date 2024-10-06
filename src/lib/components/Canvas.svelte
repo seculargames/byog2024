@@ -99,15 +99,13 @@
         const style = canvas.style('.mycolor', { color: 'pink' });
         $spaceHoldingDrainer = socialDrainMultiplier($gameState.user);
         canvas.add(style);
+        let worldMap;
         debugger;
-        initializeCity(canvas);
-        // add bot players
-        let bots = engine.gb($gameParams.locations);
-        console.debug(bots);
-        $gameState.locationUserMap = bots.locationUserMap;
-        for (const loc in $gameParams.locations) {
-            $gameState.locationUserMap[loc] = bots.locationUserMap[loc];
-        };
+        worldMap = engine.gm();
+        for(let i = 0; i < worldMap.cities.length; i++) {
+          let cityObj = worldMap.cities[i];
+          initializeCity(canvas, cityObj);
+        }
         $gameState.allUsers = bots.allUsers;
 
         loading.set(false);
@@ -132,12 +130,21 @@
       $gameState.worldmap['player'] = [x+30, y];
     }
 
-    function initializeCity(canvas) {
+    function initializeCity(canvas, cityObj) {
+        debugger;
         city = canvas.group();
         city.svg(citySvg);
         city.move(0, 0);
         city.size(800, 600);
         canvas.add(city);
+        // add bot players
+        let bots = engine.gb($gameParams.locations);
+        console.debug(bots);
+        $gameState.locationUserMap = bots.locationUserMap;
+        for (const loc in $gameParams.locations) {
+            $gameState.locationUserMap[loc] = bots.locationUserMap[loc];
+        };
+ 
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
             const svg = buildingIconMap[location.icon];
