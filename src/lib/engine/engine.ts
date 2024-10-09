@@ -8,7 +8,7 @@ let genMap = function() {
       let wmap = new Object();
       let city_cnts = 5;
       wmap.cities = new Array();
-      for(let i = 0; i++; i < city_cnts){
+      for(let i = 0; i < city_cnts; i++){
         let cityObj = new Object();
 
         let location_cnts = Math.floor(Math.random()*10);

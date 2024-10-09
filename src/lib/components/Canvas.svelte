@@ -105,8 +105,12 @@
         for(let i = 0; i < worldMap.cities.length; i++) {
           let cityObj = worldMap.cities[i];
           initializeCity(canvas, cityObj);
+          // add bot players
+          debugger;
+          let bots = engine.gb($gameParams.locations);
+          $gameState.allUsers = bots.allUsers;
+          console.debug(bots);
         }
-        $gameState.allUsers = bots.allUsers;
 
         loading.set(false);
     }
@@ -131,15 +135,11 @@
     }
 
     function initializeCity(canvas, cityObj) {
-        debugger;
         city = canvas.group();
         city.svg(citySvg);
         city.move(0, 0);
         city.size(800, 600);
         canvas.add(city);
-        // add bot players
-        let bots = engine.gb($gameParams.locations);
-        console.debug(bots);
         $gameState.locationUserMap = bots.locationUserMap;
         for (const loc in $gameParams.locations) {
             $gameState.locationUserMap[loc] = bots.locationUserMap[loc];
