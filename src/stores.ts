@@ -3,8 +3,13 @@ import { persisted } from 'svelte-persisted-store';
 
 export const loading = writable(true);
 
-export const gameParams = readable({
-    TICK: 5000,
+export const gameParams = writable({
+    TICK: {
+           easy:  50000,
+           medium: 5000,
+           hard: 1000,
+           rustic: NaN,
+    },
     defaults: {
         buildingDimensions: {
             width: 50,
@@ -62,29 +67,24 @@ export const gameParams = readable({
         alertness: "How alert they are",
         energy: {
             social: "Social Energy",
-            weird: "Weird Energy",
+            focus: "Type and intensity of Focus",
             restless: "Restless Energy"
         },
         neuro: {
-            interest: "Interest Based",
+            anxious: "Highly anxious",
             hyperfocused: "Hyper-focused",
             asocial: "No awareness of social cues",
             mirror: "Super empathic, and mirroring others' emotions"
         },
         gender: {
             conform: "Conforming to Assigned Gender",
-            weak: "Stereotyped Weak",
+            rational: "Stereotyped rational",
             emo: "Stereotyped Emo"
         },
         sexuality: {
             genderSpecific: "Attracted to specific gender",
             genderIndifferent: "Attraction not dependent on gender ",
             asexual: "No sexual attraction"
-        },
-        social: {
-            listener: "Good listener",
-            talker: "Good Talker",
-            asocial: "Asocial"
         },
         leadership: {
             leader: 'Being a Leader',
@@ -99,7 +99,7 @@ export const gameParams = readable({
             label: "University",
             drain_rate: {
                 alertness: 0.01,
-                health: 0.05,
+                health: -0.01,
                 energy: 0.05
             },
             menu: {
@@ -175,7 +175,7 @@ export const gameParams = readable({
             label: "Library",
             drain_rate: {
                 alertness: -1 * 0.1,
-                health: 0.01,
+                health: -1 * 0.01,
                 energy: 0.01,
             },
             menu: {
@@ -270,10 +270,15 @@ export const gameParams = readable({
     }
 })
 
+export var spaceHoldingDrainer = persisted('spaceHoldingDrainer', 0); //0, //socialDrainMultiplier(userObj),
 export const gameState = persisted('gameState', {
     state: 'init',
     time: 0,
-    map: {},
+    worldmap: {cities: {'name': '', 
+                        'tier': 1,
+                        'difficulty': 'hardest' 
+                      }
+            },
     user: {
 
           id: "100",
@@ -282,12 +287,12 @@ export const gameState = persisted('gameState', {
           currentLocation: 'home',
           energy: {
               social: 100,
+              asocial: 100,
               weird: 100,
           },
           neuro: {
             interest: 100,
             hyperfocused: 100,
-            asocial: 100,
             mirror: 100
           },
           gender: {
@@ -301,11 +306,12 @@ export const gameState = persisted('gameState', {
             pan: 0,
             ace: 0
           },
-          social: {
+          /*social: {
             listener: 0,
             talker: 0,
             observer: 0
-          },
+          },*/
+
           leadership: {
             leader: 0,
             follower: 0,
@@ -315,28 +321,11 @@ export const gameState = persisted('gameState', {
   },
   allUsers: new Array(),
   locationUserMap: {
-      university: [],
-      home: [],
-      library: [],
-      suicide_park: [],
-      dance: [],
+      university: new Array(),
+      home: new Array(),
+      library: new Array(),
+      suicide_park: new Array(),
+      dance: new Array(),
   },
 });
 
-export const generateMap = function () {
-  let bldg_cnts = Math.floor(Math.random()*10);
-  let buildings;
-  // let bldg_types = $gameParams.keys();
-  for (let i=0; i < bldg_cnts; i++ ) {
-    let bldg;
-    bldg= {
-      size: Math.floor(Math.random() * buildingOpts.sizes.length),
-      name: Math.floor(Math.random() * buildingOpts.names.length),
-      poss: Math.floor(Math.random() * buildingOpts.poss.length),
-    }
-    usedPoss.push(bldg.poss);
-
-    buildings[i] = bldg;
-  }
-  return buildings;
-}
