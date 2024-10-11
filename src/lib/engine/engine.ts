@@ -5,18 +5,23 @@ import {mean} from 'mathjs';
 //svelte components
 let genMap = function() {
       //let city_cnts = Math.floor(Math.random() * 10);
-      let map;
-      let city_cnts = 1;
-      for(let i = 0; i++; i < city_cnts){
-        map.city = new Array();
+      let wmap = new Object();
+      let city_cnts = 5;
+      wmap.cities = new Array();
+      for(let i = 0; i < city_cnts; i++){
+        let cityObj = new Object();
+
         let location_cnts = Math.floor(Math.random()*10);
         for(let i = 0; i++; i < location_cnts){
           let chosen_loc = gameParams.locations[Math.random() * gameParams.locations.length];
           let bot = addBot();
-          map.city.locations.push({chosen_loc: [bot] })
+          cityObj.locations.push({chosen_loc: [bot] });
         }
+        wmap.cities.push(cityObj);
+      console.log(wmap);
       }
-      return map;
+      console.log(wmap);
+      return wmap;
 };
 
 let addBot= function (){
@@ -76,7 +81,7 @@ let addBot= function (){
 
 let updateGameState = function(userStats, gameParams,
                                 currentLocation, spaceHoldingDrainer ) {
-        console.log("update game state at");
+        console.debug("update game state at");
         console.log(currentLocation);
         console.log(userStats.user.health);
         console.log(userStats.user.energy);

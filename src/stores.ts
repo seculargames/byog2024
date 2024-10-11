@@ -4,8 +4,12 @@ import { persisted } from 'svelte-persisted-store';
 export const loading = writable(true);
 
 export const gameParams = writable({
-    TICK: 5000,
-    // energy it drains(at every tick) to have one extra player/bot in your location
+    TICK: {
+           easy:  50000,
+           medium: 5000,
+           hard: 1000,
+           rustic: NaN,
+    },
     defaults: {
         buildingDimensions: {
             width: 50,
@@ -270,7 +274,11 @@ export var spaceHoldingDrainer = persisted('spaceHoldingDrainer', 0); //0, //soc
 export const gameState = persisted('gameState', {
     state: 'init',
     time: 0,
-    map: {},
+    worldmap: {cities: {'name': '', 
+                        'tier': 1,
+                        'difficulty': 'hardest' 
+                      }
+            },
     user: {
 
           id: "100",
@@ -313,11 +321,11 @@ export const gameState = persisted('gameState', {
   },
   allUsers: new Array(),
   locationUserMap: {
-      university: [],
-      home: [],
-      library: [],
-      suicide_park: [],
-      dance: [],
+      university: new Array(),
+      home: new Array(),
+      library: new Array(),
+      suicide_park: new Array(),
+      dance: new Array(),
   },
 });
 
