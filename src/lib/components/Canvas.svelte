@@ -102,9 +102,9 @@
             $gameState.locationUserMap[loc] = bots.locationUserMap[loc];
         };
         $gameState.allUsers = bots.allUsers;
-
         loading.set(false);
     }
+
     function createPlayer(canvas){
       const player = canvas.group();
       player.svg(personSvg);
@@ -112,7 +112,7 @@
 
       const playerLabel = canvas.text(function(add) {
           add.tspan("Player").fill('#fff').addClass('mycolor').css('cursor', 'pointer');
-      });
+        });
       player.add(playerLabel);
       const [x, y] = [0,0]; //$gameState.map['player'];
       //30 to the right of the Home
@@ -146,13 +146,9 @@
             });
           let x = 0;
           let y = 0;
-          if ($gameState.state == 'mapcreated') {
-              console.log('Map has been created and saved:');
-              //[x, y] = $gameState.map[loc];
-              //console.log(`${loc}: ${x}, ${y}`);
-          } else {
-              [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
-          }
+          // set the locaiton and move it to a random position
+          [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
+          debugger;
           group.move(x, y)
           label.move(x, y-20);
           group.add(label);
@@ -193,7 +189,7 @@
         if (value.user.health <= 0 || value.user.energy.social <= 0 || value.user.energy.weird > 50 || value.user.gender.conform < 75 || value.user.social.asocial > 50
                     ) {
           console.log("dead, go home");
-          //goto('/newgame');
+          // goto('/newgame');
         }
         if(value.user.health <= 50) {
             console.log("You've less than 50% health, Go home and rest");
