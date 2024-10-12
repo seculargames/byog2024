@@ -101,7 +101,7 @@
         $spaceHoldingDrainer = socialDrainMultiplier($gameState.user);
         canvas.add(style);
         let genMap;
-        genMap = engine.gm();
+        genMap = engine.gm($gameParams.locations);
         for(let i = 0; i < genMap.cities.length; i++) {
           let cityObj = genMap.cities[i];
           $gameState.worldmap.cities.push(cityObj);
