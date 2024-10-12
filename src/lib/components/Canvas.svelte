@@ -99,19 +99,14 @@
         const style = canvas.style('.mycolor', { color: 'pink' });
         $spaceHoldingDrainer = socialDrainMultiplier($gameState.user);
         canvas.add(style);
-        let worldMap;
-        debugger;
-        worldMap = engine.gm();
-        for(let i = 0; i < worldMap.cities.length; i++) {
-          let cityObj = worldMap.cities[i];
+        let genMap;
+        genMap = engine.gm();
+        for(let i = 0; i < genMap.cities.length; i++) {
+          let cityObj = genMap.cities[i];
           initializeCity(canvas, cityObj);
-          // add bot players
-          debugger;
-          let bots = engine.gb($gameParams.locations);
-          $gameState.allUsers = bots.allUsers;
-          console.debug(bots);
         }
-
+        $gameState.worldmap = new Object();
+        let currentLocation = $gameState.user.currentLocation;
         loading.set(false);
     }
 
@@ -132,7 +127,7 @@
       player.move(x+30, y);
       playerLabel.move(x+30, y-10)
       canvas.add(player);
-      $gameState.worldmap['player'] = [x+30, y];
+      //$gameState.worldmap['player'] = [x+30, y];
     }
 
     function initializeCity(canvas, cityObj) {
@@ -141,10 +136,9 @@
         city.move(0, 0);
         city.size(800, 600);
         canvas.add(city);
-        $gameState.locationUserMap = bots.locationUserMap;
-        for (const loc in $gameParams.locations) {
-            $gameState.locationUserMap[loc] = bots.locationUserMap[loc];
-        };
+        $gameState.locationUserMap[cityObj.id] = new Object();
+        let bots = engine.gb($gameParams.locations);
+        $gameState.locationUserMap[cityObj.id] = bots.locationUserMap;
 
         for (const loc in $gameParams.locations) {
             const location = $gameParams.locations[loc];
@@ -251,7 +245,8 @@
         const [x, y] = $gameState.worldmap[location.key];
         player.move(x+30, y);
         playerLabel.move(x+30, y+10);
-        $gameState.worldmap['player'] = [x+30, y];
+        let city = $currentLocation.city;
+        $gameState.worldmap['player'] = {city: [x+30, y]};
         // Now for stats update
         updatePlayerStatsChoice(location, choice);
     }

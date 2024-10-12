@@ -284,7 +284,7 @@ export const gameState = persisted('gameState', {
           id: "100",
           name: 'nands',
           health: 50,
-          currentLocation: 'home',
+          currentLocation: {city: 0, loc:'home'},
           energy: {
               social: 100,
               asocial: 100,
@@ -321,11 +321,13 @@ export const gameState = persisted('gameState', {
   },
   allUsers: new Array(),
   locationUserMap: {
+    0: {
       university: new Array(),
       home: new Array(),
       library: new Array(),
       suicide_park: new Array(),
       dance: new Array(),
-  },
+    },
+  }
 });
 

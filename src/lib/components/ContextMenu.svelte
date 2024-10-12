@@ -75,7 +75,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         $gameState.locationUserMap[currentLocation].push(newBot);
         console.debug($gameState.locationUserMap[currentLocation].length);
     }
-    function removePlayers(){
+    function teleport2City(){
     }
     function settings(){
         content.textContent = "Settings..."
@@ -97,8 +97,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             'class': 'fa-solid fa-square'
         },
         {
-            'name': 'remove people',
-            'onClick': removePlayers,
+            'name': 'Teleport 2 different City',
+            'onClick': teleport2City,
             'displayText': "remove people",
             'class': 'fa-solid fa-magnifying-glass'
         },
