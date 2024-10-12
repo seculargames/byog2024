@@ -79,8 +79,9 @@
       })();
     }
 
-    function updatePlayerStats() {
-        tick = $gameParams.TICK[$gameState.worldmap.cities.level];
+    function updatePlayerStats(currentLocation) {
+        let tick;
+        tick = $gameParams.TICK[$gameState.worldmap.cities[currentLocation.city].difficulty];
         if(tick){
           setInterval(() => {
                   let result = engine.ugs($gameState, $gameParams,
@@ -103,9 +104,10 @@
         genMap = engine.gm();
         for(let i = 0; i < genMap.cities.length; i++) {
           let cityObj = genMap.cities[i];
+          $gameState.worldmap.cities.push(cityObj);
           initializeCity(canvas, cityObj);
         }
-        $gameState.worldmap = new Object();
+
         let currentLocation = $gameState.user.currentLocation;
         loading.set(false);
     }
@@ -139,9 +141,10 @@
         $gameState.locationUserMap[cityObj.id] = new Object();
         let bots = engine.gb($gameParams.locations);
         $gameState.locationUserMap[cityObj.id] = bots.locationUserMap;
+        debugger;
 
-        for (const loc in $gameParams.locations) {
-            const location = $gameParams.locations[loc];
+        for (const loc in cityObj.locations) {
+            const location = cityObj.locations[loc];
             const svg = buildingIconMap[location.icon];
             const group = canvas.group();
             group.svg(svg);
@@ -194,7 +197,7 @@
         initFlowbite();
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
         initializeGameState(canvas);
-        window.onload = updatePlayerStats('home');
+        window.onload = updatePlayerStats({city: 0, loc:'home'});
     });
 
     gameState.subscribe((value) => {
@@ -242,7 +245,7 @@
         console.debug(`Player chose location: ${location.label} and choice: ${choice}`);
         console.debug(choice);
         // First update the UI;
-        const [x, y] = $gameState.worldmap[location.key];
+        const [x, y] = $gameState.worldmap[location.loc.pos];
         player.move(x+30, y);
         playerLabel.move(x+30, y+10);
         let city = $currentLocation.city;

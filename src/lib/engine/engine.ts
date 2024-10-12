@@ -10,17 +10,17 @@ let genMap = function() {
       wmap.cities = new Array();
       for(let i = 0; i < city_cnts; i++){
         let cityObj = new Object();
-
+        // generate random location/buildings per city and a bot for each location
         let location_cnts = Math.floor(Math.random()*10);
-        for(let i = 0; i++; i < location_cnts){
-          let chosen_loc = gameParams.locations[Math.random() * gameParams.locations.length];
+        for(let i = 0; i < location_cnts; i++){
+          let chosen_loc = $gameParams.locations[Math.random() * $gameParams.locations.length];
           let bot = addBot();
           cityObj.locations.push({chosen_loc: [bot] });
         }
         wmap.cities.push(cityObj);
-      console.log(wmap);
       }
-      console.log(wmap);
+      console.log("Finished generating Map");
+      console.debug(wmap);
       return wmap;
 };
 

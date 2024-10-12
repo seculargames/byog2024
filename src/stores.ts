@@ -8,6 +8,7 @@ export const gameParams = writable({
            easy:  50000,
            medium: 5000,
            hard: 1000,
+           hardest: 100,
            rustic: NaN,
     },
     defaults: {
@@ -274,17 +275,18 @@ export var spaceHoldingDrainer = persisted('spaceHoldingDrainer', 0); //0, //soc
 export const gameState = persisted('gameState', {
     state: 'init',
     time: 0,
-    worldmap: {cities: {'name': '', 
-                        'tier': 1,
-                        'difficulty': 'hardest' 
-                      }
+    worldmap: {cities: [{id : 0,
+                        name: 'anonymous', 
+                        tier: 5,
+                        difficulty: 'rustic' 
+                      }, ],
             },
     user: {
 
           id: "100",
           name: 'nands',
           health: 50,
-          currentLocation: {city: 0, loc:'home'},
+          currentLocation: {city: 0, loc:{name: 'home', pos: [] }},
           energy: {
               social: 100,
               asocial: 100,
