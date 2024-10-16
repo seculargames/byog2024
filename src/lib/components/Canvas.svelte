@@ -142,19 +142,20 @@
         let bots = engine.gb($gameParams.locations);
         $gameState.locationUserMap[cityObj.id] = bots.locationUserMap;
         debugger;
-
         for (const loc in cityObj.locations) {
             const location = cityObj.locations[loc];
             const svg = buildingIconMap[location.icon];
             const group = canvas.group();
             group.svg(svg);
-            if ('dimensions' in location) {
-                group.size(location.dimensions.width, location.dimensions.height);
+            if ('dimensions' in location.loc) {
+                group.size(location.loc.dimensions.width, location.loc.dimensions.height);
             } else {
                 group.size($gameParams.defaults.buildingDimensions.width, $gameParams.defaults.buildingDimensions.height);
             }
+            let elemLabel = location.loc.label + String(Math.floor(Math.random()*100));
             const label = canvas.text(function(add) {
-                add.tspan(location.label).fill('#fff');
+                add.tspan(elemLabel).fill('#fff');
+
             });
           let x = 0;
           let y = 0;
@@ -165,8 +166,8 @@
           label.move(x, y-20);
           group.add(label);
           //Tailwind helper attributes to trigger the modal Menu boxes
-          group.data('data-modal-target', `id-${loc}`);
-          group.data('data-modal-toggle', `id-${loc}`);
+          group.data('data-modal-target', `id-${loc.key}`);
+          group.data('data-modal-toggle', `id-${loc.key}`);
           group.click(() => modalShows[loc] = true);
           group.css('cursor', 'pointer');
           canvas.add(group);
@@ -176,18 +177,12 @@
               let player = createPlayer(canvas);
           }
         }
-        if ($gameState.state == 'mapcreated') {
-            console.debug('Map has been created and saved:');
-            //[x, y] = $gameState.worldmap[loc];
-            //console.debug(`${loc}: ${x}, ${y}`);
-        } else {
-        }
 
-        if ($gameState.state == 'ready') {
-            $gameState.state = 'mapcreated';
-        } else {
-            let player = createPlayer(canvas);
-        }
+        //if ($gameState.state == 'ready') {
+        //    $gameState.state = 'mapcreated';
+        //} else {
+        //    let player = createPlayer(canvas);
+        //}
         //player.move(x, y);
         //playerLabel.move(x, y-10);
         //canvas.add(player);

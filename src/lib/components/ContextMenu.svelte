@@ -99,7 +99,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         {
             'name': 'Teleport 2 different City',
             'onClick': teleport2City,
-            'displayText': "remove people",
+            'displayText': "Teleport",
             'class': 'fa-solid fa-magnifying-glass'
         },
         {

@@ -6,17 +6,22 @@ import {mean} from 'mathjs';
 let genMap = function(locationOptions) {
       //let city_cnts = Math.floor(Math.random() * 10);
       let wmap = new Object();
-      let city_cnts = 5;
+      let city_cnts = 1;
       wmap.cities = new Array();
+      console.debug("Generating %s random cities ", city_cnts)
       for(let i = 0; i < city_cnts; i++){
         let cityObj = new Object();
         cityObj.locations = new Array();
         // generate random location/buildings per city and a bot for each location
         let location_cnts = Math.floor(Math.random()*10);
-        for(let i = 0; i < location_cnts; i++){
-          let chosen_loc = locationOptions[Math.random() * locationOptions.length];
+
+        console.debug("Generating %s random buildings for city no: %s", location_cnts, i);
+        for(let j = 0; j < location_cnts; j++){
+          let randIdx = Math.floor(Math.random() * locationOptions.length);
+          let chosen_loc = locationOptions[randIdx];
           let bot = addBot();
-          cityObj.locations.push({chosen_loc: [bot] });
+          cityObj.locations.push({loc: chosen_loc,
+                                  bots: [bot] });
         }
         wmap.cities.push(cityObj);
       }

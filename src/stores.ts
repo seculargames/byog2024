@@ -93,8 +93,7 @@ export const gameParams = writable({
             ownway: 'Go your own way'
         }
     },
-    locations: {
-        university: {
+    locations: [{
             key: "university",
             icon: "building-dome.svg",
             label: "University",
@@ -130,7 +129,7 @@ export const gameParams = writable({
                 }
             }
         },
-        home: {
+        {
             key: "home",
             icon: "house.svg",
             label: "Home",
@@ -170,7 +169,7 @@ export const gameParams = writable({
                 }
             }
         },
-        library: {
+        {
             key: "library",
             icon: "building.svg",
             label: "Library",
@@ -196,7 +195,7 @@ export const gameParams = writable({
                 }
             }
         },
-        suicide_park: {
+        {
             key: "suicide_park",
             icon: "park.svg",
             label: "Suicide Park",
@@ -232,7 +231,7 @@ export const gameParams = writable({
                 }
             }
         },
-        dance: {
+        {
             key: "dance",
             icon: "disco.svg",
             label: "Dance Pub",
@@ -268,7 +267,7 @@ export const gameParams = writable({
                 }
             }
         }
-    }
+    ]
 })
 
 export var spaceHoldingDrainer = persisted('spaceHoldingDrainer', 0); //0, //socialDrainMultiplier(userObj),
