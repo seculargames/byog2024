@@ -143,16 +143,16 @@
         $gameState.locationUserMap[cityObj.id] = bots.locationUserMap;
         debugger;
         for (const loc in cityObj.locations) {
-            const location = cityObj.locations[loc];
+            const location = cityObj.locations[loc].loc;
             const svg = buildingIconMap[location.icon];
             const group = canvas.group();
             group.svg(svg);
-            if ('dimensions' in location.loc) {
-                group.size(location.loc.dimensions.width, location.loc.dimensions.height);
+            if ('dimensions' in location) {
+                group.size(location.dimensions.width, location.dimensions.height);
             } else {
                 group.size($gameParams.defaults.buildingDimensions.width, $gameParams.defaults.buildingDimensions.height);
             }
-            let elemLabel = location.loc.label + String(Math.floor(Math.random()*100));
+            let elemLabel = location.label + String(Math.floor(Math.random()*100));
             const label = canvas.text(function(add) {
                 add.tspan(elemLabel).fill('#fff');
 
@@ -237,9 +237,9 @@
     }
 
     const onPlayerAction = function(location, choice=false) {
-        console.debug(`Player chose location: ${location.label} and choice: ${choice}`);
-        console.debug(choice);
+        console.debug(`Player chose location: ${location.key} and choice: ${choice}`);
         // First update the UI;
+        debugger;
         const [x, y] = $gameState.worldmap[location.loc.pos];
         player.move(x+30, y);
         playerLabel.move(x+30, y+10);
