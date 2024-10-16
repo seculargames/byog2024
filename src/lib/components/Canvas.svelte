@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { gameParams, gameState, loading } from '../../stores.ts';
+    import { gameParams, gameState, loading, spaceHoldingDrainer } from '../../stores.ts';
     import { onMount, onDestroy } from 'svelte';
     import { SVG } from '@svgdotjs/svg.js';
     import houseSvg from '$lib/images/house.svg?raw';
@@ -20,7 +20,10 @@
     import {engine} from '../engine/engine.ts';
     import ContextMenu from './ContextMenu.svelte';
 
+    // some component level global variables
     const buildingPositions = $gameParams.defaults.buildingPositions;
+    const locationSpecificParams = $gameParams.locations;
+
     const buildingIconMap = {
         'building.svg': buildingSvg,
         'building-dome.svg': buildingDomeSvg,
@@ -30,6 +33,20 @@
         'disco.svg': discoSvg,
         'person.svg': personSvg
     }
+
+    const socialDrainMultiplier = function(userObj) {
+        let result = 0.3
+        if(userObj.neuro.asocial > userObj.neuro.mirror) {
+            return result + 0.5; // highly socially draining
+        }
+        if(userObj.leadership.ownway > userObj.leadership.leader || userObj.leadership.ownway > userObj.leadership.follower) {
+            return result + 0.3 // above average socially draining to hold space
+        }
+        if(userObj.gender.conform > userObj.gender.strong ||
+           userObj.gender.conform > userObj.gender.emo) {
+            return result + 0.1 // easily conforms so not much social battery drain.
+        }
+}
 
     //Modal boxes for locations
     let modalShows: Record<String, Boolean>[] = {};
@@ -46,10 +63,10 @@
     let canvas;
     let rect;
     let house;
-    let player;
-    let labelh, labelp;
+    let player, playerLabel;
     let buildings;
     let city;
+    let currentLocation;
 
     if (browser) {
       let last_time = window.performance.now();
@@ -62,52 +79,72 @@
       })();
     }
 
-    let updateGameState = function(currentLocation) {
-        console.log("update game state at");
-        console.log(currentLocation);
-        let user_health = $gameState.user.health;
-        let user_energy = $gameState.user.energy;
-        let user_alertness = $gameState.user.alertLevel;
-        // Calculate user parameters based on the locations
-        user_health += $gameParams.locations[currentLocation].drain_rate.health * user_health;
-        user_alertness += $gameParams.locations[currentLocation].drain_rate.alertness * user_alertness;
-        user_energy = {
-            social: clampValue(user_energy.social + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.social),
-            weird: clampValue(user_energy.weird + $gameParams.locations[currentLocation].drain_rate.energy * user_energy.weird),
-            }
-        // Calculate user parameters based on the nearby people
-        //TODO: add average of all nearby users user_health += $gameState.locationUserMap[currentLocation].length;
-
-        // Finally update the game statistics for the user.
-        $gameState.user.health = clampValue(user_health);
-        $gameState.user.energy = user_energy;
-        $gameState.user.alertLevel = clampValue(user_alertness);
-        console.log(user_health);
-        //console.log(user_energy);
-        //console.log(user_alertness);
-        };
-
     function updatePlayerStats(currentLocation) {
-        console.log("update player stats called at ");
-        console.log(currentLocation);
-        setInterval(() => {
-                updateGameState(currentLocation);
-                }, $gameParams.TICK);
-            }
-
+        let tick;
+        tick = $gameParams.TICK[$gameState.worldmap.cities[currentLocation.city].difficulty];
+        if(tick){
+          setInterval(() => {
+                  let result = engine.ugs($gameState, $gameParams,
+                                          currentLocation);
+                  // Finally update the game statistics for the user.
+                  $gameState.user.health = clampValue(result.health);
+                  $gameState.user.energy = {social:  clampValue(result.energy.social),
+                                            weird:   clampValue(result.energy.weird),
+                                            restless: clampValue(result.energy.restless)
+                                            };
+                  $gameState.user.alertLevel = clampValue(result.alertness);
+                  }, $gameParams.TICK);
+              }
+          }
     function initializeGameState(canvas) {
         const style = canvas.style('.mycolor', { color: 'pink' });
+        $spaceHoldingDrainer = socialDrainMultiplier($gameState.user);
         canvas.add(style);
+        let genMap;
+        genMap = engine.gm($gameParams.locations);
+        for(let i = 0; i < genMap.cities.length; i++) {
+          let cityObj = genMap.cities[i];
+          $gameState.worldmap.cities.push(cityObj);
+          initializeCity(canvas, cityObj);
+        }
+
+        let currentLocation = $gameState.user.currentLocation;
+        loading.set(false);
+    }
+
+    function createPlayer(canvas){
+      player = canvas.group();
+      player.svg(personSvg);
+      player.size($gameParams.defaults.player.dimensions.width, $gameParams.defaults.player.dimensions.height);
+
+      playerLabel = canvas.text(function(add) {
+          add.tspan("Player").fill('#fff').addClass('mycolor').css('cursor', 'pointer');
+        });
+      player.add(playerLabel);
+      const [x, y] = [0,0];
+      //30 to the right of the Home
+      //console.debug(`x: ${x}, y: ${y}`);
+      const pos = player.point(x,y);
+      console.debug(pos);
+      player.move(x+30, y);
+      playerLabel.move(x+30, y-10)
+      canvas.add(player);
+      //$gameState.worldmap['player'] = [x+30, y];
+    }
+
+    function initializeCity(canvas, cityObj) {
         city = canvas.group();
         city.svg(citySvg);
         city.move(0, 0);
         city.size(800, 600);
         canvas.add(city);
-
-        for (const loc in $gameParams.locations) {
-            const location = $gameParams.locations[loc];
+        $gameState.locationUserMap[cityObj.id] = new Object();
+        let bots = engine.gb($gameParams.locations);
+        $gameState.locationUserMap[cityObj.id] = bots.locationUserMap;
+        debugger;
+        for (const loc in cityObj.locations) {
+            const location = cityObj.locations[loc].loc;
             const svg = buildingIconMap[location.icon];
-
             const group = canvas.group();
             group.svg(svg);
             if ('dimensions' in location) {
@@ -115,82 +152,64 @@
             } else {
                 group.size($gameParams.defaults.buildingDimensions.width, $gameParams.defaults.buildingDimensions.height);
             }
+            let elemLabel = location.label + String(Math.floor(Math.random()*100));
             const label = canvas.text(function(add) {
-                add.tspan(location.label).fill('#fff');
-            });
-        let x = 0;
-        let y = 0;
-        if ($gameState.state == 'mapcreated') {
-            console.log('Map has been created and saved:');
-            [x, y] = $gameState.map[loc];
-            console.log(`${loc}: ${x}, ${y}`);
-        } else {
-            [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
-        }
-        group.move(x, y)
-        label.move(x, y-20);
-        group.add(label);
-        //Tailwind helper attributes to trigger the modal Menu boxes
-        group.data('data-modal-target', `id-${loc}`);
-        group.data('data-modal-toggle', `id-${loc}`);
-        group.click(() => modalShows[loc] = true);
-        group.css('cursor', 'pointer');
-        canvas.add(group);
-        $gameState.map[loc] = [x,y];
-        if (location.label == 'Home' && $gameState.state == 'ready') {
-            house = group;
+                add.tspan(elemLabel).fill('#fff');
 
-            player = canvas.group();
-            player.svg(personSvg);
-            player.size($gameParams.defaults.player.dimensions.width, $gameParams.defaults.player.dimensions.height);
-
-            const playerLabel = canvas.text(function(add) {
-                add.tspan("Player").fill('#fff').addClass('mycolor').css('cursor', 'pointer');
             });
-            player.add(playerLabel);
-            //30 to the right of the Home
-            console.log(`x: ${x}, y: ${y}`);
-            const pos = player.point(x,y);
-            console.log(pos);
-            player.move(x+30, y);
-            playerLabel.move(x+30, y-10)
-            canvas.add(player);
-            $gameState.map['player'] = [x+30, y];
-        }
-        if ($gameState.state == 'ready') {
-            $gameState.state = 'mapcreated';
-        } else {
-            const player = canvas.group();
-            player.svg(personSvg);
-            player.size($gameParams.defaults.player.dimensions.width, $gameParams.defaults.player.dimensions.height);
-            const playerLabel = canvas.text(function(add) {
-                add.tspan("Player").fill("#fff").css('cursor', 'pointer');
-            });
-            player.add(playerLabel);
-            const [x, y] = $gameState.map['player'];
-            player.move(x, y);
-            playerLabel.move(x, y-10);
-            canvas.add(player);
-        }
-    }
+          let x = 0;
+          let y = 0;
+          // set the locaiton and move it to a random position
+          [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
 
-    loading.set(false);
+          group.move(x, y)
+          label.move(x, y-20);
+          group.add(label);
+          //Tailwind helper attributes to trigger the modal Menu boxes
+          group.data('data-modal-target', `id-${loc.key}`);
+          group.data('data-modal-toggle', `id-${loc.key}`);
+          group.click(() => modalShows[loc] = true);
+          group.css('cursor', 'pointer');
+          canvas.add(group);
+          //$gameState.worldmap[loc] = [x,y];
+          if (location.label == 'Home' && $gameState.state == 'ready') {
+              house = group;
+              let player = createPlayer(canvas);
+          }
+        }
+
+        //if ($gameState.state == 'ready') {
+        //    $gameState.state = 'mapcreated';
+        //} else {
+        //    let player = createPlayer(canvas);
+        //}
+        //player.move(x, y);
+        //playerLabel.move(x, y-10);
+        //canvas.add(player);
     }
     onMount(() => {
-        window.onload = updatePlayerStats('home');
         //const flowbite = await import('flowbite');
         initFlowbite();
         canvas = SVG().addTo('#canvas').size($gameParams.board.width, $gameParams.board.height);
         initializeGameState(canvas);
+        window.onload = updatePlayerStats({city: 0, loc:'home'});
     });
 
     gameState.subscribe((value) => {
-        console.log('user health changed. new value:');
-        console.log(value);
-        if (value.user.health <= 0 || value.user.energy <= 0) {
-          goto('/deadpage');
+        console.debug('user health changed. new value:');
+        console.debug($gameState.user.energy);
+        //console.debug($gameState.user.Location);
+        console.debug($gameState.locationUserMap);
+        if (value.user.health <= 0 || value.user.energy.social <= 0 || value.user.energy.weird > 50 || value.user.gender.conform < 75 || value.user.social.asocial > 50
+                    ) {
+          console.debug("dead, go home");
+          //goto('/newgame');
+        }
+        if(value.user.health <= 50) {
+            console.debug("You've less than 50% health, Go home and rest");
         }
     });
+
     function parseDurationToMs(duration) {
         const hours = parseFloat(duration.split(" ")[0]);
         return hours * MS_PER_HOUR;
@@ -203,32 +222,37 @@
         }
         return value;
     }
-    const onPlayerAction = (location, choice) => {
-        console.log(`Player chose location: ${location.label} and choice: ${choice}`);
-        console.log(choice);
-        $gameState.time += parseDurationToMs(choice.duration);
-        $gameState.user.health = clampValue($gameState.user.health + choice.effect.health);
-        $gameState.user.alertness = clampValue($gameState.user.alertness + choice.effect.alertness);
-        console.log(typeof choice.effect.energy);
-        if (typeof choice.effect.energy == 'object') {
-            $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy.social);
-            $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy.weird);
-            $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy.restless);
-        } else {
-            $gameState.user.energy.social = clampValue($gameState.user.energy.social + choice.effect.energy);
-            $gameState.user.energy.weird = clampValue($gameState.user.energy.weird + choice.effect.energy);
-            $gameState.user.energy.restless = clampValue($gameState.user.energy.restless + choice.effect.energy);
-        }
-        const [x, y] = $gameState.map[location.key];
+    function updatePlayerStatsChoice(location, choice) {
+      console.log("update player stats from location", location);
+      console.debug(locationSpecificParams);
+      // update every type of energy value in user energy.
+      if (choice in locationSpecificParams[location.key].menu.choices ) {
+        Object.keys($gameState.user.energy).map( a=> $gameState.user.energy[a]  += locationSpecificParams[location.key].menu.choices[choice].effect.energy);
+        // update alertness and health values based on hte choice.
+        $gameState.user.alertness += locationSpecificParams[location.key].menu.choices[choice].effect.alertness;
+        $gameState.user.health += locationSpecificParams[location.key].menu.choices[choice].effect.health;
+      } else {
+        console.debug("no effect on user stats except the global time based effects")
+      }
+    }
+
+    const onPlayerAction = function(location, choice=false) {
+        console.debug(`Player chose location: ${location.key} and choice: ${choice}`);
+        // First update the UI;
+        debugger;
+        const [x, y] = $gameState.worldmap[location.loc.pos];
         player.move(x+30, y);
         playerLabel.move(x+30, y+10);
-        $gameState.map['player'] = [x+30, y];
+        let city = $currentLocation.city;
+        $gameState.worldmap['player'] = {city: [x+30, y]};
+        // Now for stats update
+        updatePlayerStatsChoice(location, choice);
     }
 
     const handleMouseDown = event => {
-        /* console.log(event); */
-        /* console.log(canvas.node); */
-        /* console.log(house.node); */
+        /* console.debug(event); */
+        /* console.debug(canvas.node); */
+        /* console.debug(house.node); */
         if (event.target == canvas.node) {
             //player.move(event.pageX-450, event.pageY-50);
             $gameState.user.energy.social -= 10;
@@ -248,7 +272,7 @@
     {#if 'menu' in location}
         <Modal size="xs" defaultClass="bg-gray-800" classHeader="bg-gray-800 text-gray-100" classFooter="bg-gray-800" title={location.menu.title} bind:open={modalShows[key]} autoclose outsideclose>
             <p class="text-base leading-relaxed text-gray-300 dark:text-gray-400">{location.menu.description}</p>
-            <Menu location={location} onSelect={onPlayerAction}/>
+            <Menu location={location} onSelect={onPlayerAction(location)}/>
             <svelte:fragment slot="footer">
                 <Button on:click={() => modalShows[key] = false} color="primary">Travel To The Location</Button>
                 <Button on:click={() => modalShows[key] = false} color="alternative">Cancel</Button>

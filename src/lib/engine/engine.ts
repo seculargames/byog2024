@@ -1,23 +1,53 @@
 import { gameParams, gameState, loading } from '../../stores.ts';
+import {mean} from 'mathjs';
 
+//TODO: move most of the game mechanics logic that's not UI here instead of context menu, canvas
+//svelte components
+let genMap = function(locationOptions) {
+      //let city_cnts = Math.floor(Math.random() * 10);
+      let wmap = new Object();
+      let city_cnts = 1;
+      wmap.cities = new Array();
+      console.debug("Generating %s random cities ", city_cnts)
+      for(let i = 0; i < city_cnts; i++){
+        let cityObj = new Object();
+        cityObj.locations = new Array();
+        // generate random location/buildings per city and a bot for each location
+        let location_cnts = Math.floor(Math.random()*10);
 
-let addUser = function (location){
+        console.debug("Generating %s random buildings for city no: %s", location_cnts, i);
+        for(let j = 0; j < location_cnts; j++){
+          let randIdx = Math.floor(Math.random() * locationOptions.length);
+          let chosen_loc = locationOptions[randIdx];
+          let bot = addBot();
+          cityObj.locations.push({loc: chosen_loc,
+                                  bots: [bot] });
+        }
+        wmap.cities.push(cityObj);
+      }
+      console.log("Finished generating Map");
+      console.debug(wmap);
+      return wmap;
+};
+
+let addBot= function (){
+      // Generate some random initial players for each location
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let counter = 0;
-      let rand_id, rand_name;
+      let rand_id = '', rand_name = '';
       length = Math.floor(Math.random() * 10);
       while (counter < length) {
-        rand_id += characters.charAt(Math.floor(Math.random() * charactersLength));
-        rand_name += characters.charAt(Math.floor(Math.random() * charactersLength));
+        rand_id += characters.charAt(Math.floor(Math.random() * characters.Length));
+        rand_name += characters.charAt(Math.floor(Math.random() * characters.Length));
         counter += 1;
       }
-      newUserObj = {
+      let newUserObj = {
           id: rand_id,
           name: rand_name,
           health: Math.floor(Math.random() * 100),
           energy: {
               social: Math.floor(Math.random() * 100),
-              weird: Math.floor(Math.random() * 100),
+              focus: Math.floor(Math.random() * 100),
               restless: Math.floor(Math.random() * 100),
           },
           neuro: {
@@ -55,5 +85,96 @@ let addUser = function (location){
       //gameState.locationUserMap[location].push(newUserObj.id);
     };
 
-const engine = { au: addUser };
+let updateGameState = function(userStats, gameParams,
+                                currentLocation, spaceHoldingDrainer ) {
+        console.debug("update game state at");
+        console.log(currentLocation);
+        console.log(userStats.user.health);
+        console.log(userStats.user.energy);
+        console.log(userStats.user.alertLevel);
+
+        let user_health = userStats.user.health;
+        let user_energy = userStats.user.energy;
+        let user_alertness = userStats.user.alertLevel;
+        // Calculate user parameters based on the locations
+        user_health += gameParams.locations[currentLocation].drain_rate.health * user_health;
+        user_alertness += gameParams.locations[currentLocation].drain_rate.alertness * user_alertness;
+        user_energy = {
+            social: user_energy.social + gameParams.locations[currentLocation].drain_rate.energy * user_energy.social,
+            focus: user_energy.focus + gameParams.locations[currentLocation].drain_rate.energy * user_energy.focus,
+            restless: user_energy.restless + gameParams.locations[currentLocation].drain_rate.energy * user_energy.restless,
+            }
+        if (userStats.locationUserMap[currentLocation].length > 0) {
+            // Calculate user parameters based on the nearby people
+            user_health += mean(userStats.locationUserMap[currentLocation].map( a=> a.health));
+            //TODO: explore the other attribute values and how they affect/impact each other's values in
+            //a group setting
+            user_energy = {
+                social: user_energy.social +
+                            // average social energy, probbaly wrong logic
+                            mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.social)) +
+                            // Idea being holding space for too many people can drain one's social battery
+                            userStats.locationUserMap[currentLocation].length * spaceHoldingDrainer,
+                focus: user_energy.focus+
+                            // average focus energy, probbaly wrong logic
+                            mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.focus)) + // Idea being holding space for too many people can drain one's social battery
+                            userStats.locationUserMap[currentLocation].length * spaceHoldingDrainer,
+                restless: user_energy.restless +
+                            // average restless energy, probbaly wrong logic
+                            mean(userStats.locationUserMap[currentLocation].map( a=> a.energy.restless)) +
+                            // Idea being holding space for too many people can drain one's social battery
+                            userStats.locationUserMap[currentLocation].length * spaceHoldingDrainer,
+
+                }
+
+            user_alertness += userStats.locationUserMap[currentLocation].length * spaceHoldingDrainer;
+        }
+
+        return {
+                health: user_health,
+                energy: user_energy,
+                alertness: user_alertness,
+                locationUserMap: userStats.locationUserMap,
+            };
+        };
+
+
+let genBots = function(locations) {
+    let crowd;
+    let allUsers = new Array();
+    let locationUserMap = new Object();
+    for (const loc in locations) {
+        let loc2 = loc;
+        switch(loc) {
+            case 'home':
+                crowd = 2;
+            case 'university':
+                crowd = 20;
+            case 'library':
+                crowd = 5;
+            case 'suicide_park':
+                crowd = 5;
+            case 'dance':
+                crowd = 10;
+            default:
+                crowd = 1;
+        }
+      console.log(loc2);
+      for (let i = 0; i < crowd; i++) {
+          let newBot;
+          newBot = addBot();
+          locationUserMap[loc2] = newBot;
+          allUsers.push(newBot.id);
+          }
+    }
+    return { allUsers: allUsers,
+             locationUserMap: locationUserMap,
+    }
+}
+const engine = {
+                 ab: addBot,
+                 ugs: updateGameState,
+                 gb: genBots,
+                 gm: genMap,
+                };
 export { engine };

@@ -15,7 +15,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     //var _ = require('lodash');
     import { izip, cycle } from 'itertools';
     import {engine} from '../engine/engine.ts';
-    import {gameParams} from '../../stores.ts';
+    import {gameParams, gameState} from '../../stores.ts';
 
     // pos is cursor position when right click occur
     let pos = { x: 0, y: 0 }
@@ -65,14 +65,17 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         }
     }
     function difficulty(){
-        content.textContent = "Hard/Medium/Easy"
-        gameParams.TICK = cycle(500, 10000,100000);
+        //content.textContent = "Hard/Medium/Easy"
+        $gameParams.TICK = cycle(500, 10000,100000, 0);
     }
     function addPlayers(){
-        content.textContent = "Add more players"
+        let currentLocation = $gameState.user.currentLocation;
+        let newBot;
+        newBot = engine.ab();
+        $gameState.locationUserMap[currentLocation].push(newBot);
+        console.debug($gameState.locationUserMap[currentLocation].length);
     }
-    function removePlayers(){
-        content.textContent = "Remove some players"
+    function teleport2City(){
     }
     function settings(){
         content.textContent = "Settings..."
@@ -94,9 +97,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             'class': 'fa-solid fa-square'
         },
         {
-            'name': 'remove people',
-            'onClick': removePlayers,
-            'displayText': "remove people",
+            'name': 'Teleport 2 different City',
+            'onClick': teleport2City,
+            'displayText': "Teleport",
             'class': 'fa-solid fa-magnifying-glass'
         },
         {

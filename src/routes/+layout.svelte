@@ -9,7 +9,7 @@
     const loader = (node, loading) => {
         let Spin, loadingValue;
 
-        console.log(`inside loadingCheck: ${node}`);
+        console.debug(`inside loadingCheck: ${node}`);
         console.log(node);
         console.log(loading);
 
