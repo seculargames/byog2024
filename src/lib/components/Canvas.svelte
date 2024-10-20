@@ -66,7 +66,8 @@
     let player, playerLabel;
     let buildings;
     let city;
-    let currentLocation;
+    let currentLocation = $gameState.user.currentLocation;
+    //let currentLocation;
 
     if (browser) {
       let last_time = window.performance.now();
@@ -101,14 +102,13 @@
         $spaceHoldingDrainer = socialDrainMultiplier($gameState.user);
         canvas.add(style);
         let genMap;
-        genMap = engine.gm($gameParams.locations);
+        genMap = engine.gm(locationSpecificParams, buildingPositions);
         for(let i = 0; i < genMap.cities.length; i++) {
           let cityObj = genMap.cities[i];
-          $gameState.worldmap.cities.push(cityObj);
           initializeCity(canvas, cityObj);
+          $gameState.worldmap.cities.push(cityObj);
         }
 
-        let currentLocation = $gameState.user.currentLocation;
         loading.set(false);
     }
 
@@ -129,7 +129,6 @@
       player.move(x+30, y);
       playerLabel.move(x+30, y-10)
       canvas.add(player);
-      //$gameState.worldmap['player'] = [x+30, y];
     }
 
     function initializeCity(canvas, cityObj) {
@@ -141,7 +140,6 @@
         $gameState.locationUserMap[cityObj.id] = new Object();
         let bots = engine.gb($gameParams.locations);
         $gameState.locationUserMap[cityObj.id] = bots.locationUserMap;
-        debugger;
         for (const loc in cityObj.locations) {
             const location = cityObj.locations[loc].loc;
             const svg = buildingIconMap[location.icon];
@@ -153,6 +151,8 @@
                 group.size($gameParams.defaults.buildingDimensions.width, $gameParams.defaults.buildingDimensions.height);
             }
             let elemLabel = location.label + String(Math.floor(Math.random()*100));
+            //update city object location label for easier id, this should reflect globally
+            cityObj.locations[loc].label = elemLabel;
             const label = canvas.text(function(add) {
                 add.tspan(elemLabel).fill('#fff');
 
@@ -160,7 +160,7 @@
           let x = 0;
           let y = 0;
           // set the locaiton and move it to a random position
-          [[x, y]] = buildingPositions.splice(Math.floor(Math.random()*buildingPositions.length), 1);
+          [[x, y]] = location.pos;
 
           group.move(x, y)
           label.move(x, y-20);
@@ -171,21 +171,12 @@
           group.click(() => modalShows[loc] = true);
           group.css('cursor', 'pointer');
           canvas.add(group);
-          //$gameState.worldmap[loc] = [x,y];
           if (location.label == 'Home' && $gameState.state == 'ready') {
               house = group;
               let player = createPlayer(canvas);
           }
         }
 
-        //if ($gameState.state == 'ready') {
-        //    $gameState.state = 'mapcreated';
-        //} else {
-        //    let player = createPlayer(canvas);
-        //}
-        //player.move(x, y);
-        //playerLabel.move(x, y-10);
-        //canvas.add(player);
     }
     onMount(() => {
         //const flowbite = await import('flowbite');
@@ -240,11 +231,14 @@
         console.debug(`Player chose location: ${location.key} and choice: ${choice}`);
         // First update the UI;
         debugger;
-        const [x, y] = $gameState.worldmap[location.loc.pos];
+        for (const loc in currentLocation[city].locations){
+          if (loc.key == location.key) {
+            const [x, y] = loc.pos;
+          }
+        }
         player.move(x+30, y);
         playerLabel.move(x+30, y+10);
-        let city = $currentLocation.city;
-        $gameState.worldmap['player'] = {city: [x+30, y]};
+        $gameState.user.currentLocation.loc = {name: location.Label, pos: [x+30,y]}
         // Now for stats update
         updatePlayerStatsChoice(location, choice);
     }

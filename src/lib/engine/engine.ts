@@ -3,7 +3,10 @@ import {mean} from 'mathjs';
 
 //TODO: move most of the game mechanics logic that's not UI here instead of context menu, canvas
 //svelte components
-let genMap = function(locationOptions) {
+let genMap = function(locationOptions, buildingPositionOpts) {
+      console.debug("genMap called with arguments");
+      console.debug(locationOptions);
+      console.debug(buildingPositionOpts);
       //let city_cnts = Math.floor(Math.random() * 10);
       let wmap = new Object();
       let city_cnts = 1;
@@ -19,6 +22,7 @@ let genMap = function(locationOptions) {
         for(let j = 0; j < location_cnts; j++){
           let randIdx = Math.floor(Math.random() * locationOptions.length);
           let chosen_loc = locationOptions[randIdx];
+          chosen_loc.pos = buildingPositionOpts.splice(Math.floor(Math.random()* buildingPositionOpts.length), 1);
           let bot = addBot();
           cityObj.locations.push({loc: chosen_loc,
                                   bots: [bot] });
