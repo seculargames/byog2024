@@ -20,7 +20,8 @@
     }
 
     $: resetGame = () => {
-        $gameState.reset();
+        //gameState.set(initialState);
+        gameState.reset();
     }
     onMount(() => {
         currentLocation = $gameState.currentLocation;

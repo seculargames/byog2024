@@ -67,7 +67,6 @@
     let buildings;
     let city;
     let currentLocation = $gameState.user.currentLocation;
-    //let currentLocation;
 
     if (browser) {
       let last_time = window.performance.now();
@@ -189,7 +188,7 @@
     gameState.subscribe((value) => {
         console.debug('user health changed. new value:');
         console.debug($gameState.user.energy);
-        //console.debug($gameState.user.Location);
+        console.debug($gameState.user.currentLocation);
         console.debug($gameState.locationUserMap);
         if (value.user.health <= 0 || value.user.energy.social <= 0 || value.user.energy.weird > 50 || value.user.gender.conform < 75 || value.user.social.asocial > 50
                     ) {

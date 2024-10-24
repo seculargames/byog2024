@@ -9,7 +9,7 @@
     let neuroValues = [0, 0, 0];
     let genderValues = [0, 0, 0];
     let sexualityValues = [0, 0, 0];
-    let socialValues = [0, 0, 0];
+    let energyValues = [0, 0, 0];
     let leadershipValues = [0, 0, 0];
     let aboutGameShown = false;
 
@@ -29,10 +29,10 @@
             description: 'Who are you attracted to',
             var: sexualityValues
         },
-        'social': {
-            label: 'Social Style',
-            description: 'What kind of person are you socially',
-            var: socialValues
+        'energy': {
+            label: 'Energy Style',
+            description: 'What kind of person are you energy-wise',
+            var: energyValues
         },
         'leadership': {
             label: 'Leadership Style',
@@ -68,7 +68,8 @@
     }
 
     function getLabels(attribute) {
-       return Object.keys($gameParams.attributes[attribute]).map(k => $gameParams.attributes[attribute][k]); 
+      console.log(attribute);
+      return Object.keys($gameParams.attributes[attribute]).map(k => $gameParams.attributes[attribute][k]); 
     }
 </script>
 
