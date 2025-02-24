@@ -5,18 +5,18 @@ const locationSpecificParams = gameParams.locations;
 
 function updatePlayerStats(currentLocation) {
 	let tick;
-	tick = gameParams.TICK[$gameState.worldmap.cities[currentLocation.city].difficulty];
+	tick = gameParams.TICK[gameState.worldmap.cities[currentLocation.city].difficulty];
 	if (tick) {
 		setInterval(() => {
-			let result = engine.ugs($gameState, gameParams, currentLocation);
+			let result = engine.ugs(gameState, gameParams, currentLocation);
 			// Finally update the game statistics for the user.
-			$gameState.user.health = clampValue(result.health);
-			$gameState.user.energy = {
+			gameState.user.health = clampValue(result.health);
+			gameState.user.energy = {
 				social: clampValue(result.energy.social),
 				weird: clampValue(result.energy.weird),
 				restless: clampValue(result.energy.restless)
 			};
-			$gameState.user.alertLevel = clampValue(result.alertness);
+			gameState.user.alertLevel = clampValue(result.alertness);
 		}, gameParams.TICK);
 	}
 }
@@ -48,8 +48,8 @@ function drawCity(canvas, cityObj) {
 	city.move(0, 0);
 	city.size(800, 600);
 	canvas.add(city);
-	$gameState.locationUserMap[cityObj.id] = new Object();
-	$gameState.locationUserMap[cityObj.id] = bots.locationUserMap;
+	gameState.locationUserMap[cityObj.id] = new Object();
+	gameState.locationUserMap[cityObj.id] = bots.locationUserMap;
 	for (const loc in cityObj.locations) {
 		const location = cityObj.locations[loc].loc;
 		const svg = buildingIconMap[location.icon];
@@ -83,7 +83,7 @@ function drawCity(canvas, cityObj) {
 		group.click(() => (modalShows[loc] = true));
 		group.css('cursor', 'pointer');
 		canvas.add(group);
-		if (location.label == 'Home' && $gameState.state == 'ready') {
+		if (location.label == 'Home' && gameState.state == 'ready') {
 			house = group;
 			let player = createPlayer(canvas);
 		}
@@ -107,15 +107,15 @@ function updatePlayerStatsChoice(location, choice) {
 	console.debug(locationSpecificParams);
 	// update every type of energy value in user energy.
 	if (choice in locationSpecificParams[location.key].menu.choices) {
-		Object.keys($gameState.user.energy).map(
+		Object.keys(gameState.user.energy).map(
 			(a) =>
-				($gameState.user.energy[a] +=
+				(gameState.user.energy[a] +=
 					locationSpecificParams[location.key].menu.choices[choice].effect.energy)
 		);
 		// update alertness and health values based on hte choice.
-		$gameState.user.alertness +=
+		gameState.user.alertness +=
 			locationSpecificParams[location.key].menu.choices[choice].effect.alertness;
-		$gameState.user.health +=
+		gameState.user.health +=
 			locationSpecificParams[location.key].menu.choices[choice].effect.health;
 	} else {
 		console.debug('no effect on user stats except the global time based effects');

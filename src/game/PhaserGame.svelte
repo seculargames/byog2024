@@ -14,6 +14,7 @@
 
 	import { engine } from './engine/engine.ts';
 	import { loading } from '../stores.ts';
+	import { gameParams, gameState } from './states.ts';
 
 	export let phaserRef: TPhaserRef = {
 		game: null,
@@ -40,7 +41,7 @@
 	//let player, playerLabel;
 	let buildings;
 	let city;
-	let currentLocation = $gameState.user.currentLocation;
+	let currentLocation = gameState.user.currentLocation;
 
 	onMount(() => {
 		// On adding players button click create count number of bot players
@@ -72,11 +73,11 @@
 					const [x, y] = loc.pos;
 				}
 			}*/
-		let x = $gameState.user.currentLocation.loc.pos.x;
-		let y = $gameState.user.currentLocation.loc.pos.y;
+		let x = gameState.user.currentLocation.loc.pos.x;
+		let y = gameState.user.currentLocation.loc.pos.y;
 		player.move(x + 30, y);
 		playerLabel.move(x + 30, y + 10);
-		$gameState.user.currentLocation.loc = { name: location.Label, pos: [x + 30, y] };
+		gameState.user.currentLocation.loc = { name: location.Label, pos: [x + 30, y] };
 		// Now for stats update
 		updatePlayerStatsChoice(location, choice);
 	};
@@ -86,7 +87,7 @@
 		/* console.debug(house.node); */
 		if (event.target == canvas.node) {
 			//player.move(event.pageX-450, event.pageY-50);
-			$gameState.user.energy.social -= 10;
+			gameState.user.energy.social -= 10;
 		} //else if (event.target == house.node) {
 		//player.move(house.x, house.y);
 		//}
@@ -98,9 +99,9 @@
 
 	/* gameState.subscribe((value) => {
 		console.debug('user health changed. new value:');
-		console.debug($gameState.user.energy);
-		console.debug($gameState.user.currentLocation);
-		console.debug($gameState.locationUserMap);
+		console.debug(gameState.user.energy);
+		console.debug(gameState.user.currentLocation);
+		console.debug(gameState.locationUserMap);
 		if (
 			value.user.health <= 0 ||
 			value.user.energy.social <= 0 ||

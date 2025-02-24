@@ -67,11 +67,11 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 		$gameParams.TICK = cycle(500, 10000, 100000, 0);
 	}
 	function addPlayers() {
-		let currentLocation = $gameState.user.currentLocation;
+		let currentLocation = gameState.user.currentLocation;
 		let newBot;
 		newBot = engine.ab();
-		$gameState.locationUserMap[currentLocation].push(newBot);
-		console.debug($gameState.locationUserMap[currentLocation].length);
+		gameState.locationUserMap[currentLocation].push(newBot);
+		console.debug(gameState.locationUserMap[currentLocation].length);
 	}
 	function teleport2City() {}
 	function settings() {

@@ -10,6 +10,7 @@
 		MS_PER_YEAR
 	} from '../constants.ts';
 	import { goto } from '$app/navigation';
+	import { gameParams, gameState } from '../../states.ts';
 
 	let neuroValues = [0, 0, 0];
 	let genderValues = [0, 0, 0];
@@ -55,20 +56,20 @@
 		const now = new Date();
 		const ms = now.getTime();
 		const gameTime = ms + MS_PER_YEAR * 10 + Math.random() * 2 * MS_PER_YEAR;
-		$gameState.time = gameTime;
-		$gameState.user.name = name;
-		$gameState.user.health = 100;
-		$gameState.user.alertness = 100;
-		$gameState.user.energy.social = 100;
-		$gameState.user.energy.weird = 100;
-		$gameState.user.energy.restless = 100;
+		gameState.time = gameTime;
+		gameState.user.name = name;
+		gameState.user.health = 100;
+		gameState.user.alertness = 100;
+		gameState.user.energy.social = 100;
+		gameState.user.energy.weird = 100;
+		gameState.user.energy.restless = 100;
 		for (const [k, v] of Object.entries(attrKeyVariableMap)) {
 			let i = 0;
 			for (const [ka, va] of Object.entries($gameParams.attributes[k])) {
-				$gameState.user[k][ka] = v.var[i++];
+				gameState.user[k][ka] = v.var[i++];
 			}
 		}
-		$gameState.state = 'ready';
+		gameState.state = 'ready';
 		goto('/');
 	}
 
