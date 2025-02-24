@@ -96,7 +96,7 @@
 		/* cancelAnimationFrame(frame); */
 	});
 
-	gameState.subscribe((value) => {
+	/* gameState.subscribe((value) => {
 		console.debug('user health changed. new value:');
 		console.debug($gameState.user.energy);
 		console.debug($gameState.user.currentLocation);
@@ -114,7 +114,7 @@
 		if (value.user.health <= 50) {
 			console.debug("You've less than 50% health, Go home and rest");
 		}
-	});
+	}); */
 </script>
 
 <svelte:window on:mousedown={handleMouseDown} />

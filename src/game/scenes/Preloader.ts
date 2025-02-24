@@ -1,13 +1,5 @@
 import { Scene } from 'phaser';
 import { SVG } from '@svgdotjs/svg.js';
-import houseSvg from '../lib/images/house.svg?raw';
-import buildingSvg from '../lib/images/building.svg?raw';
-import buildingDomeSvg from '../lib/images/building-dome.svg?raw';
-import walkSvg from '../lib/images/walk.svg?raw';
-import citySvg from '../lib/images/city-map.svg?raw';
-import parkSvg from '../lib/images/park.svg?raw';
-import discoSvg from '../lib/images/disco.svg?raw';
-import personSvg from '../lib/images/person.svg?raw';
 import Menu from '../lib/components/Menu.svelte';
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';

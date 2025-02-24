@@ -1,35 +1,14 @@
 import { loading } from '../../stores.ts';
-import { gameParams, gameState } from '../states.ts';
+import { gameParams, gameState, buildingIconMap } from '../states.ts';
 import { Preloader } from '../../game/scenes/Preloader.ts';
-const locationSpecificParams = $gameParams.locations;
-
-const buildingIconMap = {
-	'building.svg': buildingSvg,
-	'building-dome.svg': buildingDomeSvg,
-	'house.svg': houseSvg,
-	'walk.svg': walkSvg,
-	'park.svg': parkSvg,
-	'disco.svg': discoSvg,
-	'person.svg': personSvg
-};
-
-if (browser) {
-	let last_time = window.performance.now();
-	(function update() {
-		frame = requestAnimationFrame(update);
-		const time = window.performance.now();
-		elapsed += Math.min(time - last_time, duration - elapsed);
-
-		last_time = time;
-	})();
-}
+const locationSpecificParams = gameParams.locations;
 
 function updatePlayerStats(currentLocation) {
 	let tick;
-	tick = $gameParams.TICK[$gameState.worldmap.cities[currentLocation.city].difficulty];
+	tick = gameParams.TICK[$gameState.worldmap.cities[currentLocation.city].difficulty];
 	if (tick) {
 		setInterval(() => {
-			let result = engine.ugs($gameState, $gameParams, currentLocation);
+			let result = engine.ugs($gameState, gameParams, currentLocation);
 			// Finally update the game statistics for the user.
 			$gameState.user.health = clampValue(result.health);
 			$gameState.user.energy = {
@@ -38,15 +17,15 @@ function updatePlayerStats(currentLocation) {
 				restless: clampValue(result.energy.restless)
 			};
 			$gameState.user.alertLevel = clampValue(result.alertness);
-		}, $gameParams.TICK);
+		}, gameParams.TICK);
 	}
 }
 function createPlayer(canvas) {
 	player = canvas.group();
 	player.svg(personSvg);
 	player.size(
-		$gameParams.defaults.player.dimensions.width,
-		$gameParams.defaults.player.dimensions.height
+		gameParams.defaults.player.dimensions.width,
+		gameParams.defaults.player.dimensions.height
 	);
 
 	playerLabel = canvas.text(function (add) {
@@ -80,8 +59,8 @@ function drawCity(canvas, cityObj) {
 			group.size(location.dimensions.width, location.dimensions.height);
 		} else {
 			group.size(
-				$gameParams.defaults.buildingDimensions.width,
-				$gameParams.defaults.buildingDimensions.height
+				gameParams.defaults.buildingDimensions.width,
+				gameParams.defaults.buildingDimensions.height
 			);
 		}
 		let elemLabel = location.label + String(Math.floor(Math.random() * 100));

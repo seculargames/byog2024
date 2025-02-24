@@ -1,3 +1,11 @@
+import houseSvg from './lib/images/house.svg?raw';
+import buildingSvg from './lib/images/building.svg?raw';
+import buildingDomeSvg from './lib/images/building-dome.svg?raw';
+import walkSvg from './lib/images/walk.svg?raw';
+import citySvg from './lib/images/city-map.svg?raw';
+import parkSvg from './lib/images/park.svg?raw';
+import discoSvg from './lib/images/disco.svg?raw';
+import personSvg from './lib/images/person.svg?raw';
 export const gameParams = {
 	TICK: {
 		easy: 50000,
@@ -328,4 +336,14 @@ export const gameState = {
 			dance: new Array()
 		}
 	}
+};
+
+export const buildingIconMap = {
+	'building.svg': buildingSvg,
+	'building-dome.svg': buildingDomeSvg,
+	'house.svg': houseSvg,
+	'walk.svg': walkSvg,
+	'park.svg': parkSvg,
+	'disco.svg': discoSvg,
+	'person.svg': personSvg
 };
