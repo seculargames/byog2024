@@ -12,7 +12,7 @@
 	import StartGame from './main';
 	import { EventBus } from './EventBus';
 
-	import { engine } from '../lib/engine/engine.ts';
+	import { engine } from './engine/engine.ts';
 	import { gameParams, gameState, loading } from '../stores.ts';
 
 	export let phaserRef: TPhaserRef = {

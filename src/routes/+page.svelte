@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import welcome from '../game/lib/images/svelte-welcome.webp';
+	import welcome_fallback from '../game/lib/images/svelte-welcome.png';
 	import { gameState } from '../stores.ts';
 
 	import type { Scene } from 'phaser';

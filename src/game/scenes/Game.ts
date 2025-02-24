@@ -1,6 +1,6 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
-import { drawCity } from '../../lib/engine/Canvas';
+import { drawCity } from '../engine/Canvas';
 export class Game extends Scene {
 	camera: Phaser.Cameras.Scene2D.Camera;
 	background: Phaser.GameObjects.Image;

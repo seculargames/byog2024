@@ -1,8 +1,8 @@
 <script>
-	import Header from '$lib/components/Header.svelte';
-	import Spinner from '$lib/components/Spinner.svelte';
+	import Header from '../game/lib/components/Header.svelte';
+	import Spinner from '../game/lib/components/Spinner.svelte';
 	import { gameState, loading } from '../stores.ts';
-	import NewGame from '$lib/components/NewGame.svelte';
+	import NewGame from '../game/lib/components/NewGame.svelte';
 	import '../app.css';
 	import 'flowbite';
 
