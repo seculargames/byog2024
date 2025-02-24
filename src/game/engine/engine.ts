@@ -197,8 +197,28 @@ function initializeGameState(canvas) {
 	loading.set(false);
 }
 
+const socialDrainMultiplier = function (userObj) {
+	let result = 0.3;
+	if (userObj.neuro.asocial > userObj.neuro.mirror) {
+		return result + 0.5; // highly socially draining
+	}
+	if (
+		userObj.leadership.ownway > userObj.leadership.leader ||
+		userObj.leadership.ownway > userObj.leadership.follower
+	) {
+		return result + 0.3; // above average socially draining to hold space
+	}
+	if (
+		userObj.gender.conform > userObj.gender.strong ||
+		userObj.gender.conform > userObj.gender.emo
+	) {
+		return result + 0.1; // easily conforms so not much social battery drain.
+	}
+};
+
 const engine = {
 	ab: addBot,
+	igs: initializeGameState,
 	ugs: updateGameState,
 	gb: genBots,
 	gm: genMap
