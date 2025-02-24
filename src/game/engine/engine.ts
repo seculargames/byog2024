@@ -1,4 +1,5 @@
-import { gameParams, gameState, loading } from '../../stores.ts';
+import { loading } from '../../stores.ts';
+import { gameParams, gameState } from '../states.ts';
 import { mean } from 'mathjs';
 
 //TODO: move most of the game mechanics logic that's not UI here instead of context menu, canvas

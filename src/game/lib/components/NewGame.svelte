@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { gameState, gameParams } from '../../../stores.ts';
 	import { Label, Input, Button } from 'flowbite-svelte';
 	import personSvg from '../images/person-outline.svg?raw';
 	import Wheel from './Wheel.svelte';

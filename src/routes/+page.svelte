@@ -2,7 +2,7 @@
 	import Counter from './Counter.svelte';
 	import welcome from '../game/lib/images/svelte-welcome.webp';
 	import welcome_fallback from '../game/lib/images/svelte-welcome.png';
-	import { gameState } from '../stores.ts';
+	import { gameState } from '../game/states.ts';
 
 	import type { Scene } from 'phaser';
 	import type { MainMenu } from '../game/scenes/MainMenu';

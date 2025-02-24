@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { onMount, onDestroy } from 'svelte';
-	import { gameState, gameParams } from '../../../stores.ts';
+	import { gameState, gameParams } from '../../states.ts';
 	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Input } from 'flowbite-svelte';
 	import { Dropdown, DropdownItem, Marquee } from 'flowbite-svelte';
 	import { ChevronDownOutline, ChevronRightOutline } from 'flowbite-svelte-icons';

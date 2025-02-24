@@ -13,11 +13,12 @@ import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { Button, Modal } from 'flowbite-svelte';
 import { onMount, onDestroy } from 'svelte';
+
+import { gameParams } from '../states.ts';
 import { MS_PER_HOUR } from '../lib/constants.ts';
 import { engine } from '../engine/engine.ts';
 
-// some component level global variables
-const buildingPositions = $gameParams.defaults.buildingPositions;
+const buildingPositions = gameParams.defaults.buildingPositions;
 
 export class Preloader extends Scene {
 	constructor() {
