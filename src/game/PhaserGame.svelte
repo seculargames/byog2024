@@ -26,7 +26,7 @@
 	//Modal boxes for locations
 	let modalShows: Record<String, Boolean>[] = {};
 	let content;
-	for (const loc in $gameParams.locations) {
+	for (const loc in gameParams.locations) {
 		modalShows[loc] = false;
 	}
 
@@ -45,7 +45,7 @@
 
 	onMount(() => {
 		// On adding players button click create count number of bot players
-		//let bots = engine.gb($gameParams.locations, count);
+		//let bots = engine.gb(gameParams.locations, count);
 		let initialGameState = engine.igs();
 		phaserRef.game = StartGame('game-container');
 
@@ -55,7 +55,7 @@
 			initFlowbite();
 			canvas = SVG()
 				.addTo('#currentCityCanvas')
-				.size($gameParams.board.width, $gameParams.board.height);
+				.size(gameParams.board.width, gameParams.board.height);
 			drawCityState(canvas);
 			window.onload = updatePlayerStats({ city: 0, loc: 'home' });
 
@@ -119,7 +119,7 @@
 </script>
 
 <svelte:window on:mousedown={handleMouseDown} />
-{#each Object.entries($gameParams.locations) as [key, location]}
+{#each Object.entries(gameParams.locations) as [key, location]}
 	{#if 'menu' in location}
 		<Modal
 			size="xs"

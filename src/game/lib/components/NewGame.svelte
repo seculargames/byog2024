@@ -65,7 +65,7 @@
 		gameState.user.energy.restless = 100;
 		for (const [k, v] of Object.entries(attrKeyVariableMap)) {
 			let i = 0;
-			for (const [ka, va] of Object.entries($gameParams.attributes[k])) {
+			for (const [ka, va] of Object.entries(gameParams.attributes[k])) {
 				gameState.user[k][ka] = v.var[i++];
 			}
 		}
@@ -75,8 +75,8 @@
 
 	function getLabels(attribute) {
 		console.log(attribute);
-		return Object.keys($gameParams.attributes[attribute]).map(
-			(k) => $gameParams.attributes[attribute][k]
+		return Object.keys(gameParams.attributes[attribute]).map(
+			(k) => gameParams.attributes[attribute][k]
 		);
 	}
 </script>
@@ -106,8 +106,8 @@
 							</li>
 							<li>
 								{attrKeyVariableMap[k].label} set values:
-								{#each Object.keys($gameParams.attributes[k]) as ka, ia}
-									<p>{$gameParams.attributes[k][ka]}: {attrKeyVariableMap[k]['var'][ia]}</p>
+								{#each Object.keys(gameParams.attributes[k]) as ka, ia}
+									<p>{gameParams.attributes[k][ka]}: {attrKeyVariableMap[k]['var'][ia]}</p>
 								{/each}
 							</li>
 						{/each}

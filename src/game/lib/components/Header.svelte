@@ -12,7 +12,7 @@
 	let playerStats = false;
 	let currentLocation;
 
-	let allHeadlines = $gameParams.headlines;
+	let allHeadlines = gameParams.headlines;
 	let headlines = [];
 	$: toggleHamburger = () => {
 		hamburgerOpen = !hamburgerOpen;
@@ -40,7 +40,7 @@
 					<ChevronDownOutline class="h-3 w-3 text-white" />
 				</Button>
 				<Dropdown bind:open={playerStats}>
-					{#each Object.keys($gameParams.attributes).filter((k) => k != 'health' && k != 'energy') as ka, ia}
+					{#each Object.keys(gameParams.attributes).filter((k) => k != 'health' && k != 'energy') as ka, ia}
 						{#each Object.keys(gameState.user[ka]) as kv, iv}
 							<DropdownItem>{ka} - {kv}: {gameState.user[ka][kv]}</DropdownItem>
 						{/each}
