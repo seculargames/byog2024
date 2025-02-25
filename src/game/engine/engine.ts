@@ -186,7 +186,7 @@ let genBots = function (locations) {
 
 function initializeGameState(canvas) {
 	const style = canvas.style('.mycolor', { color: 'pink' });
-	//$spaceHoldingDrainer = socialDrainMultiplier($gameState.user);
+	//$spaceHoldingDrainer = socialDrainMultiplier(gameState.user);
 	canvas.add(style);
 	let genMap;
 	genMap = engine.gm(locationSpecificParams, buildingPositions);
