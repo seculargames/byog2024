@@ -1,3 +1,6 @@
+import { writable, readable } from 'svelte/store';
+import { persisted } from 'svelte-persisted-store';
+
 import houseSvg from './lib/images/house.svg?raw';
 import buildingSvg from './lib/images/building.svg?raw';
 import buildingDomeSvg from './lib/images/building-dome.svg?raw';
@@ -6,6 +9,7 @@ import citySvg from './lib/images/city-map.svg?raw';
 import parkSvg from './lib/images/park.svg?raw';
 import discoSvg from './lib/images/disco.svg?raw';
 import personSvg from './lib/images/person.svg?raw';
+import { user, gameStatePersisted } from '../stores.ts';
 export const gameParams = {
 	TICK: {
 		easy: 50000,
@@ -283,49 +287,27 @@ export const gameParams = {
 /*export var spaceHoldingDrainer = persisted('spaceHoldingDrainer', {
 	value: 0
 }); //0, //socialDrainMultiplier(userObj),*/
-export const gameState = {
-	state: 'init',
+
+export let gameStateTemp = writable({
+	state: gameStatePersisted.state,
 	time: 0,
 	worldmap: { cities: [{ id: 0, name: 'anonymous', tier: 5, difficulty: 'rustic' }] },
 	user: {
-		id: '100',
-		name: 'nands',
-		health: 50,
+		name: gameStatePersisted.user_name,
+		id: gameStatePersisted.user_id,
+		health: 100,
 		currentLocation: { city: 0, loc: { name: 'home', pos: [] } },
 		energy: {
 			social: 100,
 			asocial: 100,
 			weird: 100
 		},
-		neuro: {
-			interest: 100,
-			hyperfocused: 100,
-			mirror: 100
-		},
-		gender: {
-			conform: 100,
-			weak: 100,
-			emo: 100
-		},
-		sexuality: {
-			hetero: 0,
-			homo: 0,
-			pan: 0,
-			ace: 0
-		},
-		/*social: {
-            listener: 0,
-            talker: 0,
-            observer: 0
-          },*/
-
-		leadership: {
-			leader: 0,
-			follower: 0,
-			ownway: 0
-		},
-		alertLevel: 40
+		neuro: gameStatePersisted.user_neuro,
+		social: gameStatePersisted.user_social,
+		asocial: gameStatePersisted.user_asocial,
+		weird: gameStatePersisted.user_weird
 	},
+
 	allUsers: new Array(),
 	locationUserMap: {
 		0: {
@@ -336,7 +318,7 @@ export const gameState = {
 			dance: new Array()
 		}
 	}
-};
+});
 
 export const buildingIconMap = {
 	'building.svg': buildingSvg,

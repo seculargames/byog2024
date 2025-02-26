@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { onMount, onDestroy } from 'svelte';
-	import { gameState, gameParams } from '../../states.ts';
+	import { gameStateTemp, gameParams } from '../../states.ts';
+	import { gameStatePersisted } from '../../../stores.ts';
 	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Input } from 'flowbite-svelte';
 	import { Dropdown, DropdownItem, Marquee } from 'flowbite-svelte';
 	import { ChevronDownOutline, ChevronRightOutline } from 'flowbite-svelte-icons';
@@ -21,10 +22,10 @@
 
 	$: resetGame = () => {
 		//gameState.set(initialState);
-		gameState.reset();
+		gameStatePersisted.reset();
 	};
 	onMount(() => {
-		currentLocation = gameState.currentLocation;
+		currentLocation = gameStateTemp.currentLocation;
 		for (let i = 0; i < 3; i++) {
 			headlines.push(allHeadlines.splice(Math.floor(Math.random() * allHeadlines.length), 1)[0]);
 		}
@@ -36,29 +37,29 @@
 		<div class="m-2 flex items-center">
 			<p class="m-1 p-2">
 				<Button on:click={() => (playerStats = !playerStats)} class="bg-gray-800 text-white">
-					Welcome: {gameState.user.name}
+					Welcome: {$gameStateTemp.user.name}
 					<ChevronDownOutline class="h-3 w-3 text-white" />
 				</Button>
 				<Dropdown bind:open={playerStats}>
 					{#each Object.keys(gameParams.attributes).filter((k) => k != 'health' && k != 'energy') as ka, ia}
-						{#each Object.keys(gameState.user[ka]) as kv, iv}
-							<DropdownItem>{ka} - {kv}: {gameState.user[ka][kv]}</DropdownItem>
+						{#each Object.keys(gameStateTemp.user[ka]) as kv, iv}
+							<DropdownItem>{ka} - {kv}: {gameStateTemp.user[ka][kv]}</DropdownItem>
 						{/each}
 					{/each}
 				</Dropdown>
 			</p>
 			<Button on:click={resetGame} class="mx-1 bg-primary-800 px-3 text-white">New Game</Button>
 			<p class="m-1 p-1">
-				Date &amp; Time: {new Date(gameState.time).toLocaleString()}
+				Date &amp; Time: {new Date(gameStateTemp.time).toLocaleString()}
 			</p>
 		</div>
 		<div class="sm:hidden md:order-1 md:flex">
 			<NavHamburger onClick={toggleHamburger} />
 		</div>
 		<div class={display}>
-			<Meter value={gameState.user.health} label="Health" id="health" />
-			<Meter value={gameState.user.energy.social} label="Energy" id="energy" />
-			<Meter value={gameState.user.alertLevel} label="Alert Level" id="alert" />
+			<Meter value={gameStateTemp.user.health} label="Health" id="health" />
+			<Meter value={gameStateTemp.user.energy.social} label="Energy" id="energy" />
+			<Meter value={gameStateTemp.user.alertLevel} label="Alert Level" id="alert" />
 			<!-- <Meter value={gameState.locationUserMap[currentLocation].length} label="Users Nearby" id="nearby_users" /> -->
 		</div>
 	</Navbar>

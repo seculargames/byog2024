@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { Label, Input, Button } from 'flowbite-svelte';
-	import personSvg from '../images/person-outline.svg?raw';
-	import Wheel from './Wheel.svelte';
+	import personSvg from '../game/lib/images/person-outline.svg?raw';
+	import Wheel from '../game/lib/components/Wheel.svelte';
 	import {
 		MS_PER_MINUTE,
 		MS_PER_HOUR,
 		MS_PER_DAY,
 		MS_PER_MONTH,
 		MS_PER_YEAR
-	} from '../constants.ts';
+	} from '../game/lib/constants.ts';
 	import { goto } from '$app/navigation';
-	import { gameParams, gameState } from '../../states.ts';
-
+	import { gameParams, gameStateTemp } from '../game/states.ts';
+	import { gameStatePersisted } from '../stores.ts';
+	import { user } from '../stores.ts';
 	let neuroValues = [0, 0, 0];
 	let genderValues = [0, 0, 0];
 	let sexualityValues = [0, 0, 0];
@@ -49,6 +50,7 @@
 	let name = '';
 
 	function save() {
+		console.log(user);
 		if (name == '') {
 			alert("Please enter your character's name");
 			return;
@@ -57,16 +59,15 @@
 		const ms = now.getTime();
 		const gameTime = ms + MS_PER_YEAR * 10 + Math.random() * 2 * MS_PER_YEAR;
 		gameState.time = gameTime;
-		gameState.user.name = name;
-		gameState.user.health = 100;
-		gameState.user.alertness = 100;
-		gameState.user.energy.social = 100;
-		gameState.user.energy.weird = 100;
-		gameState.user.energy.restless = 100;
+		user.name = name;
+		user.health = 100;
+		user.alertness = 100;
+		user.energy = { social: 100, weird: 100, restless: 100 };
 		for (const [k, v] of Object.entries(attrKeyVariableMap)) {
+			user[k] = {};
 			let i = 0;
 			for (const [ka, va] of Object.entries(gameParams.attributes[k])) {
-				gameState.user[k][ka] = v.var[i++];
+				user[k][ka] = v.var[i++];
 			}
 		}
 		gameState.state = 'ready';

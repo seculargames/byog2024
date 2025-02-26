@@ -1,9 +1,8 @@
 <script>
 	import Header from '../game/lib/components/Header.svelte';
 	import Spinner from '../game/lib/components/Spinner.svelte';
-	import { gameState } from '../game/states.ts';
-	import { loading } from '../stores.ts';
-	import NewGame from '../game/lib/components/NewGame.svelte';
+	import { loading, gameStatePersisted } from '../stores.ts';
+	import NewGame from './NewGame.svelte';
 	import '../app.css';
 	import 'flowbite';
 
@@ -31,7 +30,7 @@
 {#await loading}
 	<Spinner />
 {:then}
-	{#if gameState.state == 'init'}
+	{#if gameStatePersisted.state == 'init'}
 		<NewGame />
 	{:else}
 		<div class="app container mx-auto bg-gray-900 bg-opacity-100 text-white">
