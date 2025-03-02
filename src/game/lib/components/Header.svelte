@@ -25,7 +25,7 @@
 		gameStatePersisted.reset();
 	};
 	onMount(() => {
-		currentLocation = gameStateTemp.currentLocation;
+		currentLocation = $gameStateTemp.currentLocation;
 		for (let i = 0; i < 3; i++) {
 			headlines.push(allHeadlines.splice(Math.floor(Math.random() * allHeadlines.length), 1)[0]);
 		}
@@ -57,9 +57,9 @@
 			<NavHamburger onClick={toggleHamburger} />
 		</div>
 		<div class={display}>
-			<Meter value={gameStateTemp.user.health} label="Health" id="health" />
-			<Meter value={gameStateTemp.user.energy.social} label="Energy" id="energy" />
-			<Meter value={gameStateTemp.user.alertLevel} label="Alert Level" id="alert" />
+			<Meter value={$gameStateTemp.user.health} label="Health" id="health" />
+			<Meter value={$gameStateTemp.user.energy.social} label="Energy" id="energy" />
+			<Meter value={$gameStateTemp.user.alertLevel} label="Alert Level" id="alert" />
 			<!-- <Meter value={gameState.locationUserMap[currentLocation].length} label="Users Nearby" id="nearby_users" /> -->
 		</div>
 	</Navbar>
