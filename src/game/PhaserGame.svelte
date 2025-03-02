@@ -14,7 +14,8 @@
 
 	import { engine } from './engine/engine.ts';
 	import { loading } from '../stores.ts';
-	import { gameParams, gameState } from './states.ts';
+	import { gameParams, gameStatePersisted } from './states.ts';
+	import { gameStateTemp } from '../stores.ts';
 
 	export let phaserRef: TPhaserRef = {
 		game: null,
@@ -41,7 +42,7 @@
 	//let player, playerLabel;
 	let buildings;
 	let city;
-	let currentLocation = gameState.user.currentLocation;
+	let currentLocation = $gameStateTemp.user.currentLocation;
 
 	onMount(() => {
 		// On adding players button click create count number of bot players
@@ -55,7 +56,7 @@
 			initFlowbite();
 			canvas = SVG()
 				.addTo('#currentCityCanvas')
-				.size(gameParams.board.width, gameParams.board.height);
+				.size($gameParams.board.width, $gameParams.board.height);
 			drawCityState(canvas);
 			window.onload = updatePlayerStats({ city: 0, loc: 'home' });
 
@@ -73,11 +74,11 @@
 					const [x, y] = loc.pos;
 				}
 			}*/
-		let x = gameState.user.currentLocation.loc.pos.x;
-		let y = gameState.user.currentLocation.loc.pos.y;
+		let x = $gameStateTemp.user.currentLocation.loc.pos.x;
+		let y = $gameStateTemp.user.currentLocation.loc.pos.y;
 		player.move(x + 30, y);
 		playerLabel.move(x + 30, y + 10);
-		gameState.user.currentLocation.loc = { name: location.Label, pos: [x + 30, y] };
+		$gameStateTemp.user.currentLocation.loc = { name: location.Label, pos: [x + 30, y] };
 		// Now for stats update
 		updatePlayerStatsChoice(location, choice);
 	};
@@ -87,7 +88,7 @@
 		/* console.debug(house.node); */
 		if (event.target == canvas.node) {
 			//player.move(event.pageX-450, event.pageY-50);
-			gameState.user.energy.social -= 10;
+			$gameStateTemp.user.energy.social -= 10;
 		} //else if (event.target == house.node) {
 		//player.move(house.x, house.y);
 		//}
