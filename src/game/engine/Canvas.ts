@@ -1,11 +1,11 @@
-import { loading } from '../../stores.ts';
+import { gameStatePersisted, loading } from '../../stores.ts';
 import { gameParams, gameStateTemp, buildingIconMap } from '../states.ts';
 import { Preloader } from '../../game/scenes/Preloader.ts';
 const locationSpecificParams = gameParams.locations;
 
 function updatePlayerStats(currentLocation) {
 	let tick;
-	tick = gameParams.TICK[gameState.worldmap.cities[currentLocation.city].difficulty];
+	tick = gameStatePersisted.TICK[gameState.worldmap.cities[currentLocation.city].difficulty];
 	if (tick) {
 		setInterval(() => {
 			let result = engine.ugs(gameState, gameParams, currentLocation);
@@ -17,7 +17,7 @@ function updatePlayerStats(currentLocation) {
 				restless: clampValue(result.energy.restless)
 			};
 			gameState.user.alertLevel = clampValue(result.alertness);
-		}, gameParams.TICK);
+		}, gameStatePersisted.TICK);
 	}
 }
 function createPlayer(canvas) {

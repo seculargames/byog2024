@@ -8,6 +8,8 @@
 </script>
 
 <script lang="ts">
+	import { Button, Modal } from 'flowbite-svelte';
+	import Menu from './lib/components/Menu.svelte';
 	import { onMount } from 'svelte';
 	import StartGame from './main';
 	import { EventBus } from './EventBus';
@@ -56,7 +58,7 @@
 			initFlowbite();
 			canvas = SVG()
 				.addTo('#currentCityCanvas')
-				.size($gameParams.board.width, $gameParams.board.height);
+				.size(gameParams.board.width, gameParams.board.height);
 			drawCityState(canvas);
 			window.onload = updatePlayerStats({ city: 0, loc: 'home' });
 

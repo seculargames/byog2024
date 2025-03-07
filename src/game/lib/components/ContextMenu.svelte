@@ -15,7 +15,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 	//var _ = require('lodash');
 	import { izip, cycle } from 'itertools';
 	import { engine } from '../engine/engine.ts';
+	import { gameStatePersisted } from '../../../stores.ts';
 	import { gameParams, gameStateTemp } from '../../states.ts';
+	import { G } from '@svgdotjs/svg.js';
 
 	// pos is cursor position when right click occur
 	let pos = { x: 0, y: 0 };
@@ -64,7 +66,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 	}
 	function difficulty() {
 		//content.textContent = "Hard/Medium/Easy"
-		gameParams.TICK = cycle(500, 10000, 100000, 0);
+		gameStatePersisted.TICK = cycle(500, 10000, 100000, 0);
 	}
 	function addPlayers() {
 		let currentLocation = gameState.user.currentLocation;
