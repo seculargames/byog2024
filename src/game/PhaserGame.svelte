@@ -14,8 +14,8 @@
 
 	import { engine } from './engine/engine.ts';
 	import { loading } from '../stores.ts';
-	import { gameParams, gameStatePersisted } from './states.ts';
-	import { gameStateTemp } from '../stores.ts';
+	import { gameParams, gameStateTemp } from './states.ts';
+	import { gameStatePersisted } from '../stores.ts';
 
 	export let phaserRef: TPhaserRef = {
 		game: null,

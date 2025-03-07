@@ -1,5 +1,5 @@
-import { loading } from '../../stores.ts';
-import { gameParams, gameState } from '../states.ts';
+import { loading, gameStatePersisted } from '../../stores.ts';
+import { gameParams, gameStateTemp } from '../states.ts';
 import { mean } from 'mathjs';
 
 //TODO: move most of the game mechanics logic that's not UI here instead of context menu, canvas
@@ -193,7 +193,7 @@ function initializeGameState(canvas) {
 	for (let i = 0; i < genMap.cities.length; i++) {
 		let cityObj = genMap.cities[i];
 		//drawCity(canvas, cityObj);
-		gameState.worldmap.cities.push(cityObj);
+		gameStatePersisted.worldmap.cities.push(cityObj);
 	}
 	loading.set(false);
 }

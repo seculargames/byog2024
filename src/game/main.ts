@@ -7,7 +7,7 @@ import { Preloader } from './scenes/Preloader';
 import { initFlowbite } from 'flowbite';
 
 import { loading } from '../stores.ts';
-import { gameParams, gameState } from './states.ts';
+import { gameParams } from './states.ts';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig

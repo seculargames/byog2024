@@ -15,7 +15,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 	//var _ = require('lodash');
 	import { izip, cycle } from 'itertools';
 	import { engine } from '../engine/engine.ts';
-	import { gameParams, gameState } from '../../states.ts';
+	import { gameParams, gameStateTemp } from '../../states.ts';
 
 	// pos is cursor position when right click occur
 	let pos = { x: 0, y: 0 };

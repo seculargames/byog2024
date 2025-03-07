@@ -289,7 +289,8 @@ export const gameParams = {
 }); //0, //socialDrainMultiplier(userObj),*/
 
 export let gameStateTemp = writable({
-	state: gameStatePersisted.state,
+	persistedState: gameStatePersisted.state,
+	state: 'waiting',
 	time: 0,
 	worldmap: { cities: [{ id: 0, name: 'anonymous', tier: 5, difficulty: 'rustic' }] },
 	user: {

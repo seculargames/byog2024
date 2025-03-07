@@ -1,5 +1,5 @@
 import { loading } from '../../stores.ts';
-import { gameParams, gameState, buildingIconMap } from '../states.ts';
+import { gameParams, gameStateTemp, buildingIconMap } from '../states.ts';
 import { Preloader } from '../../game/scenes/Preloader.ts';
 const locationSpecificParams = gameParams.locations;
 

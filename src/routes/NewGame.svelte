@@ -58,7 +58,7 @@
 		const now = new Date();
 		const ms = now.getTime();
 		const gameTime = ms + MS_PER_YEAR * 10 + Math.random() * 2 * MS_PER_YEAR;
-		gameState.time = gameTime;
+		gameStateTemp.time = gameTime;
 		user.name = name;
 		user.health = 100;
 		user.alertness = 100;
@@ -70,7 +70,7 @@
 				user[k][ka] = v.var[i++];
 			}
 		}
-		gameState.state = 'ready';
+		gameStateTemp.state = 'ready';
 		goto('/');
 	}
 
