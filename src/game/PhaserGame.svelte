@@ -49,18 +49,12 @@
 	onMount(() => {
 		// On adding players button click create count number of bot players
 		//let bots = engine.gb(gameParams.locations, count);
-		let initialGameState = engine.igs();
+        const flowbite = await import('flowbite');
+        initFlowbite();
 		phaserRef.game = StartGame('game-container');
 
 		EventBus.on('current-scene-ready', (scene_instance: Scene) => {
 			phaserRef.scene = scene_instance;
-			//const flowbite = await import('flowbite');
-			initFlowbite();
-			canvas = SVG()
-				.addTo('#currentCityCanvas')
-				.size(gameParams.board.width, gameParams.board.height);
-			drawCityState(canvas);
-			window.onload = updatePlayerStats({ city: 0, loc: 'home' });
 
 			if (currentActiveScene) {
 				currentActiveScene(scene_instance);

@@ -30,6 +30,11 @@ export class MainMenu extends Scene {
 			.setOrigin(0.5)
 			.setDepth(100);
 
+		canvas = SVG()
+			.addTo('#currentCityCanvas')
+			.size(gameParams.board.width, gameParams.board.height);
+		drawCityState(canvas);
+		//window.onload = updatePlayerStats({ city: 0, loc: 'home' });
 		EventBus.emit('current-scene-ready', this);
 	}
 
