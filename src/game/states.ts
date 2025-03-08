@@ -1,14 +1,14 @@
 import { writable, readable } from 'svelte/store';
 import { persisted } from 'svelte-persisted-store';
 
-import houseSvg from './lib/images/house.svg?raw';
-import buildingSvg from './lib/images/building.svg?raw';
-import buildingDomeSvg from './lib/images/building-dome.svg?raw';
-import walkSvg from './lib/images/walk.svg?raw';
-import citySvg from './lib/images/city-map.svg?raw';
-import parkSvg from './lib/images/park.svg?raw';
-import discoSvg from './lib/images/disco.svg?raw';
-import personSvg from './lib/images/person.svg?raw';
+import houseSvg from '$lib/images/house.svg?raw';
+import buildingSvg from '$lib/images/building.svg?raw';
+import buildingDomeSvg from '$lib/images/building-dome.svg?raw';
+import walkSvg from '$lib/images/walk.svg?raw';
+import citySvg from '$lib/images/city-map.svg?raw';
+import parkSvg from '$lib/images/park.svg?raw';
+import discoSvg from '$lib/images/disco.svg?raw';
+import personSvg from '$lib/images/person.svg?raw';
 import { user, gameStatePersisted } from '../stores.ts';
 export const gameParams = {
 	TICK: {

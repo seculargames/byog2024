@@ -1,6 +1,6 @@
 <script>
-	import Wheel from '../../game/lib/components/Wheel.svelte';
-	import Menu from '../../game/lib/components/Menu.svelte';
+	import Wheel from '$lib/components/Wheel.svelte';
+	import Menu from '$lib/components/Menu.svelte';
 </script>
 
 <svelte:head>

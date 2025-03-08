@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { Label, Input, Button } from 'flowbite-svelte';
-	import personSvg from '../game/lib/images/person-outline.svg?raw';
-	import Wheel from '../game/lib/components/Wheel.svelte';
+	import personSvg from '$lib/images/person-outline.svg?raw';
+	import Wheel from '$lib/components/Wheel.svelte';
 	import {
 		MS_PER_MINUTE,
 		MS_PER_HOUR,
 		MS_PER_DAY,
 		MS_PER_MONTH,
 		MS_PER_YEAR
-	} from '../game/lib/constants.ts';
+	} from '$lib/constants.ts';
 	import { goto } from '$app/navigation';
 	import { gameParams, gameStateTemp } from '../game/states.ts';
 	import { gameStatePersisted } from '../stores.ts';

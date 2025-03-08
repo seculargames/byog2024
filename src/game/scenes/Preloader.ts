@@ -1,13 +1,13 @@
 import { Scene } from 'phaser';
 import { SVG } from '@svgdotjs/svg.js';
-import Menu from '../lib/components/Menu.svelte';
+import Menu from '$lib/components/Menu.svelte';
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { Button, Modal } from 'flowbite-svelte';
 import { onMount, onDestroy } from 'svelte';
 
 import { gameParams } from '../states.ts';
-import { MS_PER_HOUR } from '../lib/constants.ts';
+import { MS_PER_HOUR } from '$lib/constants.ts';
 import { engine } from '../engine/engine.ts';
 
 const buildingPositions = gameParams.defaults.buildingPositions;

@@ -1,6 +1,6 @@
 <script>
-	import Header from '../game/lib/components/Header.svelte';
-	import Spinner from '../game/lib/components/Spinner.svelte';
+	import Header from '$lib/components/Header.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
 	import { loading, gameStatePersisted } from '../stores.ts';
 	import NewGame from './NewGame.svelte';
 	import '../app.css';
