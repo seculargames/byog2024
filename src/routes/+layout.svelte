@@ -36,9 +36,6 @@
 		<div class="app container mx-auto bg-gray-900 bg-opacity-100 text-white">
 			<div id="game-container">
 				<Header></Header>
-				<div id="worldCanvas">
-					<div id="currentCityCanvas"></div>
-				</div>
 			</div>
 
 			<main role="main" class="relative mx-auto w-full">

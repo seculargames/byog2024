@@ -38,7 +38,7 @@ export class MainMenu extends Scene {
 		EventBus.emit('current-scene-ready', this);
 	}
 
-	changeScene() {
+	changeCity() {
 		if (this.logoTween) {
 			this.logoTween.stop();
 			this.logoTween = null;

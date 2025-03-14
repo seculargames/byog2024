@@ -14,12 +14,12 @@
 	let phaserRef: TPhaserRef = { game: null, scene: null };
 	const spritePosition = { x: 0, y: 0 };
 
-	const changeScene = () => {
+	const changeCity = () => {
 		const scene = phaserRef.scene as MainMenu;
 
 		if (scene) {
 			// Call the changeScene method defined in the `MainMenu`, `Game` and `GameOver` Scenes
-			scene.changeScene();
+			scene.changeCity();
 		}
 	};
 
@@ -66,20 +66,25 @@
 </script>
 
 <div id="app">
-	<PhaserGame bind:phaserRef currentActiveScene={currentScene} />
-	<div>
+	<div id="worldCanvas">
+		<div id="currentCityCanvas"></div>
+		<PhaserGame bind:phaserRef currentActiveScene={currentScene} />
 		<div>
-			<button class="button" on:click={changeScene}>Change Scene</button>
-		</div>
-		<div>
-			<button class="button" disabled={canMoveSprite} on:click={moveSprite}>Toggle Movement</button>
-		</div>
-		<div class="spritePosition">
-			Sprite Position:
-			<pre>{JSON.stringify(spritePosition, null, 2)}</pre>
-		</div>
-		<div>
-			<button class="button" on:click={addSprite}>Add New Sprite</button>
+			<div>
+				<button class="button" on:click={changeCity}>Change City</button>
+			</div>
+			<div>
+				<button class="button" disabled={canMoveSprite} on:click={moveSprite}
+					>Toggle Movement</button
+				>
+			</div>
+			<div class="spritePosition">
+				Sprite Position:
+				<pre>{JSON.stringify(spritePosition, null, 2)}</pre>
+			</div>
+			<div>
+				<button class="button" on:click={addSprite}>Add New Sprite</button>
+			</div>
 		</div>
 	</div>
 </div>
