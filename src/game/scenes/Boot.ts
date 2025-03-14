@@ -16,7 +16,7 @@ export class Boot extends Scene {
 		canvas = SVG()
 			.addTo('#currentCityCanvas')
 			.size(gameParams.board.width, gameParams.board.height);
-		drawCityState(canvas);
+		drawCity(canvas);
 	}
 
 	create() {

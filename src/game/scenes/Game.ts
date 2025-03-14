@@ -33,7 +33,8 @@ export class Game extends Scene {
 		canvas = SVG()
 			.addTo('#currentCityCanvas')
 			.size(gameParams.board.width, gameParams.board.height);
-		drawCityState(canvas);
+		initializeGameState(canvas, this);
+		//drawCity(canvas, cityObj, this);
 		EventBus.emit('current-scene-ready', this);
 	}
 
