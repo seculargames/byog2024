@@ -10,7 +10,13 @@ export class Boot extends Scene {
 		//  The smaller the file size of the assets, the better, as the Boot Scene itself has no preloader.
 
 		this.load.image('background', 'assets/bg.png');
+		// initialize the random map generator first
 		let initialGameState = engine.igs();
+		// draw the map.
+		canvas = SVG()
+			.addTo('#currentCityCanvas')
+			.size(gameParams.board.width, gameParams.board.height);
+		drawCityState(canvas);
 	}
 
 	create() {

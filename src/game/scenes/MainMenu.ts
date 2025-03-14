@@ -30,6 +30,7 @@ export class MainMenu extends Scene {
 			.setOrigin(0.5)
 			.setDepth(100);
 
+		// draw the map.
 		canvas = SVG()
 			.addTo('#currentCityCanvas')
 			.size(gameParams.board.width, gameParams.board.height);
@@ -71,6 +72,5 @@ export class MainMenu extends Scene {
 				}
 			});
 		}
-		QT_LINUX_ACCESSIBILITY_ALWAYS_ONuuu: qr;
 	}
 }

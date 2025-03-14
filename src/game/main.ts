@@ -17,7 +17,14 @@ const config: Phaser.Types.Core.GameConfig = {
 	height: 768,
 	parent: 'game-container',
 	backgroundColor: '#028af8',
-	scene: [Boot, Preloader, MainMenu, MainGame, GameOver]
+	/// Initialize the scenes involved in the game flow
+	scene: {
+		boot: Boot,
+		preloader: Preloader,
+		mainMenu: MainMenu,
+		newGame: MainGame,
+		gameOver: GameOver
+	}
 };
 
 const StartGame = (parent: string) => {

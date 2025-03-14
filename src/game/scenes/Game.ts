@@ -29,6 +29,11 @@ export class Game extends Scene {
 			.setOrigin(0.5)
 			.setDepth(100);
 
+		// draw the map.
+		canvas = SVG()
+			.addTo('#currentCityCanvas')
+			.size(gameParams.board.width, gameParams.board.height);
+		drawCityState(canvas);
 		EventBus.emit('current-scene-ready', this);
 	}
 

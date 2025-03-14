@@ -49,8 +49,8 @@
 	onMount(() => {
 		// On adding players button click create count number of bot players
 		//let bots = engine.gb(gameParams.locations, count);
-        const flowbite = await import('flowbite');
-        initFlowbite();
+		//const flowbite = await import('flowbite');
+		initFlowbite();
 		phaserRef.game = StartGame('game-container');
 
 		EventBus.on('current-scene-ready', (scene_instance: Scene) => {

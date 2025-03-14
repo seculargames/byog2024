@@ -32,6 +32,11 @@ export class Preloader extends Scene {
 			//  Update the progress bar (our bar is 464px wide, so 100% = 464px)
 			bar.width = 4 + 460 * progress;
 		});
+		// draw the map.
+		canvas = SVG()
+			.addTo('#currentCityCanvas')
+			.size(gameParams.board.width, gameParams.board.height);
+		drawCityState(canvas);
 	}
 
 	preload() {
@@ -40,6 +45,8 @@ export class Preloader extends Scene {
 
 		this.load.image('logo', 'logo.png');
 		this.load.image('star', 'star.png');
+		// initialize the random map generator first
+		this.initialGameState = engine.igs();
 	}
 
 	create() {
