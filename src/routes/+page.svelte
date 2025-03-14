@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
-
 	import type { Scene } from 'phaser';
 	import type { MainMenu } from '../game/scenes/MainMenu';
 	import PhaserGame, { type TPhaserRef } from '../game/PhaserGame.svelte';
+
+	import welcome from '$lib/images/svelte-welcome.webp';
+	import welcome_fallback from '$lib/images/svelte-welcome.png';
 
 	// The sprite can only be moved in the MainMenu Scene
 	let canMoveSprite = false;
@@ -13,13 +13,16 @@
 	//  References to the PhaserGame component (game and scene are exposed)
 	let phaserRef: TPhaserRef = { game: null, scene: null };
 	const spritePosition = { x: 0, y: 0 };
+
 	const changeScene = () => {
 		const scene = phaserRef.scene as MainMenu;
+
 		if (scene) {
 			// Call the changeScene method defined in the `MainMenu`, `Game` and `GameOver` Scenes
 			scene.changeScene();
 		}
 	};
+
 	const moveSprite = () => {
 		const scene = phaserRef.scene as MainMenu;
 
@@ -31,6 +34,31 @@
 			});
 		}
 	};
+
+	const addSprite = () => {
+		const scene = phaserRef.scene as Scene;
+
+		if (scene) {
+			// Add more stars
+			const x = Phaser.Math.Between(64, scene.scale.width - 64);
+			const y = Phaser.Math.Between(64, scene.scale.height - 64);
+
+			//  `add.sprite` is a Phaser GameObjectFactory method and it returns a Sprite Game Object instance
+			const star = scene.add.sprite(x, y, 'star');
+
+			//  ... which you can then act upon. Here we create a Phaser Tween to fade the star sprite in and out.
+			//  You could, of course, do this from within the Phaser Scene code, but this is just an example
+			//  showing that Phaser objects and systems can be acted upon from outside of Phaser itself.
+			scene.add.tween({
+				targets: star,
+				duration: 500 + Math.random() * 1000,
+				alpha: 0,
+				yoyo: true,
+				repeat: -1
+			});
+		}
+	};
+
 	// Event emitted from the PhaserGame component
 	const currentScene = (scene: Scene) => {
 		canMoveSprite = scene.scene.key !== 'MainMenu';
@@ -41,7 +69,7 @@
 	<PhaserGame bind:phaserRef currentActiveScene={currentScene} />
 	<div>
 		<div>
-			<button class="button" on:click={changeScene}>Change City</button>
+			<button class="button" on:click={changeScene}>Change Scene</button>
 		</div>
 		<div>
 			<button class="button" disabled={canMoveSprite} on:click={moveSprite}>Toggle Movement</button>
@@ -55,27 +83,13 @@
 		</div>
 	</div>
 </div>
+
 <svelte:head>
 	<title>BYOG24-City Game</title>
 	<meta name="description" content="Submission for the BYOG-2024 Game Jam" />
 </svelte:head>
 
-<section>
-	<Canvas />
-</section>
-
 <style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-	}
 	#app {
 		width: 100%;
 		height: 100vh;
@@ -89,6 +103,7 @@
 		margin: 10px 0 0 10px;
 		font-size: 0.8em;
 	}
+
 	.button {
 		width: 140px;
 		margin: 10px;
