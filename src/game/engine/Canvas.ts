@@ -20,7 +20,7 @@ function updatePlayerStats(currentLocation) {
 		}, gameStatePersisted.TICK);
 	}
 }
-function createPlayer(canvas) {
+function createPlayer(canvas, game) {
 	player = canvas.group();
 	player.svg(personSvg);
 	player.size(
@@ -42,7 +42,7 @@ function createPlayer(canvas) {
 	canvas.add(player);
 }
 
-function drawCity(canvas, cityObj) {
+function drawCity(canvas, cityObj, gameObj) {
 	city = canvas.group();
 	city.svg(citySvg);
 	city.move(0, 0);

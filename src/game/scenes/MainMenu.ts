@@ -31,10 +31,9 @@ export class MainMenu extends Scene {
 			.setDepth(100);
 
 		// draw the map.
-		canvas = SVG()
-			.addTo('#currentCityCanvas')
-			.size(gameParams.board.width, gameParams.board.height);
-		drawCityState(canvas);
+		//canvas = SVG()
+		//	.addTo('#currentCityCanvas')
+		//	.size(gameParams.board.width, gameParams.board.height);
 		//window.onload = updatePlayerStats({ city: 0, loc: 'home' });
 		EventBus.emit('current-scene-ready', this);
 	}

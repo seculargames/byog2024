@@ -33,7 +33,6 @@ let genMap = function (locationOptions, buildingPositionOpts) {
 		wmap.cities.push(cityObj);
 	}
 	console.log('Finished generating Map');
-	console.debug(wmap);
 	return wmap;
 };
 
@@ -184,7 +183,7 @@ let genBots = function (locations) {
 	return { allUsers: allUsers, locationUserMap: locationUserMap };
 };
 
-function initializeGameState(canvas) {
+function initializeGameState(canvasObj, gameObj) {
 	const style = canvas.style('.mycolor', { color: 'pink' });
 	//$spaceHoldingDrainer = socialDrainMultiplier(gameState.user);
 	canvas.add(style);
