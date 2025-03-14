@@ -7,6 +7,8 @@
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
 
+	import { customParams } from '$lib/gameParamsChanger';
+
 	// The sprite can only be moved in the MainMenu Scene
 	let canMoveSprite = false;
 
@@ -65,26 +67,23 @@
 	};
 </script>
 
-<div id="app">
-	<div id="worldCanvas">
+<div id="app" class="container">
+	<div id="worldCanvas" class="topleft">
 		<div id="currentCityCanvas"></div>
 		<PhaserGame bind:phaserRef currentActiveScene={currentScene} />
+	</div>
+	<div id="mainMenuButtons" class="topright">
 		<div>
-			<div>
-				<button class="button" on:click={changeCity}>Change City</button>
-			</div>
-			<div>
-				<button class="button" disabled={canMoveSprite} on:click={moveSprite}
-					>Toggle Movement</button
-				>
-			</div>
-			<div class="spritePosition">
-				Sprite Position:
-				<pre>{JSON.stringify(spritePosition, null, 2)}</pre>
-			</div>
-			<div>
-				<button class="button" on:click={addSprite}>Add New Sprite</button>
-			</div>
+			<button class="button" on:click={changeCity}>Change City</button>
+			<button class="button" on:click={changeDifficulty}>Change Difficulty</button>
+			<button class="button" on:click={addPlayers}>Add Players</button>
+		</div>
+		<div>
+			<button class="button" disabled={canMoveSprite} on:click={moveSprite}>Toggle Movement</button>
+		</div>
+		<div class="spritePosition">
+			Sprite Position:
+			<pre>{JSON.stringify(spritePosition, null, 2)}</pre>
 		</div>
 	</div>
 </div>
@@ -95,7 +94,8 @@
 </svelte:head>
 
 <style>
-	#app {
+	.container {
+		position: relative;
 		width: 100%;
 		height: 100vh;
 		overflow: hidden;
@@ -104,11 +104,41 @@
 		align-items: center;
 	}
 
+	.topleft {
+		position: absolute;
+		top: 8px;
+		left: 16px;
+		font-size: 18px;
+	}
+	.topright {
+		position: absolute;
+		top: 8px;
+		right: 16px;
+		font-size: 18px;
+	}
+	.bottomleft {
+		position: absolute;
+		bottom: 8px;
+		left: 16px;
+		font-size: 18px;
+	}
+	.bottomright {
+		position: absolute;
+		bottom: 8px;
+		right: 16px;
+		font-size: 18px;
+	}
+	.center {
+		position: absolute;
+		top: 50%;
+		width: 100%;
+		text-align: center;
+		font-size: 18px;
+	}
 	.spritePosition {
 		margin: 10px 0 0 10px;
 		font-size: 0.8em;
 	}
-
 	.button {
 		width: 140px;
 		margin: 10px;
