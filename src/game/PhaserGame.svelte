@@ -44,6 +44,8 @@
 	//let player, playerLabel;
 	let buildings;
 	let city;
+	let scene;
+
 	let currentLocation = $gameStateTemp.user.currentLocation;
 
 	onMount(() => {
@@ -57,7 +59,7 @@
 			phaserRef.scene = scene_instance;
 
 			if (currentActiveScene) {
-				currentActiveScene(scene_instance);
+				scene = currentActiveScene(scene_instance);
 			}
 		});
 	});
@@ -82,10 +84,10 @@
 		/* console.debug(event); */
 		/* console.debug(canvas.node); */
 		/* console.debug(house.node); */
-		if (event.target == canvas.node) {
-			//player.move(event.pageX-450, event.pageY-50);
-			$gameStateTemp.user.energy.social -= 10;
-		} //else if (event.target == house.node) {
+		//if (event.target == scene.canvas.node) {
+		//	//player.move(event.pageX-450, event.pageY-50);
+		//	$gameStateTemp.user.energy.social -= 10;
+		//} //else if (event.target == house.node) {
 		//player.move(house.x, house.y);
 		//}
 	};

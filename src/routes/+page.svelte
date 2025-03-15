@@ -16,15 +16,6 @@
 	let phaserRef: TPhaserRef = { game: null, scene: null };
 	const spritePosition = { x: 0, y: 0 };
 
-	const changeCity = () => {
-		const scene = phaserRef.scene as MainMenu;
-
-		if (scene) {
-			// Call the changeScene method defined in the `MainMenu`, `Game` and `GameOver` Scenes
-			scene.changeCity();
-		}
-	};
-
 	const moveSprite = () => {
 		const scene = phaserRef.scene as MainMenu;
 
@@ -65,33 +56,45 @@
 	const currentScene = (scene: Scene) => {
 		canMoveSprite = scene.scene.key !== 'MainMenu';
 	};
+	const changeCity = () => {
+		customParams.teleport2City();
+	};
+	const changeDifficulty = () => {
+		customParams.changeDifficulty();
+	};
+	const addPlayers = () => {
+		customParams.addPlayers();
+	};
 </script>
-
-<div id="app" class="container">
-	<div id="worldCanvas" class="topleft">
-		<div id="currentCityCanvas"></div>
-		<PhaserGame bind:phaserRef currentActiveScene={currentScene} />
-	</div>
-	<div id="mainMenuButtons" class="topright">
-		<div>
-			<button class="button" on:click={changeCity}>Change City</button>
-			<button class="button" on:click={changeDifficulty}>Change Difficulty</button>
-			<button class="button" on:click={addPlayers}>Add Players</button>
-		</div>
-		<div>
-			<button class="button" disabled={canMoveSprite} on:click={moveSprite}>Toggle Movement</button>
-		</div>
-		<div class="spritePosition">
-			Sprite Position:
-			<pre>{JSON.stringify(spritePosition, null, 2)}</pre>
-		</div>
-	</div>
-</div>
 
 <svelte:head>
 	<title>BYOG24-City Game</title>
 	<meta name="description" content="Submission for the BYOG-2024 Game Jam" />
-</svelte:head>
+	<div id="app" class="container">
+		<div class="container">
+			<div id="worldCanvas" class="reltopleft">
+				<div id="currentCityCanvas" class="reltopright"></div>
+				<PhaserGame bind:phaserRef currentActiveScene={currentScene} />
+				<div id="mainMenuButtons" class="stytopright">
+					<div>
+						<button class="button" on:click={changeCity()}>Change City</button>
+						<button class="button" on:click={changeDifficulty()}>Change Difficulty</button>
+						<button class="button" on:click={addPlayers()}>Add Players</button>
+					</div>
+					<div>
+						<button class="button" disabled={canMoveSprite} on:click={moveSprite}
+							>Toggle Movement</button
+						>
+					</div>
+					<div class="spritePosition">
+						Sprite Position:
+						<pre>{JSON.stringify(spritePosition, null, 2)}</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div></svelte:head
+>
 
 <style>
 	.container {
@@ -103,32 +106,63 @@
 		justify-content: center;
 		align-items: center;
 	}
+	.reltopleft {
+		position: relative;
+		top: 8px;
+		left: 16px;
+		font-size: 18px;
+	}
+	.stytopright {
+		position: sticky;
+		top: 0;
+		right: 16px;
+		font-size: 18px;
+	}
+	.relbottomleft {
+		position: relative;
+		bottom: 8px;
+		left: 16px;
+		font-size: 18px;
+	}
+	.relbottomright {
+		position: relative;
+		bottom: 8px;
+		right: 16px;
+		font-size: 18px;
+	}
+	.relcenter {
+		position: relative;
+		top: 50%;
+		width: 100%;
+		text-align: center;
+		font-size: 18px;
+	}
 
-	.topleft {
+	.abstopleft {
 		position: absolute;
 		top: 8px;
 		left: 16px;
 		font-size: 18px;
 	}
-	.topright {
+	.abstopright {
 		position: absolute;
 		top: 8px;
 		right: 16px;
 		font-size: 18px;
 	}
-	.bottomleft {
+	.absbottomleft {
 		position: absolute;
 		bottom: 8px;
 		left: 16px;
 		font-size: 18px;
 	}
-	.bottomright {
+	.absbottomright {
 		position: absolute;
 		bottom: 8px;
 		right: 16px;
 		font-size: 18px;
 	}
-	.center {
+	.abscenter {
 		position: absolute;
 		top: 50%;
 		width: 100%;

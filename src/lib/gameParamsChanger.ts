@@ -1,8 +1,8 @@
 //var _ = require('lodash');
 import { izip, cycle } from 'itertools';
-import { engine } from '../engine/engine.ts';
-import { gameStatePersisted } from '../../../stores.ts';
-import { gameParams, gameStateTemp } from '../../states.ts';
+import { engine } from '../game/engine/engine.ts';
+import { gameStatePersisted } from '../stores.ts';
+import { gameParams, gameStateTemp } from '../game/states.ts';
 import { G } from '@svgdotjs/svg.js';
 
 // pos is cursor position when right click occur
@@ -55,11 +55,11 @@ function changeDifficulty() {
 	gameStatePersisted.TICK = cycle(500, 10000, 100000, 0);
 }
 function addPlayers() {
-	let currentLocation = gameState.user.currentLocation;
+	let currentLocation = gameStatePersisted.user.currentLocation;
 	let newBot;
 	newBot = engine.ab();
-	gameState.locationUserMap[currentLocation].push(newBot);
-	console.debug(gameState.locationUserMap[currentLocation].length);
+	gameStatePersisted.locationUserMap[currentLocation].push(newBot);
+	console.debug(gameStatePersisted.locationUserMap[currentLocation].length);
 }
 function teleport2City() {}
 function settings() {
@@ -68,41 +68,9 @@ function settings() {
 function restart() {
 	content.textContent = 'Restart game...';
 }
-let menuItems = [
-	{
-		name: 'difficulty',
-		onClick: difficulty,
-		displayText: 'Difficulty Level',
-		class: 'fa-solid fa-plus'
-	},
-	{
-		name: 'Add more People',
-		onClick: addPlayers,
-		displayText: 'Add People',
-		class: 'fa-solid fa-square'
-	},
-	{
-		name: 'Teleport 2 different City',
-		onClick: teleport2City,
-		displayText: 'Teleport',
-		class: 'fa-solid fa-magnifying-glass'
-	},
-	{
-		name: 'setting',
-		onClick: settings,
-		displayText: 'Settings',
-		class: 'fa-solid fa-print'
-	},
-	{
-		name: 'restart',
-		onClick: restart,
-		displayText: 'Restart',
-		class: 'fa-solid fa-trash-can'
-	}
-];
 // export dict and vars
 const customParams = {
-	difficulty: changeDifficulty,
+	changeDifficulty: changeDifficulty,
 	addPlayers: addPlayers,
 	teleport2City: teleport2City,
 	settings: settings,
