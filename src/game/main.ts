@@ -1,3 +1,4 @@
+import StateManagerPlugin from 'phaser3-rex-plugins/plugins/statemanager-plugin.js';
 import { Boot } from './scenes/Boot';
 import { GameOver } from './scenes/GameOver';
 import { Game as MainGame } from './scenes/Game';
@@ -24,6 +25,16 @@ const config: Phaser.Types.Core.GameConfig = {
 		mainMenu: MainMenu,
 		newGame: MainGame,
 		gameOver: GameOver
+	},
+	plugins: {
+		global: [
+			{
+				key: 'rexStateManager',
+				plugin: StateManagerPlugin,
+				start: true
+			}
+			// ...
+		]
 	}
 };
 

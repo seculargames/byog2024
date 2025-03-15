@@ -55,11 +55,11 @@ function changeDifficulty() {
 	gameStatePersisted.TICK = cycle(500, 10000, 100000, 0);
 }
 function addPlayers() {
-	let currentLocation = gameStatePersisted.user.currentLocation;
+	let currentLocation = $gameStatePersisted.user.currentLocation;
 	let newBot;
 	newBot = engine.ab();
-	gameStatePersisted.locationUserMap[currentLocation].push(newBot);
-	console.debug(gameStatePersisted.locationUserMap[currentLocation].length);
+	$gameStatePersisted.locationUserMap[currentLocation].push(newBot);
+	console.debug($gameStatePersisted.locationUserMap[currentLocation].length);
 }
 function teleport2City() {}
 function settings() {
