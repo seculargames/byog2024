@@ -10,7 +10,7 @@
 		MS_PER_YEAR
 	} from '$lib/constants.ts';
 	import { goto } from '$app/navigation';
-	import { gameParams, gameStateTemp } from '../game/states.ts';
+	import { gameParams, gameStateTemp } from '$lib/constants.ts';
 	import { gameStatePersisted } from '../stores.ts';
 	import { user } from '../stores.ts';
 	let neuroValues = [0, 0, 0];

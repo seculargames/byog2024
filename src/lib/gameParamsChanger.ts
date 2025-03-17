@@ -2,7 +2,6 @@
 import { izip, cycle } from 'itertools';
 import { engine } from '../game/engine/engine.ts';
 import { gameStatePersisted } from '../stores.ts';
-import { gameParams, gameStateTemp } from '../game/states.ts';
 import { G } from '@svgdotjs/svg.js';
 
 // pos is cursor position when right click occur

@@ -1,5 +1,5 @@
 import { loading, gameStatePersisted } from '../../stores.ts';
-import { gameParams, gameStateTemp } from '../states.ts';
+import { gameParams, gameStateTemp } from '$lib/constants.ts';
 import { mean } from 'mathjs';
 
 //TODO: move most of the game mechanics logic that's not UI here instead of context menu, canvas
